@@ -32,17 +32,25 @@ spl_autoload_register($swdNamespaceAutoload, true, true);
 
 require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 
-use Linko\Managers\Players;
+use Linko\Factories\StatsFactory;
+use Linko\Managers\CardsManager;
+use Linko\Managers\PlayersManager;
+
 
 class Linko extends Table {
 
     CONST GAME_NAME = "Linko";
 
+    private $playerManager;
+    private $cardManager;
     protected static $instance = null;
 
     public function __construct() {
         parent::__construct();
         self::$instance = $this;
+
+        $this->cardManager = new CardsManager();
+        $this->playerManager = new PlayersManager();
         //-- TODO Kyw : identify what is called.
         //self::initGameStateLabels([]);
     }
@@ -55,22 +63,52 @@ class Linko extends Table {
         return self::$instance;
     }
 
-    /*
-      setupNewGame:
-
-      This method is called only once, when a new game is launched.
-      In this method, you must setup the game according to the game rules, so that
-      the game is ready to be played.
+    /**
+     * This method is called only once, when a new game is launched.
+     * In this method, you must setup the game according to the game rules, so that
+     * the game is ready to be played.
+     * 
+     * @param type $players
+     * @param type $options
      */
-
     protected function setupNewGame($players, $options = array()) {
-        $cardManager = new Linko\Managers\Cards();
-        $cardManager->setupNewGame();
-        
-        $playerManager = new Players();
-        $playerManager->setupNewGame($players, $cardManager, $options);
-        
-        
+
+        $this->cardManager->setupNewGame();
+        $this->playerManager->setupNewGame($players, $this->cardManager, $options);
+
+        StatsFactory::create($this);
+
+        $this->activeNextPlayer();
+    }
+
+    protected function getAllDatas() {
+        $pId = self::getCurrentPlayerId();
+
+        return [
+            'players' => $this->playerManager->getUiData($pId),
+            
+        ];
+
+//        $result = array();
+//
+//        $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
+//        // Get information about players
+//        // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
+//        $sql = "SELECT player_id id, player_score score FROM player ";
+//        $result['players'] = self::getCollectionFromDb($sql);
+//
+//        // TODO: Gather all information about current game situation (visible by player $current_player_id).
+//        // Cards in player hand
+//        $result['hand'] = $this->cards->getCardsInLocation('hand', $current_player_id);
+//
+//        foreach ($result['players'] as $player) {
+//            $result['ontable'][$player['id']] = $this->getPlayedCollection($player['id']);
+//        }
+//
+//        // Drawable Cards
+//        $result['drawable'] = $this->cards->getCardsInLocation('draw');
+//
+//        return $result;
     }
 
 }

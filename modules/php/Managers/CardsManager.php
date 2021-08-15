@@ -10,7 +10,7 @@ use Linko\Tools\DB_Manager;
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class Cards extends DB_Manager {
+class CardsManager extends DB_Manager {
 
     private $deck;
 

@@ -4,12 +4,13 @@ namespace Linko\Managers;
 
 use Linko;
 use Linko\Tools\DB_Manager;
+
 /**
  * Players manager : allows to easily access players
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class Players extends DB_Manager {
+class PlayersManager extends DB_Manager {
 
     const CARDS_START = 13;
 
@@ -27,7 +28,7 @@ class Players extends DB_Manager {
         return Linko::getInstance();
     }
 
-    public function setupNewGame($players, Cards $cardManager, $options) {
+    function setupNewGame($players, Cards $cardManager, $options) {
         // Create players
         $gameinfos = self::getGameinfos();
         $default_colors = $gameinfos['player_colors'];
@@ -41,7 +42,8 @@ class Players extends DB_Manager {
         ]);
 
         $values = [];
-//        $i = 0;
+        $deck = $cardManager->getDeck();
+
         foreach ($players as $pId => $player) {
             $color = array_shift($default_colors);
             $canal = $player['player_canal'];
@@ -50,9 +52,6 @@ class Players extends DB_Manager {
 
             $values[] = [$pId, $color, $canal, $name, $avatar];
 
-            //-- TODO Kyw :. DEAL cards !
-
-            $deck = $cardManager->getDeck();
             $cards = $deck->pickCards(self::CARDS_START, Cards::LOCATION_DECK, $pId);
             // Notify player about his cards
             self::notifyPlayer($pId, 'newHand', '', array('cards' => $cards));
@@ -60,6 +59,20 @@ class Players extends DB_Manager {
         $queryBuilder->values($values);
         self::getGame()->reattributeColorsBasedOnPreferences($players, $gameinfos['player_colors']);
         self::getGame()->reloadPlayersBasicInfos();
+    }
+
+    /**
+     * get All Players from Database
+     * @return type
+     */
+    private function getAll() {
+        return $this->getQueryBuilder()->get(false);
+    }
+
+    public function getUiData($pId) {
+        return $this->getAll()->map(function ($player) use ($pId) {
+                    return $player->getUiData($pId);
+                });
     }
 
 }
