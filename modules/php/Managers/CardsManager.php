@@ -35,15 +35,25 @@ class CardsManager extends DB_Manager {
     public function setupNewGame() {
         $cards = DeckFactory::create();
 
-        $this->cards->createCards($cards, self::NAME_OF_DECK);
-        $this->cards->moveAllCardsInLocation(null, self::LOCATION_DECK);
-        $this->cards->shuffle(self::NAME_OF_DECK);
+        $this->deck->createCards($cards, self::NAME_OF_DECK);
+        $this->deck->moveAllCardsInLocation(null, self::LOCATION_DECK);
+        $this->deck->shuffle(self::NAME_OF_DECK);
 
         return $this;
     }
 
     public function getDeck() {
         return $this->deck;
+    }
+
+    /**
+     * 
+     * @param string $location
+     * @param mixed $arg
+     * @return type
+     */
+    public function getCardInLocation(string $location = self::LOCATION_DECK, mixed $arg = null) {
+        return $this->deck->getInLocation([$location,$arg]);
     }
 
 }

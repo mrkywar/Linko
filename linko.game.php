@@ -36,7 +36,6 @@ use Linko\Factories\StatsFactory;
 use Linko\Managers\CardsManager;
 use Linko\Managers\PlayersManager;
 
-
 class Linko extends Table {
 
     CONST GAME_NAME = "Linko";
@@ -86,7 +85,7 @@ class Linko extends Table {
 
         return [
             'players' => $this->playerManager->getUiData($pId),
-            
+            'deck' => $this->cardManager->getCardInLocation(CardsManager::LOCATION_DECK),
         ];
 
 //        $result = array();
