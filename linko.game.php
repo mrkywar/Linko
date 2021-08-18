@@ -24,7 +24,7 @@ $swdNamespaceAutoload = function ($class) {
         if (file_exists($file)) {
             require_once $file;
         } else {
-            var_dump("Impossible to load bang class : $class");
+            var_dump("Impossible to load linko class : $class");
         }
     }
 };
@@ -55,7 +55,7 @@ class Linko extends Table {
     }
 
     protected function getGameName() {
-        return "Linko";
+        return self::GAME_NAME;
     }
 
     public static function getInstance() {
@@ -85,29 +85,9 @@ class Linko extends Table {
 
         return [
             'players' => $this->playerManager->getUiData($pId),
-            'deck' => $this->cardManager->getCardInLocation(CardsManager::LOCATION_DECK),
+            'deck' => $this->cardManager->getDeck(),
+            'visibleDraw' => $this->cardManager->getVisibleDraw()
         ];
-
-//        $result = array();
-//
-//        $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
-//        // Get information about players
-//        // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
-//        $sql = "SELECT player_id id, player_score score FROM player ";
-//        $result['players'] = self::getCollectionFromDb($sql);
-//
-//        // TODO: Gather all information about current game situation (visible by player $current_player_id).
-//        // Cards in player hand
-//        $result['hand'] = $this->cards->getCardsInLocation('hand', $current_player_id);
-//
-//        foreach ($result['players'] as $player) {
-//            $result['ontable'][$player['id']] = $this->getPlayedCollection($player['id']);
-//        }
-//
-//        // Drawable Cards
-//        $result['drawable'] = $this->cards->getCardsInLocation('draw');
-//
-//        return $result;
     }
 
 }

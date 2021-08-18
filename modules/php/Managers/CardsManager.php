@@ -18,6 +18,7 @@ class CardsManager extends DB_Manager {
     const LOCATION_DECK = "deck";
     const LOCATION_HAND = "hand";
     const LOCATION_IN_GAME = "playertablecard_";
+    const LOCATION_VISIBLE_DRAW = "draw";
     const NAME_OF_DECK = "deck";
 
     //-- Abstract definitions (required by DB_Manager)
@@ -45,10 +46,6 @@ class CardsManager extends DB_Manager {
         return $this;
     }
 
-    public function getDeck() {
-        return $this->deck;
-    }
-
     /**
      * 
      * 
@@ -56,7 +53,7 @@ class CardsManager extends DB_Manager {
      * @param mixed $arg
      * @return type
      */
-    public function getCardsInLocation(string $location = self::LOCATION_DECK, mixed $arg = null) {
+    public function getCardsInLocation(string $location, mixed $arg = null) {
         return $this->deck->getInLocation([$location, $arg]);
     }
 
@@ -84,6 +81,20 @@ class CardsManager extends DB_Manager {
         }
 
         return $result;
+    }
+
+    /**
+     * GetDeck is a shortcut for get cards in deck
+     */
+    public function getDeck() {
+        return $this->getCardsInLocation(self::LOCATION_DECK);
+    }
+
+    /**
+     * getVisibleDraw is a shortcut for get visible card in the draw
+     */
+    public function getVisibleDraw() {
+        return $this->getCardsInLocation(self::LOCATION_VISIBLE_DRAW);
     }
 
 }
