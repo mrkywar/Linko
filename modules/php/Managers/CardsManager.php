@@ -3,6 +3,7 @@
 namespace Linko\Managers;
 
 use Linko\Factories\DeckFactory;
+use Linko\Models\Player;
 use Linko\Tools\DB_Manager;
 
 /**
@@ -15,6 +16,8 @@ class CardsManager extends DB_Manager {
     private $deck;
 
     const LOCATION_DECK = "deck";
+    const LOCATION_HAND = "hand";
+    const LOCATION_IN_GAME = "playertablecard_";
     const NAME_OF_DECK = "deck";
 
     //-- Abstract definitions (required by DB_Manager)
@@ -48,12 +51,39 @@ class CardsManager extends DB_Manager {
 
     /**
      * 
+     * 
      * @param string $location
      * @param mixed $arg
      * @return type
      */
-    public function getCardInLocation(string $location = self::LOCATION_DECK, mixed $arg = null) {
-        return $this->deck->getInLocation([$location,$arg]);
+    public function getCardsInLocation(string $location = self::LOCATION_DECK, mixed $arg = null) {
+        return $this->deck->getInLocation([$location, $arg]);
+    }
+
+    /**
+     * Get Hand is a shortcut for get cards in a player hand
+     * 
+     * @param Player played : the player who whant his hand
+     */
+    public function getHand(Player $player) {
+        return $this->getCardsInLocation(self::LOCATION_HAND, $player->getId());
+    }
+
+    /**
+     * Get cards group by collection played by a player
+     * 
+     * @param Player played : the player who whant his hand
+     */
+    public function getPlayedCollections(Player $player) {
+
+        $result = array();
+        $raw = $this->getCardsInLocation(self::LOCATION_IN_GAME . $player->getId());
+
+        foreach ($raw as $playedCard) {
+            $result[$playedCard['location_arg']][] = $playedCard;
+        }
+
+        return $result;
     }
 
 }

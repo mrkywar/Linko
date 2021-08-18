@@ -36,5 +36,16 @@ abstract class Serializer {
 
         return null;
     }
+    
+    protected function prepareForRow($fieldValue) {
+        switch (gettype($fieldValue)){
+            case "boolean" :
+                return $fieldValue ? 1:0;
+            
+            default:
+                return $fieldValue;
+        }
+        
+    }
 
 }

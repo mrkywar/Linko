@@ -14,6 +14,19 @@ class PlayersManager extends DB_Manager {
 
     const CARDS_START = 13;
 
+    private static $serializer;
+
+    //private static $instance;
+
+    public function __construct() {
+        self::$serializer = new Linko\Serializers\PlayerSerializer();
+        //self::$instance = $this;
+    }
+
+    protected static function cast($row) {
+        return self::$serializer->unserialize($row);
+    }
+
     //-- Abstract definitions (required by DB_Manager)
     protected function getPrimary() {
         return 'player_id';
@@ -66,13 +79,13 @@ class PlayersManager extends DB_Manager {
      * @return type
      */
     private function getAll() {
-        return $this->getQueryBuilder()->get(false);
+        return $this->getQueryBuilder()->get();
     }
 
-    public function getUiData($pId) {
-        return $this->getAll()->map(function ($player) use ($pId) {
-                    return $player->getUiData($pId);
-                });
+    public function getUiData($pId, CardsManager $cardManager) {
+        return array_map(function ($player) use ($pId, $cardManager) {
+            return $player->getUiData($pId, $cardManager);
+        }, self::getAll());
     }
 
 }
