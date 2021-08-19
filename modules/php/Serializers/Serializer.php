@@ -1,6 +1,7 @@
 <?php
-
 namespace Linko\Serializers;
+
+use Linko\Tools\DB_Manager;
 
 /**
  * Description of Serializer

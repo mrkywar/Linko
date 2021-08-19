@@ -14,17 +14,17 @@ class PlayersManager extends DB_Manager {
 
     const CARDS_START = 13;
 
-    private static $serializer;
+    private  $serializer;
 
     //private static $instance;
 
     public function __construct() {
-        self::$serializer = new Linko\Serializers\PlayerSerializer();
+        $this->serializer = new Linko\Serializers\PlayerSerializer();
         //self::$instance = $this;
     }
 
-    protected static function cast($row) {
-        return self::$serializer->unserialize($row);
+    protected function cast($row) {
+        return $this->serializer->unserialize($row);
     }
 
     //-- Abstract definitions (required by DB_Manager)

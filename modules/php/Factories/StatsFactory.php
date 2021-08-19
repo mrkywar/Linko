@@ -8,7 +8,7 @@ namespace Linko\Factories;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 abstract class StatsFactory {
-    public static function create(Table &$table){
+    public static function create(Table $table){
         $all_stats = $table->getStatTypes();
         $player_stats = $all_stats['player'];
 

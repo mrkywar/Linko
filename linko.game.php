@@ -32,9 +32,9 @@ spl_autoload_register($swdNamespaceAutoload, true, true);
 
 require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 
-use Linko\Factories\StatsFactory;
 use Linko\Managers\CardsManager;
 use Linko\Managers\PlayersManager;
+use Linko\Managers\StatsManager;
 
 class Linko extends Table {
 
@@ -42,11 +42,15 @@ class Linko extends Table {
 
     private $playerManager;
     private $cardManager;
+    private $statsManager;
     protected static $instance = null;
 
     public function __construct() {
         parent::__construct();
         self::$instance = $this;
+
+        $this->statsManager = new StatsManager();
+        $this->statsManager->setGame($this);
 
         $this->cardManager = new CardsManager();
         $this->playerManager = new PlayersManager();
@@ -56,10 +60,6 @@ class Linko extends Table {
 
     protected function getGameName() {
         return self::GAME_NAME;
-    }
-
-    public static function getInstance() {
-        return self::$instance;
     }
 
     /**
@@ -72,10 +72,9 @@ class Linko extends Table {
      */
     protected function setupNewGame($players, $options = array()) {
 
-        $this->cardManager->setupNewGame();
-        $this->playerManager->setupNewGame($players, $this->cardManager, $options);
-
-        StatsFactory::create($this);
+//        $this->cardManager->setupNewGame();
+//        $this->playerManager->setupNewGame($players, $this->cardManager, $options);
+        //StatsFactory::create($this);
 
         $this->activeNextPlayer();
     }
@@ -84,10 +83,32 @@ class Linko extends Table {
         $pId = self::getCurrentPlayerId();
 
         return [
+            'player_id' => $pId,
             'players' => $this->playerManager->getUiData($pId),
             'deck' => $this->cardManager->getDeck(),
             'visibleDraw' => $this->cardManager->getVisibleDraw()
         ];
     }
 
+    /* --------------------------------
+     *  BEGIN Statics Methods
+     * --------------------------------
+     */
+
+    public static function getDeckModule() {
+        return self::getNew("module.common.deck");
+    }
+
+    /**
+     * 
+     * @return Linko
+     */
+    public static function getInstance() {
+        return self::$instance;
+    }
+
+    /* --------------------------------
+     *  END Statics Methods
+     * --------------------------------
+     */
 }

@@ -3,6 +3,7 @@
 namespace Linko\Serializers;
 
 use Linko\Models\Player;
+use Linko\Tools\DB_Manager;
 
 /**
  * Description of Player
@@ -11,7 +12,15 @@ use Linko\Models\Player;
  */
 class PlayerSerializer extends Serializer {
 
-    public function serialize(Player $player) {
+//    public function serialize(DB_Manager $player) {
+//        return $this->serializePlayer($player);
+//    }
+
+    public function serialize(DB_Manager $model) {
+        return $this->serializePlayer($model);
+    }
+
+    private function serializePlayer(Player $player) {
         return [
             "player_id" => $this->prepareForRow($player->getId()),
             "player_no" => $this->prepareForRow($player->getNo()),

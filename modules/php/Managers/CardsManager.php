@@ -2,6 +2,7 @@
 
 namespace Linko\Managers;
 
+use Linko;
 use Linko\Factories\DeckFactory;
 use Linko\Models\Player;
 use Linko\Tools\DB_Manager;
@@ -31,8 +32,7 @@ class CardsManager extends DB_Manager {
     }
 
     public function __construct() {
-        parent::__construct();
-        $this->deck = self::getNew("module.common.deck");
+        $this->deck =  Linko::getDeckModule();
         $this->deck->init("card");
     }
 
