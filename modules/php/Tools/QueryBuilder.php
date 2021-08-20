@@ -176,6 +176,42 @@ class QueryBuilder extends \APP_DbObject {
             return new Collection($oRes);
         }
     }
+    
+    public function getById($primaryKeys){
+        $select = $this->columns ?? "*, {$this->primary} AS `result_associative_index`";
+        $this->sql = "SELECT $select FROM `$this->table`";
+        if(is_array($this->primary)){
+            $iteration = 0;
+            foreach ($this->primary as $key){
+                if(!isset($primaryKeys[$key])){
+                    throw new \feException("Primary Key isn't correct");
+                }
+                $this->sql .= (0 === $iteration)? " where " : " and ";
+                $this->sql .= " `$key` = ".$this->protect($primaryKeys[$key]);
+            }
+        }else{
+                $this->sql .=" where $this->primary = ".$primaryKeys;
+        }
+        $this->assembleQueryClauses();
+        
+        $res = self::getObjectListFromDB($this->sql);
+        $oRes = [];
+        foreach ($res as $row) {
+            $id = $row['result_associative_index'];
+            unset($row['result_associative_index']);
+
+            $val = $row;
+            if (is_callable($this->cast)) {
+                $val = forward_static_call($this->cast, $row);
+            } elseif (is_string($this->cast)) {
+                $val = $this->cast == 'object' ? ((object) $row) : new $this->cast($row);
+            }
+
+            $oRes[$id] = $val;
+        }
+
+        return new Collection($oRes);   
+    }
 
     public function getSingle() {
         return $this->limit(1)->get(true);

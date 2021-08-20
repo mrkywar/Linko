@@ -72,8 +72,8 @@ class Linko extends Table {
      */
     protected function setupNewGame($players, $options = array()) {
 
-//        $this->cardManager->setupNewGame();
-//        $this->playerManager->setupNewGame($players, $this->cardManager, $options);
+        $this->cardManager->setupNewGame();
+        $this->playerManager->setupNewGame($players, $this->cardManager, $options);
         //StatsFactory::create($this);
 
         $this->activeNextPlayer();

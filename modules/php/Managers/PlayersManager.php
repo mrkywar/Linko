@@ -4,6 +4,8 @@ namespace Linko\Managers;
 
 use Linko;
 use Linko\Tools\DB_Manager;
+use Linko\Core\Notifications;
+use Linko\Serializers\PlayerSerializer;
 
 /**
  * Players manager : allows to easily access players
@@ -14,12 +16,13 @@ class PlayersManager extends DB_Manager {
 
     const CARDS_START = 13;
 
-    private  $serializer;
+    private $serializer;
+    private static $defaultColor = ["ff0000", "008000", "0000ff", "ffa500", "773300"];
 
     //private static $instance;
 
     public function __construct() {
-        $this->serializer = new Linko\Serializers\PlayerSerializer();
+        $this->serializer = new PlayerSerializer();
         //self::$instance = $this;
     }
 
@@ -41,10 +44,10 @@ class PlayersManager extends DB_Manager {
         return Linko::getInstance();
     }
 
-    function setupNewGame($players, Cards $cardManager, $options) {
+    function setupNewGame($players, CardsManager $cardManager, $options) {
         // Create players
-        $gameinfos = self::getGameinfos();
-        $default_colors = $gameinfos['player_colors'];
+        $gameinfos = $this->getGame()->getGameinfos();
+        $default_colors = self::$defaultColor; //$gameinfos['player_colors'];
 
         $queryBuilder = $this->getQueryBuilder()->multipleInsert([
             'player_id',
@@ -55,7 +58,7 @@ class PlayersManager extends DB_Manager {
         ]);
 
         $values = [];
-        $deck = $cardManager->getDeck();
+        //$deck = $cardManager->getDeck();
 
         foreach ($players as $pId => $player) {
             $color = array_shift($default_colors);
@@ -64,10 +67,13 @@ class PlayersManager extends DB_Manager {
             $name = addslashes($player['player_name']);
 
             $values[] = [$pId, $color, $canal, $name, $avatar];
+            $player = $this->getQueryBuilder()->getById($pId);
 
-            $cards = $deck->pickCards(self::CARDS_START, Cards::LOCATION_DECK, $pId);
+            $cards = $cardManager->pickCardsFor($player, self::CARDS_START);
             // Notify player about his cards
-            self::notifyPlayer($pId, 'newHand', '', array('cards' => $cards));
+            // --- TODO kyw : Reactive this !
+            //notifyPlayer($pId, 'newHand', '', array('cards' => $cards));
+            Notifications::newHand($this->serializer->unserialize($values), $cards);
         }
         $queryBuilder->values($values);
         self::getGame()->reattributeColorsBasedOnPreferences($players, $gameinfos['player_colors']);

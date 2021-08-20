@@ -32,7 +32,7 @@ class CardsManager extends DB_Manager {
     }
 
     public function __construct() {
-        $this->deck =  Linko::getDeckModule();
+        $this->deck = Linko::getDeckModule();
         $this->deck->init("card");
     }
 
@@ -46,6 +46,15 @@ class CardsManager extends DB_Manager {
         return $this;
     }
 
+    public function pickCardsFor($playerId, $numberOfCards = 1, $location = self::LOCATION_DECK) {
+        return $this->deck->pickCards($numberOfCards, $location, $playerId);
+    }
+
+    /* --------------------------------
+     *  BEGIN cards localisation methods
+     * --------------------------------
+     */
+
     /**
      * 
      * 
@@ -54,7 +63,7 @@ class CardsManager extends DB_Manager {
      * @return type
      */
     public function getCardsInLocation(string $location, mixed $arg = null) {
-        return $this->deck->getInLocation([$location, $arg]);
+        return $this->deck->getCardsInLocation([$location, $arg]);
     }
 
     /**
@@ -97,4 +106,8 @@ class CardsManager extends DB_Manager {
         return $this->getCardsInLocation(self::LOCATION_VISIBLE_DRAW);
     }
 
+    /* --------------------------------
+     *  END cards localisation methods
+     * --------------------------------
+     */
 }
