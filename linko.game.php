@@ -44,8 +44,8 @@ class Linko extends Table
 	
     protected function getGameName( )
     {
-	// Used for translations and stuff. Please do not modify.
-        return "Linko";
+		// Used for translations and stuff. Please do not modify.
+        return "linko";
     }	
 
     /*

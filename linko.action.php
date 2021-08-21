@@ -2,7 +2,7 @@
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * emptyKyw implementation : © <Your name here> <Your email address here>
+ * Linko implementation : © <Your name here> <Your email address here>
  *
  * This code has been produced on the BGA studio platform for use on https://boardgamearena.com.
  * See http://en.doc.boardgamearena.com/Studio for more information.
@@ -10,7 +10,7 @@
  * 
  * linko.action.php
  *
- * emptyKyw main action entry point
+ * Linko main action entry point
  *
  *
  * In this file, you are describing all the methods that can be called from your
@@ -34,7 +34,7 @@
   	    }
   	    else
   	    {
-            $this->view = "linko";
+            $this->view = "linko_linko";
             self::trace( "Complete reinitialization of board game" );
       }
   	} 

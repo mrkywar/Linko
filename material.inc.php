@@ -10,7 +10,7 @@
  *
  * material.inc.php
  *
- * abluxxen game material description
+ * Linko game material description
  *
  * Here, you can describe the material of your game with PHP variables.
  *   
