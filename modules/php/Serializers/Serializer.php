@@ -10,7 +10,7 @@ use Linko\Models\Model;
  */
 interface Serializer {
 
-    public function serialize(Model $object, array $fields);
+    public function serialize(Model $object, array $fields, $prefix="");
 
     public function unserialize($raw);
 }

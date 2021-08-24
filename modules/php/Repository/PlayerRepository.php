@@ -17,7 +17,7 @@ class PlayerRepository implements Repository {
     const FIELDS_PREFIX = "player_";
     const FIELDS = [
         "id" => self::INTEGER_FORMAT,
-        "no" => self::INTEGER_FORMAT,
+        //"no" => self::INTEGER_FORMAT,
         "name" => self::STRING_FORMAT,
         "canal" => self::STRING_FORMAT,
         "color" => self::STRING_FORMAT,

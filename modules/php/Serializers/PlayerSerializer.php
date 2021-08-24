@@ -14,30 +14,27 @@ use ReflectionMethod;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 class PlayerSerializer implements Serializer {
-    
-    
+
     /**
      * Object To Array 
      * @param Model $object
      * @return array $rawDatas
      */
-
-    public function serialize(Model $object, array $fields) {
+    public function serialize(Model $object, array $fields, $prefix = "") {
         $raw = [];
 
         foreach ($fields as $field) {
             $getter = "get" . ucfirst($field);
-            $raw[$field] = $object->$getter();
+            $raw[$prefix . $field] = $object->$getter();
         }
 
         return $raw;
     }
 
-    
     /* -------------------------------------------------------------------------
      *                  BEGIN -  Unserialize Methods
      * ---------------------------------------------------------------------- */
-    
+
     private function isSetMethod(ReflectionMethod $method) {
         return("set" === substr($method->getName(), 0, 3));
     }

@@ -15,6 +15,10 @@ use Linko\Tools\ArrayCollection;
 class PlayerManager {
 
     private $repository;
+    /**
+     * 
+     * @var PlayerSerializer
+     */
     private $serializer;
 
     public function __construct() {
@@ -32,15 +36,17 @@ class PlayerManager {
         $gameinfos = Linko::getInstance()->getGameinfos();
         $default_colors = $gameinfos['player_colors'];
 
-        foreach ($players as $rawPlayer) {
+        foreach ($players as $playerId => $rawPlayer) {
             $color = array_shift($default_colors);
             $player = $this->serializer->unserialize($rawPlayer);
-
-            $player->setColor($color);
+            
+            $player->setId($playerId)
+                    ->setColor($color);
             $playersToCreate->add($player);
         }
 
         $this->repository->create($playersToCreate);
+
         //$this->queryBuilder->create($playersToCreate);
 
         Linko::getInstance()->reattributeColorsBasedOnPreferences($players, $gameinfos['player_colors']);

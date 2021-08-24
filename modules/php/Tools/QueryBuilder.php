@@ -12,10 +12,12 @@ use Linko\Repository\Repository;
  */
 class QueryBuilder extends \APP_DbObject {
 
+    const TYPE_SELECT = "SELECT";
+    const TYPE_INSERT = "INSERT";
+
     private $conditions;
     private $repository;
     private $fieldTransposer;
-    //private $typeOfQuery;
     private $sql;
 
     public function __construct(Repository $repository) {
@@ -25,6 +27,20 @@ class QueryBuilder extends \APP_DbObject {
     }
 
     private function execute() {
+        $queryType = substr($this->sql, 0, strpos($this->sql, " "));
+//        var_dump($queryType, $this->sql);
+//        die;
+
+        switch ($queryType) {
+            case self::TYPE_SELECT:
+                return $this->executeSelect();
+            case self::TYPE_INSERT:
+                self::DbQuery($this->sql);
+                return self::DbGetLastId();
+        }
+    }
+
+    private function executeSelect() {
         $results = self::getObjectListFromDB($this->sql);
 
         switch (sizeof($results)) {
@@ -46,7 +62,8 @@ class QueryBuilder extends \APP_DbObject {
      * ---------------------------------------------------------------------- */
 
     private function preapareSelect() {
-        $this->sql = "SELECT * FROM " . $this->repository->getTableName();
+        $this->sql = self::TYPE_SELECT . " * FROM ";
+        $this->sql .= $this->repository->getTableName();
         return $this;
     }
 
@@ -76,23 +93,27 @@ class QueryBuilder extends \APP_DbObject {
     }
 
     private function prepareInsert($items) {
-        $this->sql = "INSERT INTO " . $this->repository->getTableName() . " ";
-        $this->sql .= implode(",", $this->repository->getDbFields()) . " ";
-        $this->sql .= "VALUES ";
+        $fields = implode(', ', $this->repository->getDbFields());
+        $table = $this->repository->getTableName();
+
+        $this->sql = self::TYPE_INSERT." INTO";
+        $this->sql .= " `" . $table . "` ";
+        $this->sql .= "( " . $fields . ")";
+        $this->sql .= " VALUES ";
 
         $serializer = $this->repository->getSerializer();
         if ($items instanceof ArrayCollection) {
             //multiple
             $raws = [];
             foreach ($items as $item) {
-                $raw = $serializer->serialize($item, $this->repository->getFields());
+                $raw = $serializer->serialize($item, $this->repository->getFields(), $this->repository->getFieldsPrefix());
                 $raws[] = $this->prepareValues($raw);
             }
 
             $this->sql .= implode(",", $raws);
         } else {
             //single
-            $raw = $serializer->serialize($items, $this->repository->getFields());
+            $raw = $serializer->serialize($items, $this->repository->getFields(), $this->repository->getFieldsPrefix());
             $this->sql .= $raw;
         }
 
@@ -100,10 +121,7 @@ class QueryBuilder extends \APP_DbObject {
     }
 
     public function create($items) {
-        $this->prepareInsert($items);
-        var_dump($this->sql);die;
-        
-        return $this->prepareInsert($items)->execute();
+        $this->prepareInsert($items)->execute();
     }
 
 }

@@ -79,11 +79,8 @@ class Linko extends Table {
      */
 
     protected function setupNewGame($players, $options = array()) {
-        // Set the colors of the players with HTML color code
-        // The default below is red/green/blue/orange/brown
-        // The number of colors defined here must correspond to the maximum number of players allowed for the gams
         $pm = new PlayerManager();
-        $pm->setupNewGame($players, array());
+        $pm->setupNewGame($players, $options);
         
 //        $gameinfos = self::getGameinfos();
 //        $default_colors = $gameinfos['player_colors'];
@@ -131,8 +128,6 @@ class Linko extends Table {
         
         $result = array();
 
-        $pm = new PlayerManager();
-        $pm->setupNewGame($this->Tplayers, array());
 //        $pm = new PlayerManager();
 //        $pm->getAllPlayers();
 
