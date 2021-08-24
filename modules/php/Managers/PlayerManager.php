@@ -35,7 +35,7 @@ class PlayerManager {
         foreach ($players as $rawPlayer) {
             $color = array_shift($default_colors);
             $player = $this->serializer->unserialize($rawPlayer);
-            
+
             $player->setColor($color);
             $playersToCreate->add($player);
         }

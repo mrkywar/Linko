@@ -53,8 +53,18 @@ class PlayerRepository implements Repository {
         return array_keys(self::FIELDS);
     }
 
+    public function getDbFields() {
+        $res = [];
+        foreach ($this->getFields() as $fieldName) {
+            if (isset(self::FIELDS[$fieldName])) {
+                $res [] = self::FIELDS_PREFIX . $fieldName;
+            }
+        }
+        return $res;
+    }
+
     public function getFieldType($fieldName) {
-        
+
         if (isset(self::FIELDS[$fieldName])) {
             return self::FIELDS[$fieldName];
         } else {

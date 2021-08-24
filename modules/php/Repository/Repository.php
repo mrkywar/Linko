@@ -31,7 +31,9 @@ interface Repository {
 
     public function getFieldType($fieldName);
     
-    
+    public function getDbFields();
+
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - Base queries
      * ---------------------------------------------------------------------- */

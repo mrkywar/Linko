@@ -53,8 +53,8 @@ class PlayerSerializer implements Serializer {
     }
 
     private function set(Player &$player, ReflectionMethod $methodToCall, $rawDatas) {
-//        $field = PlayerRepository::FIELDS_PREFIX;
-        $field = strtolower(substr($methodToCall->getName(), 3));
+        $field = PlayerRepository::FIELDS_PREFIX;
+        $field .= strtolower(substr($methodToCall->getName(), 3));
 
         if (isset($rawDatas[strtolower($field)])) {
             $setter = $methodToCall->getName();

@@ -77,7 +77,7 @@ class QueryBuilder extends \APP_DbObject {
 
     private function prepareInsert($items) {
         $this->sql = "INSERT INTO " . $this->repository->getTableName() . " ";
-        $this->sql .= implode(",", $this->repository->getFields()) . " ";
+        $this->sql .= implode(",", $this->repository->getDbFields()) . " ";
         $this->sql .= "VALUES ";
 
         $serializer = $this->repository->getSerializer();
