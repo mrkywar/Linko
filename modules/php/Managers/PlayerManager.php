@@ -3,45 +3,48 @@
 namespace Linko\Managers;
 
 use Linko;
+use Linko\Repository\PlayerRepository;
 use Linko\Serializers\PlayerSerializer;
-use Linko\Serializers\Serializer;
-use Linko\Tools\Interfaces\Repository;
-use Linko\Tools\QueryBuilder;
+use Linko\Tools\ArrayCollection;
 
 /**
  * Description of PlayerManager
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class PlayerManager implements Repository {
+class PlayerManager {
 
-    const TABLE_NAME = "player";
-    const FIELD_PREFIX = "player_";
-
-    private $queryBuilder;
+    private $repository;
     private $serializer;
 
     public function __construct() {
-        //var_dump(\Linko::getInstance()->getGameinfos());die;
-        $this->queryBuilder = new QueryBuilder($this);
-        $this->serializer = new PlayerSerializer();
+        $this->repository = new PlayerRepository();
+        $this->serializer = $this->repository->getSerializer();
     }
 
-    public function getSerializer(): Serializer {
-        return $this->serializer;
+    public function getAllPlayers() {
+        return $this->repository->getAll();
     }
 
-    public function getTableName() {
-        return "player";
-    }
+    public function setupNewGame(array $players, array $options) {
+        $playersToCreate = new ArrayCollection();
 
-    public function initNewGame($players, $options = array()) {
         $gameinfos = Linko::getInstance()->getGameinfos();
         $default_colors = $gameinfos['player_colors'];
-    }
 
-    public function getAll() {
-        return $this->queryBuilder->getAll();
+        foreach ($players as $rawPlayer) {
+            $color = array_shift($default_colors);
+            $player = $this->serializer->unserialize($rawPlayer);
+            
+            $player->setColor($color);
+            $playersToCreate->add($player);
+        }
+
+        $this->repository->create($playersToCreate);
+        //$this->queryBuilder->create($playersToCreate);
+
+        Linko::getInstance()->reattributeColorsBasedOnPreferences($players, $gameinfos['player_colors']);
+        Linko::getInstance()->reloadPlayersBasicInfos();
     }
 
 }

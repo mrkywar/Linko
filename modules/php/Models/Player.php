@@ -7,11 +7,14 @@ namespace Linko\Models;
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class Player {
+class Player implements Model{
 
     private $id;
     private $no;
     private $name;
+    private $color;
+    private $canal;
+    private $avatar;
 
     public function getId() {
         return $this->id;
@@ -23,6 +26,18 @@ class Player {
 
     public function getName() {
         return $this->name;
+    }
+
+    public function getColor() {
+        return $this->color;
+    }
+
+    public function getCanal() {
+        return $this->canal;
+    }
+
+    public function getAvatar() {
+        return $this->avatar;
     }
 
     public function setId($id) {
@@ -37,6 +52,21 @@ class Player {
 
     public function setName($name) {
         $this->name = $name;
+        return $this;
+    }
+
+    public function setColor($color) {
+        $this->color = $color;
+        return $this;
+    }
+
+    public function setCanal($canal) {
+        $this->canal = $canal;
+        return $this;
+    }
+
+    public function setAvatar($avatar) {
+        $this->avatar = $avatar;
         return $this;
     }
 

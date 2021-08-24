@@ -2,11 +2,11 @@
 
 namespace Linko\Serializers;
 
-use Linko\Managers\PlayerManager;
+use Linko\Models\Model;
 use Linko\Models\Player;
+use Linko\Repository\PlayerRepository;
 use ReflectionClass;
 use ReflectionMethod;
-use stdClass;
 
 /**
  * Description of PlayerSerializer
@@ -14,12 +14,30 @@ use stdClass;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 class PlayerSerializer implements Serializer {
+    
+    
+    /**
+     * Object To Array 
+     * @param Model $object
+     * @return array $rawDatas
+     */
 
-    //put your code here
-    public function serialize(stdClass $object) {
-        
+    public function serialize(Model $object, array $fields) {
+        $raw = [];
+
+        foreach ($fields as $field) {
+            $getter = "get" . ucfirst($field);
+            $raw[$field] = $object->$getter();
+        }
+
+        return $raw;
     }
 
+    
+    /* -------------------------------------------------------------------------
+     *                  BEGIN -  Unserialize Methods
+     * ---------------------------------------------------------------------- */
+    
     private function isSetMethod(ReflectionMethod $method) {
         return("set" === substr($method->getName(), 0, 3));
     }
@@ -35,18 +53,22 @@ class PlayerSerializer implements Serializer {
     }
 
     private function set(Player &$player, ReflectionMethod $methodToCall, $rawDatas) {
-        $field = PlayerManager::FIELD_PREFIX;
-        $field .= substr($methodToCall->getName(), 3);
-        
-        if(isset($rawDatas[$field])){
+//        $field = PlayerRepository::FIELDS_PREFIX;
+        $field = strtolower(substr($methodToCall->getName(), 3));
+
+        if (isset($rawDatas[strtolower($field)])) {
             $setter = $methodToCall->getName();
             $player->$setter($rawDatas[$field]);
         }
-        
+
         return $this;
-        
     }
 
+    /**
+     * Array To Object
+     * @param array $rawDatas
+     * @return Player
+     */
     public function unserialize($rawDatas) {
         $player = new Player();
 
@@ -57,6 +79,8 @@ class PlayerSerializer implements Serializer {
         foreach ($setMethods as $methodToCall) {
             $this->set($player, $methodToCall, $rawDatas);
         }
+
+        return $player;
     }
 
 }

@@ -1,5 +1,8 @@
 <?php
+
 namespace Linko\Serializers;
+
+use Linko\Models\Model;
 
 /**
  *
@@ -7,7 +10,7 @@ namespace Linko\Serializers;
  */
 interface Serializer {
 
-    public function serialize(\stdClass $object);
+    public function serialize(Model $object, array $fields);
 
     public function unserialize($raw);
 }
