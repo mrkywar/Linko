@@ -3,6 +3,7 @@
 namespace Linko\Serializers;
 
 use Linko\Models\Card;
+use Linko\Serializers\Core\SuperSerializer;
 
 /**
  * Description of CardSerializer

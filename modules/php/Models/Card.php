@@ -14,6 +14,7 @@ class Card implements Model {
     private $typeArg;
     private $location;
     private $locationArg;
+
     public function getId() {
         return $this->id;
     }
@@ -58,6 +59,5 @@ class Card implements Model {
         $this->locationArg = $locationArg;
         return $this;
     }
-
 
 }

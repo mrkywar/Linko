@@ -1,7 +1,7 @@
 <?php
-namespace Linko\Repository;
+namespace Linko\Repository\Core;
 
-use Linko\Serializers\Serializer;
+use Linko\Serializers\Core\Serializer;
 
 /**
  *

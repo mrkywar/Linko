@@ -2,7 +2,8 @@
 
 namespace Linko\Tools;
 
-use Linko\Repository\Repository;
+use Linko\Repository\Core\Repository;
+
 
 /**
  * Description of FieldTransposer

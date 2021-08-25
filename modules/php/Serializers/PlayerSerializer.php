@@ -3,6 +3,7 @@
 namespace Linko\Serializers;
 
 use Linko\Models\Player;
+use Linko\Serializers\Core\SuperSerializer;
 
 /**
  * Description of PlayerSerializer

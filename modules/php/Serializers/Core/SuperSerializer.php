@@ -1,6 +1,6 @@
 <?php
 
-namespace Linko\Serializers;
+namespace Linko\Serializers\Core;
 
 use Linko\Models\Model;
 use Linko\Models\Player;

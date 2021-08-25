@@ -2,16 +2,16 @@
 
 namespace Linko\Repository;
 
+use Linko\Repository\Core\SuperRepository;
+use Linko\Serializers\Core\Serializer;
 use Linko\Serializers\PlayerSerializer;
-use Linko\Serializers\Serializer;
-use Linko\Tools\QueryBuilder;
 
 /**
  * Description of PlayerRepository
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class PlayerRepository implements Repository {
+class PlayerRepository extends SuperRepository {
 
     const TABLE_NAME = "player";
     const FIELDS_PREFIX = "player_";
@@ -24,12 +24,8 @@ class PlayerRepository implements Repository {
         "avatar" => self::STRING_FORMAT
     ];
 
-    private $queryBuilder;
-    private $serializer;
-
+    
     public function __construct() {
-        $this->queryBuilder = new QueryBuilder($this);
-
         $this->serializer = new PlayerSerializer();
     }
 
@@ -72,16 +68,6 @@ class PlayerRepository implements Repository {
         }
     }
 
-    /* -------------------------------------------------------------------------
-     *                  BEGIN - Implement Base queries
-     * ---------------------------------------------------------------------- */
-
-    public function getAll() {
-        return $this->queryBuilder->getAll();
-    }
-
-    public function create($items) {
-        return $this->queryBuilder->create($items);
-    }
+    
 
 }
