@@ -11,10 +11,9 @@ class Card implements Model {
 
     private $id;
     private $type;
-    private $type_arg;
+    private $typeArg;
     private $location;
-    private $location_arg;
-
+    private $locationArg;
     public function getId() {
         return $this->id;
     }
@@ -23,16 +22,16 @@ class Card implements Model {
         return $this->type;
     }
 
-    public function getType_arg() {
-        return $this->type_arg;
+    public function getTypeArg() {
+        return $this->typeArg;
     }
 
     public function getLocation() {
         return $this->location;
     }
 
-    public function getLocation_arg() {
-        return $this->location_arg;
+    public function getLocationArg() {
+        return $this->locationArg;
     }
 
     public function setId($id) {
@@ -45,8 +44,8 @@ class Card implements Model {
         return $this;
     }
 
-    public function setType_arg($type_arg) {
-        $this->type_arg = $type_arg;
+    public function setTypeArg($typeArg) {
+        $this->typeArg = $typeArg;
         return $this;
     }
 
@@ -55,9 +54,10 @@ class Card implements Model {
         return $this;
     }
 
-    public function setLocation_arg($location_arg) {
-        $this->location_arg = $location_arg;
+    public function setLocationArg($locationArg) {
+        $this->locationArg = $locationArg;
         return $this;
     }
+
 
 }

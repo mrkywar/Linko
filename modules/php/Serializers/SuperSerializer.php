@@ -2,6 +2,12 @@
 
 namespace Linko\Serializers;
 
+use Linko\Models\Model;
+use Linko\Models\Player;
+use Linko\Repository\PlayerRepository;
+use ReflectionClass;
+use ReflectionMethod;
+
 /**
  * Description of SuperSerializer
  *
@@ -65,9 +71,10 @@ abstract class SuperSerializer implements Serializer {
      * @return Player
      */
     public function unserialize($rawDatas) {
-        $player = new $this->getModelClass();
+        $modelClass = $this->getModelClass();
+        $player = new $modelClass() ;
 
-        $reflexion = new ReflectionClass($this->getModelClass());
+        $reflexion = new ReflectionClass($modelClass);
         $methods = $reflexion->getMethods(ReflectionMethod::IS_PUBLIC);
         $setMethods = $this->filterSetMethods($methods);
 

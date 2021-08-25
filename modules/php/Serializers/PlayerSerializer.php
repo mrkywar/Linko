@@ -2,11 +2,7 @@
 
 namespace Linko\Serializers;
 
-use Linko\Models\Model;
 use Linko\Models\Player;
-use Linko\Repository\PlayerRepository;
-use ReflectionClass;
-use ReflectionMethod;
 
 /**
  * Description of PlayerSerializer
@@ -19,8 +15,5 @@ class PlayerSerializer extends SuperSerializer {
         return Player::class;
     }
 
-    public function initModel(): Model {
-        
-    }
-
+    
 }
