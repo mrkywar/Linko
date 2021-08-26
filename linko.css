@@ -1,7 +1,7 @@
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * FrenchTarot implementation : © Jean Portemer <jportemer@gmail.com>
+ * Linko implementation : © <Your name here> <Your email address here>
  *
  * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
  * See http://en.boardgamearena.com/#!doc/Studio for more information.
@@ -40,55 +40,33 @@
         
      Note: on the production platform, this file will be compressed and comments will be removed.
            Consequently, don't hesitate to put as many comments as necessary.
-*
+*/
 
-@import url(../../../css/csslayer.css); /* Note: you must not use any @import directive other than this one */
+
+/* Note: you must not use any @import directive */
+
 
 /********* You can start writing your CSS below this line: **********/
 
 
-.container{
-    width: 100%;
-}
-#carddeck,#playertables{
-    float: left;
-}
-#carddeck{
-    width: 13%;
-    margin-right: 2%;
-    min-height: 340px;
-}
-#playertables{
-    width: 85%;
-    min-height: 340px;
-}
-.playertable{
-    font-weight: bold;
-}
-.clear{
-    clear: both;
-}
-.playertablecard,drawablecard{
-    display: inline-block;
-    position: relative;
-    margin-top: 5px;
-    width: 87px;
-    height: 134px;
-   /*background-image: url('img/cards.png'); /* temp hack to see it*/
-}
+/*
+    Example of CSS sprites (a black token and a white token, 20x20px each, embedded in the same "tokens.png" 40x20px image):
 
-/*** cards on table ***/
+    .white_token {
+        background-image: url('img/tokens.png');
+        background-position: 0px 0px;
+    }
+    .black_token {
+        background-image: url('img/tokens.png');
+        background-position: -20px 0px;
+    }
+    .token {
+        width: 20px;
+        height: 20px;
+        background-repeat: none;
+    }
+*/
 
-.cardontable {
-    position: absolute;
-    width: 87px;
-    height: 134px;
-    background-image: url('img/cards.png'); 
-}
 
-.debug{
-    min-height: 30px;
-    min-width: 30px;
-    background: greenyellow;
-    border: 3px black solid;
-}
+
+
