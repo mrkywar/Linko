@@ -2,58 +2,19 @@
 
 namespace Linko\Models;
 
-use Linko\Managers\CardsManager;
-use Linko\Serializers\PlayerSerializer;
-use Linko\Tools\DB_Manager;
-
 /**
  * Description of Player
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class Player extends DB_Manager {
+class Player implements Model{
 
-    protected $id;
-    protected $no; // natural order
-    protected $name; // player name
-    protected $color;
-    protected $eliminated = false;
-    protected $zombie = false;
-    protected $score;
-    protected $hand;
-    private $serializer;
-
-    public function __construct() {
-        $this->serializer = new PlayerSerializer();
-    }
-
-    //-- Abstract definitions (required by DB_Manager)
-    protected function getPrimary() {
-        return 'player_id';
-    }
-
-    protected function getTableName() {
-        return 'player';
-    }
-
-    public function getUiData($currentPlayerId, CardsManager $cardManager) {
-        $isCurrent = $this->getId() === $currentPlayerId;
-
-        //$hand = $current ? $this->getHand($this->id)->toArray() : $this->countHand($this->id);
-        $handCards = $cardManager->getHand($this);
-        $this->setHand($handCards);
-
-        $serializedPlayer = $this->serializer->serialize($this);
-        $serializedPlayer['hand'] = $isCurrent ? $handCards->toArray() : sizeof($handCards);
-        $serializedPlayer['ingame'] = $cardManager->getPlayedCollections($this);
-        
-        return $serializedPlayer;
-    }
-
-    /* --------------------------------
-     *  BEGIN GETTERS & SETTERS
-     * --------------------------------
-     */
+    private $id;
+    private $no;
+    private $name;
+    private $color;
+    private $canal;
+    private $avatar;
 
     public function getId() {
         return $this->id;
@@ -71,20 +32,12 @@ class Player extends DB_Manager {
         return $this->color;
     }
 
-    public function getEliminated() {
-        return $this->eliminated;
+    public function getCanal() {
+        return $this->canal;
     }
 
-    public function getZombie() {
-        return $this->zombie;
-    }
-
-    public function getScore() {
-        return $this->score;
-    }
-
-    public function getHand() {
-        return $this->hand;
+    public function getAvatar() {
+        return $this->avatar;
     }
 
     public function setId($id) {
@@ -107,28 +60,14 @@ class Player extends DB_Manager {
         return $this;
     }
 
-    public function setEliminated($eliminated) {
-        $this->eliminated = $eliminated;
+    public function setCanal($canal) {
+        $this->canal = $canal;
         return $this;
     }
 
-    public function setZombie($zombie) {
-        $this->zombie = $zombie;
+    public function setAvatar($avatar) {
+        $this->avatar = $avatar;
         return $this;
     }
 
-    public function setScore($score) {
-        $this->score = $score;
-        return $this;
-    }
-
-    public function setHand($hand) {
-        $this->hand = $hand;
-        return $this;
-    }
-
-    /* --------------------------------
-     *  END GETTERS & SETTERS
-     * --------------------------------
-     */
 }

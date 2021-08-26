@@ -2,19 +2,19 @@
 
 namespace Linko\Serializers;
 
-use Linko\Models\Player;
+use Linko\Models\Card;
 use Linko\Serializers\Core\SuperSerializer;
 
 /**
- * Description of PlayerSerializer
+ * Description of CardSerializer
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class PlayerSerializer extends SuperSerializer {
-    
+class CardSerializer extends SuperSerializer {
+   
+ 
     public function getModelClass() {
-        return Player::class;
+        return Card::class;
     }
 
-    
 }
