@@ -1,15 +1,15 @@
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * FrenchTarot implementation : © Jean Portemer <jportemer@gmail.com>
+ * abluxxen implementation : © <Your name here> <Your email address here>
  *
  * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
  * See http://en.boardgamearena.com/#!doc/Studio for more information.
  * -----
  *
- * linko.css
+ * abluxxen.css
  *
- * Linko stylesheet
+ * abluxxen stylesheet
  *
  */
 
@@ -17,8 +17,8 @@
     This is the CSS stylesheet of your game User Interface.
     
     Styles defined on this file will be applied to the HTML elements you define in your
-    HTML template (linko_linko.tpl), and to HTML elements you create dynamically
-    (in linko.js).
+    HTML template (abluxxen_abluxxen.tpl), and to HTML elements you create dynamically
+    (in abluxxen.js).
     
     Usually, you are using CSS to:
     
@@ -40,12 +40,62 @@
         
      Note: on the production platform, this file will be compressed and comments will be removed.
            Consequently, don't hesitate to put as many comments as necessary.
-*
+*/
 
-@import url(../../../css/csslayer.css); /* Note: you must not use any @import directive other than this one */
+
+/* Note: you must not use any @import directive */
+
 
 /********* You can start writing your CSS below this line: **********/
 
+
+/*
+    Example of CSS sprites (a black token and a white token, 20x20px each, embedded in the same "tokens.png" 40x20px image):
+
+    .white_token {
+        background-image: url('img/tokens.png');
+        background-position: 0px 0px;
+    }
+    .black_token {
+        background-image: url('img/tokens.png');
+        background-position: -20px 0px;
+    }
+    .token {
+        width: 20px;
+        height: 20px;
+        background-repeat: none;
+    }
+*/
+/*
+#linkogame{
+    position: relative;
+    
+}
+
+#playertables,#carddraw{
+    float: left;
+}
+.clear{
+    clear: both;
+}
+#playertables {
+    position: relative;
+    height: 340px;
+    width: 85%;
+}
+#carddraw{
+    width: 15%;
+    
+}
+.playertablecard,drawablecard{
+    display: inline-block;
+    position: relative;
+    margin-top: 5px;
+    width: 147px;
+    height: 182px;
+    background-image: url('img/cards.png'); /* temp hack to see it 
+}
+*/
 
 .container{
     width: 100%;
