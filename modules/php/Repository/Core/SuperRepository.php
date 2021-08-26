@@ -2,7 +2,7 @@
 
 namespace Linko\Repository\Core;
 
-
+use Linko\Serializers\Core\Serializer;
 use Linko\Tools\QueryBuilder;
 
 /**
@@ -28,6 +28,14 @@ abstract class SuperRepository implements Repository {
             $this->queryBuilder = new QueryBuilder($this);
         }
         return $this->queryBuilder;
+    }
+
+    /**
+     * 
+     * @return Serializer
+     */
+    public function getSerializer(): Serializer {
+        return $this->serializer;
     }
 
     /* -------------------------------------------------------------------------

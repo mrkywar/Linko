@@ -33,10 +33,6 @@ class PlayerRepository extends SuperRepository {
      *                  BEGIN - Implement Repository Management
      * ---------------------------------------------------------------------- */
 
-    public function getSerializer(): Serializer {
-        return $this->serializer;
-    }
-
     public function getTableName() {
         return self::TABLE_NAME;
     }
