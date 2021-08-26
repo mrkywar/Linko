@@ -33,10 +33,12 @@ spl_autoload_register($swdNamespaceAutoload, true, true);
 
 require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 
+use Linko\Managers\CardManager;
 use Linko\Managers\PlayerManager;
 
 class Linko extends Table {
     private $playerManager;
+    private $cardManager;
     private static $instance = null;
 
 
@@ -50,7 +52,10 @@ class Linko extends Table {
         parent::__construct();
         
         self::$instance = $this;
+//        $this->cardManager = new CardManager();
+        //$this->cardManager->setDeckModule(self::getNew("module.common.deck"));
         $this->playerManager = new PlayerManager();
+        
 
         self::initGameStateLabels(array(
                 //    "my_first_global_variable" => 10,
@@ -79,24 +84,10 @@ class Linko extends Table {
      */
 
     protected function setupNewGame($players, $options = array()) {
-        //$pm = new PlayerManager();
+        //$this->cardManager->setupNewGame();
+        
         $this->playerManager->setupNewGame($players, $options);
         
-//        $gameinfos = self::getGameinfos();
-//        $default_colors = $gameinfos['player_colors'];
-//
-//        // Create players
-//        // Note: if you added some extra field on "player" table in the database (dbmodel.sql), you can initialize it there.
-//        $sql = "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar) VALUES ";
-//        $values = array();
-//        foreach ($players as $player_id => $player) {
-//            $color = array_shift($default_colors);
-//            $values[] = "('" . $player_id . "','$color','" . $player['player_canal'] . "','" . addslashes($player['player_name']) . "','" . addslashes($player['player_avatar']) . "')";
-//        }
-//        $sql .= implode($values, ',');
-//        self::DbQuery($sql);
-//        self::reattributeColorsBasedOnPreferences($players, $gameinfos['player_colors']);
-//        self::reloadPlayersBasicInfos();
 
         /*         * ********** Start the game initialization **** */
 
