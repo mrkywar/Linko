@@ -2,7 +2,7 @@
 
 namespace Linko\Repository\Core;
 
-
+use Linko\Serializers\Core\Serializer;
 use Linko\Tools\QueryBuilder;
 
 /**
@@ -28,6 +28,37 @@ abstract class SuperRepository implements Repository {
             $this->queryBuilder = new QueryBuilder($this);
         }
         return $this->queryBuilder;
+    }
+
+    /**
+     * 
+     * @return Serializer
+     */
+    public function getSerializer(): Serializer {
+        return $this->serializer;
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Fields Management
+     * ---------------------------------------------------------------------- */
+
+    abstract public function getFields();
+
+    abstract public function getFieldsPrefix();
+
+    abstract public function getFieldType($fieldName);
+
+    public function getDbFields() {
+        $res = [];
+
+        $fields = $this->getFields();
+
+        foreach ($fields as $fieldName) {
+            if (isset($fields[$fieldName])) {
+                $res [] = $this->getFieldsPrefix() . $fieldName;
+            }
+        }
+        return $res;
     }
 
     /* -------------------------------------------------------------------------

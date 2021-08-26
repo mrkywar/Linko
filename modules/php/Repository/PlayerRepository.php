@@ -24,7 +24,6 @@ class PlayerRepository extends SuperRepository {
         "avatar" => self::STRING_FORMAT
     ];
 
-    
     public function __construct() {
         $this->serializer = new PlayerSerializer();
     }
@@ -32,10 +31,6 @@ class PlayerRepository extends SuperRepository {
     /* -------------------------------------------------------------------------
      *                  BEGIN - Implement Repository Management
      * ---------------------------------------------------------------------- */
-
-    public function getSerializer(): Serializer {
-        return $this->serializer;
-    }
 
     public function getTableName() {
         return self::TABLE_NAME;
@@ -49,25 +44,12 @@ class PlayerRepository extends SuperRepository {
         return array_keys(self::FIELDS);
     }
 
-    public function getDbFields() {
-        $res = [];
-        foreach ($this->getFields() as $fieldName) {
-            if (isset(self::FIELDS[$fieldName])) {
-                $res [] = self::FIELDS_PREFIX . $fieldName;
-            }
-        }
-        return $res;
-    }
-
     public function getFieldType($fieldName) {
-
         if (isset(self::FIELDS[$fieldName])) {
             return self::FIELDS[$fieldName];
         } else {
             return null;
         }
     }
-
-    
 
 }
