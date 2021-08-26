@@ -57,7 +57,8 @@ abstract class SuperRepository implements Repository {
         foreach ($fields as $fieldName) {
             $res [] = $this->getFieldsPrefix() . $fieldName;
 
-    
+        }
+        return $res;
 
     }
 
