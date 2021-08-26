@@ -34,8 +34,27 @@ abstract class SuperRepository implements Repository {
      * 
      * @return Serializer
      */
-    public function getSerializer(): Serializer {
+    final public function getSerializer(): Serializer {
         return $this->serializer;
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Fields Management
+     * ---------------------------------------------------------------------- */
+
+    abstract public function getFields();
+
+    abstract public function getTableName();
+
+    abstract public function getFieldsPrefix();
+
+    public function getDbFields() {
+        $res = [];
+        $fields = $this->getFields();
+        foreach ($fields as $fieldName) {
+            $res [] = $this->getFieldsPrefix() . $fieldName;
+        }
+        return $res;
     }
 
     /* -------------------------------------------------------------------------

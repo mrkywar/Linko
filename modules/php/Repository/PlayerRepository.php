@@ -3,7 +3,6 @@
 namespace Linko\Repository;
 
 use Linko\Repository\Core\SuperRepository;
-use Linko\Serializers\Core\Serializer;
 use Linko\Serializers\PlayerSerializer;
 
 /**
