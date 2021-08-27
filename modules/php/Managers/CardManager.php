@@ -64,22 +64,26 @@ class CardManager {
         $this->deckModule->moveAllCardsInLocation(null, self::DECK_NAME);
         $this->deckModule->shuffle(self::DECK_NAME);
 
-//        return $this->prepareCards($players);
+        return $this->prepareCards($players);
+    }
+
+    private function prepareCards($players) {
+        // inital Draw
         $this->deckModule->pickCardsForLocation(
                 self::VISIBLE_DRAW,
                 self::DECK_NAME,
                 self::DRAW_NAME
         );
-        
+
+        foreach ($players as $playerId => $player) {
+            $cards = $this->deckModule->pickCards(
+                    self::INTIALS_CARD,
+                    'deck',
+                    $playerId
+            );
+        }
+
         return $this;
     }
 
-//    private function prepareCards($players) {
-////        foreach (array_keys($players) as $playerId) {
-////            
-////        }
-//
-//        
-//        return $this;
-//    }
 }
