@@ -42,12 +42,6 @@ class Linko extends Table {
     private static $instance = null;
 
     public function __construct() {
-        // Your global variables labels:
-        //  Here, you can assign labels to global variables you are using for this game.
-        //  You can use any number of global variables with IDs between 10 and 99.
-        //  If your game has options (variants), you also have to associate here a label to
-        //  the corresponding ID in gameoptions.inc.php.
-        // Note: afterwards, you can get/set the global variables with getGameStateValue/setGameStateInitialValue/setGameStateValue
         parent::__construct();
 
         self::$instance = $this;
@@ -83,21 +77,14 @@ class Linko extends Table {
 
     protected function setupNewGame($players, $options = array()) {
         $this->playerManager->setupNewGame($players, $options);
-        $this->cardManager->setupNewGame($players);
+//        $oPlayers = $this->playerManager->getAllPlayers();
+//        var_dump($oPlayers);die;
+//        
+        
+        $this->cardManager->setupNewGame($this->playerManager->getAllPlayers());
 
-        /*         * ********** Start the game initialization **** */
-
-        // Init global values with their initial values
-        //self::setGameStateInitialValue( 'my_first_global_variable', 0 );
-        // Init game statistics
-        // (note: statistics used in this file must be defined in your stats.inc.php file)
-        //self::initStat( 'table', 'table_teststat1', 0 );    // Init a table statistics
-        //self::initStat( 'player', 'player_teststat1', 0 );  // Init a player statistics (for all players)
-        // TODO: setup the initial game situation here
-        // Activate first player (which is in general a good idea :) )
         $this->activeNextPlayer();
 
-        /*         * ********** End of the game initialization **** */
     }
 
     /*

@@ -2,7 +2,10 @@
 
 namespace Linko\Managers;
 
+use Linko\Models\Player;
 use Linko\Repository\CardRepository;
+use Linko\Tools\ArrayCollection;
+use Linko\Tools\Notifier;
 
 /**
  * Description of CardManager
@@ -22,6 +25,7 @@ class CardManager {
 
     private $repository;
     private $deckModule;
+    private $notify;
 
     /**
      * 
@@ -32,6 +36,7 @@ class CardManager {
     public function __construct() {
         $this->repository = new CardRepository();
         $this->serializer = $this->repository->getSerializer();
+        $this->notify = new Notifier();
     }
 
     public function setDeckModule($deckModule) {
@@ -43,7 +48,11 @@ class CardManager {
         return $this->deckModule;
     }
 
-    public function setupNewGame($players) {
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - New Game Initialization
+     * ---------------------------------------------------------------------- */
+
+    public function setupNewGame(ArrayCollection $players) {
         if (null === $this->deckModule) {
             throw new \feException('No deck module loaded : call setDeckModule'
                             . '(self::getNew("module.common.deck")) '
@@ -64,26 +73,31 @@ class CardManager {
         $this->deckModule->moveAllCardsInLocation(null, self::DECK_NAME);
         $this->deckModule->shuffle(self::DECK_NAME);
 
-        return $this->prepareCards($players);
+        return $this->setupFirstCards($players);
     }
 
-    private function prepareCards($players) {
-        // inital Draw
+    private function setupFirstCards(ArrayCollection $players) {
         $this->deckModule->pickCardsForLocation(
                 self::VISIBLE_DRAW,
                 self::DECK_NAME,
                 self::DRAW_NAME
         );
-
-        foreach ($players as $playerId => $player) {
-            $cards = $this->deckModule->pickCards(
-                    self::INTIALS_CARD,
-                    'deck',
-                    $playerId
-            );
+        foreach ($players as $player) {
+            $this->setupFirstHand($player);
         }
 
         return $this;
     }
 
+    private function setupFirstHand(Player $player) {
+        $cards = $this->deckModule->pickCards(
+                self::INTIALS_CARD,
+                'deck',
+                $player->getId()
+        );
+        
+        $this->notify->newHand($player, $cards);
+
+        return $this;
+    }
 }
