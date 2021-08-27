@@ -24,7 +24,7 @@ $swdNamespaceAutoload = function ($class) {
     if (file_exists($file)) {
       require_once $file;
     } else {
-      var_dump("Impossible to load Linko class : $class");
+      var_dump("Missing Linko class : $class");
     }
   }
 };
@@ -52,8 +52,8 @@ class Linko extends Table {
         parent::__construct();
         
         self::$instance = $this;
-//        $this->cardManager = new CardManager();
-        //$this->cardManager->setDeckModule(self::getNew("module.common.deck"));
+        $this->cardManager = new CardManager();
+        $this->cardManager->setDeckModule(self::getNew("module.common.deck"));
         $this->playerManager = new PlayerManager();
         
 
@@ -84,9 +84,10 @@ class Linko extends Table {
      */
 
     protected function setupNewGame($players, $options = array()) {
-        //$this->cardManager->setupNewGame();
+        //;
         
         $this->playerManager->setupNewGame($players, $options);
+        $this->cardManager->setupNewGame($players);
         
 
         /*         * ********** Start the game initialization **** */
