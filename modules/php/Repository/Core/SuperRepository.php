@@ -42,7 +42,7 @@ abstract class SuperRepository implements Repository {
     /* -------------------------------------------------------------------------
      *                  BEGIN - Fields Management
      * ---------------------------------------------------------------------- */
-
+    
     abstract public function getFields();
 
     abstract public function getTableName();
@@ -50,6 +50,11 @@ abstract class SuperRepository implements Repository {
     abstract public function getFieldsPrefix();
   
     abstract public function getFieldType($fieldName);
+    
+    public function getPrimaryField(){
+        $fields = $this->getDbFields();
+        return $fields[0];
+    }
 
     public function getDbFields() {
         $res = [];

@@ -4,7 +4,6 @@ namespace Linko\Tools;
 
 use Linko\Repository\Core\Repository;
 
-
 /**
  * Description of QueryBuilder
  *
@@ -75,6 +74,15 @@ class QueryBuilder extends \APP_DbObject {
         return $this->preapareSelect()->execute();
     }
 
+    public function findOneByPrimary($id) {
+        $this->prepareSelect();
+        $primary = $this->repository->getPrimaryField();
+        $this->sql .= " WHERE `" . $primary . "` = ";
+        $this->sql .= $this->fieldTransposer->transpose($id, $primary);
+        
+        return $this->execute();
+    }
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - INSERT
      * ---------------------------------------------------------------------- */
@@ -96,7 +104,7 @@ class QueryBuilder extends \APP_DbObject {
         $fields = implode(', ', $this->repository->getDbFields());
         $table = $this->repository->getTableName();
 
-        $this->sql = self::TYPE_INSERT." INTO";
+        $this->sql = self::TYPE_INSERT . " INTO";
         $this->sql .= " `" . $table . "` ";
         $this->sql .= "( " . $fields . ")";
         $this->sql .= " VALUES ";

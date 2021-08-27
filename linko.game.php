@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
@@ -15,21 +16,19 @@
  * In this PHP file, you are going to defines the rules of the game.
  *
  */
-
 $swdNamespaceAutoload = function ($class) {
-  $classParts = explode('\\', $class);
-  if ("Linko" === $classParts[0]) {
-    array_shift($classParts);
-    $file = dirname(__FILE__) . '/modules/php/' . implode(DIRECTORY_SEPARATOR, $classParts) . '.php';
-    if (file_exists($file)) {
-      require_once $file;
-    } else {
-      var_dump("Missing Linko class : $class");
+    $classParts = explode('\\', $class);
+    if ("Linko" === $classParts[0]) {
+        array_shift($classParts);
+        $file = dirname(__FILE__) . '/modules/php/' . implode(DIRECTORY_SEPARATOR, $classParts) . '.php';
+        if (file_exists($file)) {
+            require_once $file;
+        } else {
+            var_dump("Missing Linko class : $class");
+        }
     }
-  }
 };
 spl_autoload_register($swdNamespaceAutoload, true, true);
-
 
 require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 
@@ -37,10 +36,10 @@ use Linko\Managers\CardManager;
 use Linko\Managers\PlayerManager;
 
 class Linko extends Table {
+
     private $playerManager;
     private $cardManager;
     private static $instance = null;
-
 
     public function __construct() {
         // Your global variables labels:
@@ -50,12 +49,11 @@ class Linko extends Table {
         //  the corresponding ID in gameoptions.inc.php.
         // Note: afterwards, you can get/set the global variables with getGameStateValue/setGameStateInitialValue/setGameStateValue
         parent::__construct();
-        
+
         self::$instance = $this;
         $this->cardManager = new CardManager();
         $this->cardManager->setDeckModule(self::getNew("module.common.deck"));
         $this->playerManager = new PlayerManager();
-        
 
         self::initGameStateLabels(array(
                 //    "my_first_global_variable" => 10,
@@ -70,8 +68,8 @@ class Linko extends Table {
     protected function getGameName() {
         return "linko";
     }
-    
-    public static function getInstance(){
+
+    public static function getInstance() {
         return self::$instance;
     }
 
@@ -84,11 +82,8 @@ class Linko extends Table {
      */
 
     protected function setupNewGame($players, $options = array()) {
-        //;
-        
         $this->playerManager->setupNewGame($players, $options);
         $this->cardManager->setupNewGame($players);
-        
 
         /*         * ********** Start the game initialization **** */
 
@@ -117,7 +112,7 @@ class Linko extends Table {
 
     protected function getAllDatas() {
         //$pm = new Linko\Managers\PlayerManager();
-        
+
         $result = array();
 
 //        $pm = new PlayerManager();
