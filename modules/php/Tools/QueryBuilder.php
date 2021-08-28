@@ -74,12 +74,22 @@ class QueryBuilder extends \APP_DbObject {
         return $this->preapareSelect()->execute();
     }
 
-    public function findOneByPrimary($id) {
+    public function findByPrimary($id) {
         $this->prepareSelect();
         $primary = $this->repository->getPrimaryField();
-        $this->sql .= " WHERE `" . $primary->getDB() . "` = ";
+        $this->sql .= " WHERE `" . $primary->getDB() . "` ";
+        if (is_array($id)) {
+            $transposed = [];
+            foreach ($id as $sid) {
+                $transposed [] = $this->sql .= $this->fieldTransposer->transpose($sid, $primary);
+            }
+            $this->sql .= " IN (" . implode(",", $transposed) . ")";
+        } else {
+            $this->sql .= " = ";
+            $this->sql .= $this->fieldTransposer->transpose($id, $primary);
+        }
         $this->sql .= $this->fieldTransposer->transpose($id, $primary);
-        
+
         return $this->execute();
     }
 
