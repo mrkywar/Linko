@@ -32,12 +32,15 @@ spl_autoload_register($swdNamespaceAutoload, true, true);
 
 require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 
+use Linko\Game\PlayCardsTrait;
+use Linko\Game\TurnTrait;
 use Linko\Managers\CardManager;
 use Linko\Managers\PlayerManager;
 
 class Linko extends Table {
     
-    use Linko\Game\PlayCardsTrait;
+    use TurnTrait;
+    use PlayCardsTrait;
 
     private $playerManager;
     private $cardManager;

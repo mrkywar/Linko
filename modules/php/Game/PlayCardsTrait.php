@@ -7,10 +7,33 @@ namespace Linko\Game;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 trait PlayCardsTrait {
-    public function playCards($cardsId){
+
+    public function playCards($cardsId) {
         \Linko::getInstance()->checkAction("playCards");
         //$player = Link
     }
+
+    public function stPlayCard() {
+        /*
+          // TODO: Do we need this?
+          $players = Players::getLivingPlayers(null, true);
+          $newstate = null;
+          foreach($players as $player) {
+          $player->checkHand();
+          }
+          if($newstate != null) $this->gamestate->nextState($newState);
+         */
+//        $player = Players::getActive();
+//        if ($player->getHand()->count() == 0) {
+//            Notifications::tell(clienttranslate('${player_name} does not have any cards in hand and thus ends their turn'), [
+//                'player_name' => $player->getName(),
+//            ]);
+//            Stack::unsuspendNext(ST_PLAY_CARD);
+//            Stack::finishState();
+//        }
+        die("unimplemented");
+    }
+
 }
 
 //public function playCards($cardsIds) {
