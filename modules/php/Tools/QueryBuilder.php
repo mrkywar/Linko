@@ -113,14 +113,14 @@ class QueryBuilder extends \APP_DbObject {
             //multiple
             $raws = [];
             foreach ($items as $item) {
-                $raw = $serializer->serialize($item, $this->repository->getFields(), $this->repository->getFieldsPrefix());
+                $raw = $serializer->serialize($item, $this->repository->getFields());
                 $raws[] = $this->prepareValues($raw);
             }
 
             $this->sql .= implode(",", $raws);
         } else {
             //single
-            $raw = $serializer->serialize($items, $this->repository->getFields(), $this->repository->getFieldsPrefix());
+            $raw = $serializer->serialize($items, $this->repository->getFields());
             $this->sql .= $raw;
         }
 

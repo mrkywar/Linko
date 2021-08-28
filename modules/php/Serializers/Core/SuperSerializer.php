@@ -22,7 +22,7 @@ abstract class SuperSerializer implements Serializer {
      * @param Model $object
      * @return array $rawDatas
      */
-    public function serialize(Model $object, ArrayCollection $fields, $prefix = "") {
+    public function serialize(Model $object, ArrayCollection $fields) {
         $raw = [];
 
         foreach ($fields as $field) {

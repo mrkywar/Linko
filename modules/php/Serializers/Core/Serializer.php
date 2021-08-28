@@ -11,7 +11,7 @@ use Linko\Tools\ArrayCollection;
  */
 interface Serializer {
 
-    public function serialize(Model $object, ArrayCollection $fields, $prefix = "");
+    public function serialize(Model $object, ArrayCollection $fields);
 
     public function unserialize($raw);
 
