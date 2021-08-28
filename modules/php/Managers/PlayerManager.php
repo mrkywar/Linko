@@ -15,6 +15,7 @@ use Linko\Tools\ArrayCollection;
 class PlayerManager {
 
     private $repository;
+
     /**
      * 
      * @var PlayerSerializer
@@ -26,8 +27,26 @@ class PlayerManager {
         $this->serializer = $this->repository->getSerializer();
     }
 
-    public function getAllPlayers() {
-        return $this->repository->getAll();
+    /**
+     * 
+     * @param boolean $arrayFormat optionnal, true if you want an serrializable return
+     * @return type
+     */
+    public function getAllPlayers($arrayFormat = false) {
+        $players = $this->repository->getAll();
+
+        if (!$arrayFormat) {
+            return $players;
+        } else {
+            $arrayPlayer = [];
+            foreach ($players as $player) {
+                $arrayPlayer[$player->getId()] = $this->serializer->serialize(
+                        $player,
+                        $this->repository->getFields()
+                );
+            }
+            return $arrayPlayer;
+        }
     }
 
     public function setupNewGame(array $players, array $options) {
@@ -39,7 +58,7 @@ class PlayerManager {
         foreach ($players as $playerId => $rawPlayer) {
             $color = array_shift($default_colors);
             $player = $this->serializer->unserialize($rawPlayer);
-            
+
             $player->setId($playerId)
                     ->setColor($color);
             $playersToCreate->add($player);

@@ -3,6 +3,7 @@
 namespace Linko\Repository;
 
 use Linko\Repository\Core\SuperRepository;
+use Linko\Repository\FieldsFactories\PlayerFieldsFactory;
 use Linko\Serializers\PlayerSerializer;
 
 /**
@@ -22,9 +23,11 @@ class PlayerRepository extends SuperRepository {
         "color" => self::STRING_FORMAT,
         "avatar" => self::STRING_FORMAT
     ];
-
+    
     public function __construct() {
         $this->serializer = new PlayerSerializer();
+        
+        $this->fields = PlayerFieldsFactory::create($this);
     }
 
     /* -------------------------------------------------------------------------
@@ -37,18 +40,6 @@ class PlayerRepository extends SuperRepository {
 
     public function getFieldsPrefix() {
         return self::FIELDS_PREFIX;
-    }
-
-    public function getFields() {
-        return array_keys(self::FIELDS);
-    }
-
-    public function getFieldType($fieldName) {
-        if (isset(self::FIELDS[$fieldName])) {
-            return self::FIELDS[$fieldName];
-        } else {
-            return null;
-        }
     }
 
 }

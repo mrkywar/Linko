@@ -2,6 +2,7 @@
 
 namespace Linko\Repository\Core;
 
+use Linko\Models\Core\Field;
 use Linko\Serializers\Core\Serializer;
 use Linko\Tools\QueryBuilder;
 
@@ -18,6 +19,7 @@ abstract class SuperRepository implements Repository {
      */
     protected $queryBuilder;
     protected $serializer;
+    protected $fields;
 
     /**
      * 
@@ -43,24 +45,34 @@ abstract class SuperRepository implements Repository {
      *                  BEGIN - Fields Management
      * ---------------------------------------------------------------------- */
     
-    abstract public function getFields();
+    final public function getFields(){
+        return $this->fields;
+    }
 
     abstract public function getTableName();
 
     abstract public function getFieldsPrefix();
-  
-    abstract public function getFieldType($fieldName);
     
+    /**
+     * 
+     * @return Field
+     */
     public function getPrimaryField(){
-        $fields = $this->getDbFields();
-        return $fields[0];
+        $fields = $this->getFields();
+        foreach ($fields as $field) {
+            if($field->isPrimary()){
+                return $field;
+            }
+        }
+        
+        return;
     }
 
     public function getDbFields() {
         $res = [];
         $fields = $this->getFields();
-        foreach ($fields as $fieldName) {
-            $res [] = $this->getFieldsPrefix() . $fieldName;
+        foreach ($fields as $field) {
+            $res [] = $this->getFieldsPrefix() . $field->getProperty();
 
         }
         return $res;

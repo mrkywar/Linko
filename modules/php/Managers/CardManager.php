@@ -3,7 +3,6 @@
 namespace Linko\Managers;
 
 use Linko\Models\Player;
-use Linko\Repository\CardRepository;
 use Linko\Tools\ArrayCollection;
 use Linko\Tools\Notifier;
 
@@ -23,19 +22,11 @@ class CardManager {
     CONST DECK_NAME = "deck";
     CONST DRAW_NAME = "draw";
 
-    private $repository;
     private $deckModule;
     private $notify;
 
-    /**
-     * 
-     * @var CardRepository
-     */
-    private $serializer;
 
     public function __construct() {
-        $this->repository = new CardRepository();
-        $this->serializer = $this->repository->getSerializer();
         $this->notify = new Notifier();
     }
 

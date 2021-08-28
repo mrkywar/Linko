@@ -2,6 +2,7 @@
 
 namespace Linko\Tools;
 
+use Linko\Models\Core\Field;
 use Linko\Repository\Core\Repository;
 
 
@@ -12,14 +13,9 @@ use Linko\Repository\Core\Repository;
  */
 class DBFieldTransposer {
 
-    private $repository;
 
-    public function __construct(Repository $repository = null) {
-        $this->repository = $repository;
-    }
-
-    public function transpose($value, $fieldName) {
-        switch ($this->repository->getFieldType($fieldName)) {
+    public function transpose($value, Field $field) {
+        switch ($field->getFieldType()) {
             case Repository::STRING_FORMAT:
                 return "'" . addslashes($value) . "'";
             case Repository::BOOLEAN_FORMAT:
