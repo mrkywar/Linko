@@ -77,7 +77,7 @@ class QueryBuilder extends \APP_DbObject {
     public function findOneByPrimary($id) {
         $this->prepareSelect();
         $primary = $this->repository->getPrimaryField();
-        $this->sql .= " WHERE `" . $primary . "` = ";
+        $this->sql .= " WHERE `" . $primary->getDB() . "` = ";
         $this->sql .= $this->fieldTransposer->transpose($id, $primary);
         
         return $this->execute();
@@ -89,10 +89,9 @@ class QueryBuilder extends \APP_DbObject {
 
     private function prepareValues($raw) {
         $values = [];
-        foreach ($this->repository->getFields() as $fieldName) {
-            $field = $this->repository->getFieldsPrefix() . $fieldName;
-            if (isset($raw[$field])) {
-                $values[] = $this->fieldTransposer->transpose($raw[$field], $fieldName);
+        foreach ($this->repository->getFields() as $field) {
+            if (isset($raw[$field->getDB()])) {
+                $values[] = $this->fieldTransposer->transpose($raw[$field->getDB()], $field);
             } else {
                 $values[] = "null";
             }

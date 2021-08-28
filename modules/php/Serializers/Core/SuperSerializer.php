@@ -2,9 +2,11 @@
 
 namespace Linko\Serializers\Core;
 
+use Linko\Models\Core\Field;
 use Linko\Models\Model;
 use Linko\Models\Player;
 use Linko\Repository\PlayerRepository;
+use Linko\Tools\ArrayCollection;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -20,22 +22,27 @@ abstract class SuperSerializer implements Serializer {
      * @param Model $object
      * @return array $rawDatas
      */
-    public function serialize(Model $object, array $fields, $prefix = "") {
+    public function serialize(Model $object, ArrayCollection $fields, $prefix = "") {
         $raw = [];
 
         foreach ($fields as $field) {
-            $getter = "get" . ucfirst($field);
-            $raw[$prefix . $field] = $object->$getter();
+            $raw[$prefix . $field] = $this->retriveValue($object, $field);
         }
 
         return $raw;
     }
 
+    private function retriveValue(Model $object, Field $field) {
+        $getter = "get" . ucfirst($field->getProperty());
+        return $object->$getter();
+    }
+
     /* -------------------------------------------------------------------------
      *                  BEGIN -  Unserialize Methods
      * ---------------------------------------------------------------------- */
+
 //    abstract public function initModel(): Model;
-    
+
     abstract public function getModelClass();
 
     private function isSetMethod(ReflectionMethod $method) {
@@ -63,8 +70,7 @@ abstract class SuperSerializer implements Serializer {
 
         return $this;
     }
-    
-    
+
     /**
      * Array To Object
      * @param array $rawDatas
@@ -72,7 +78,7 @@ abstract class SuperSerializer implements Serializer {
      */
     public function unserialize($rawDatas) {
         $modelClass = $this->getModelClass();
-        $player = new $modelClass() ;
+        $player = new $modelClass();
 
         $reflexion = new ReflectionClass($modelClass);
         $methods = $reflexion->getMethods(ReflectionMethod::IS_PUBLIC);
