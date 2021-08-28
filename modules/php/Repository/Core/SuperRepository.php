@@ -57,7 +57,7 @@ abstract class SuperRepository implements Repository {
      * 
      * @return Field
      */
-    public function getPrimaryFields(){
+    public function getPrimaryField(){
         $fields = $this->getFields();
         foreach ($fields as $field) {
             if($field->isPrimary()){

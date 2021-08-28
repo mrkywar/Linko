@@ -26,7 +26,7 @@ abstract class SuperSerializer implements Serializer {
         $raw = [];
 
         foreach ($fields as $field) {
-            $raw[$prefix . $field] = $this->retriveValue($object, $field);
+            $raw[$field->getDB()] = $this->retriveValue($object, $field);
         }
 
         return $raw;

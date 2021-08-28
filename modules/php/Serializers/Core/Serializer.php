@@ -3,6 +3,7 @@
 namespace Linko\Serializers\Core;
 
 use Linko\Models\Model;
+use Linko\Tools\ArrayCollection;
 
 /**
  *
@@ -10,7 +11,7 @@ use Linko\Models\Model;
  */
 interface Serializer {
 
-    public function serialize(Model $object, array $fields, $prefix = "");
+    public function serialize(Model $object, ArrayCollection $fields, $prefix = "");
 
     public function unserialize($raw);
 
