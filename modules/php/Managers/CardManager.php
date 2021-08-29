@@ -8,7 +8,6 @@ use Linko\Repository\CardRepository;
 use Linko\Serializers\CardSerializer;
 use Linko\Tools\ArrayCollection;
 use Linko\Tools\Notifier;
-use Linko\Tools\QueryBuilder;
 
 /**
  * Description of CardManager
@@ -113,16 +112,16 @@ class CardManager {
         $this->deck = $this->repository->getAllInLocation(self::DECK_NAME);
         
         
-        //
-        for($i = 0; $i < self::VISIBLE_DRAW; $i++){
-            
-        }
-        
-        
-        
-        echo '<pre>';
-        var_dump($this->deck);die;
-        
+//        //
+//        for($i = 0; $i < self::VISIBLE_DRAW; $i++){
+//            
+//        }
+//        
+//        
+//        
+//        echo '<pre>';
+//        var_dump($this->deck);die;
+//        
     }
 
 //
@@ -179,7 +178,7 @@ class CardManager {
         $card->setLocation($destination)
                 ->setLocationArg($destinationArg);
         
-        
+        $this->repository->update($card);
     }
 
 }

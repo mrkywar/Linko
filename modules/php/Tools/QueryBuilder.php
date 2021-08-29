@@ -3,6 +3,7 @@
 namespace Linko\Tools;
 
 use Linko\Models\Core\Field;
+use Linko\Models\Model;
 use Linko\Repository\Core\Repository;
 
 /**
@@ -48,6 +49,11 @@ class QueryBuilder extends \APP_DbObject {
      */
     private $limit;
 
+    /**
+     * @var array
+     */
+    private $setters = [];
+
     public function __construct(Repository $repository) {
         $this->repository = $repository;
         $this->fieldTransposer = new DBFieldTransposer($this->repository);
@@ -78,8 +84,6 @@ class QueryBuilder extends \APP_DbObject {
 
         switch (sizeof($results)) {
             case 0:
-                var_dump($results, $this->sql);
-                die;
                 return null;
             case 1:
 
@@ -228,6 +232,24 @@ class QueryBuilder extends \APP_DbObject {
      */
     public function create($items) {
         $this->prepareInsert($items)->execute();
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - UPDATE
+     * ---------------------------------------------------------------------- */
+
+    public function update(Model $model) {
+        $this->sql = self::TYPE_UPDATE;
+        $this->sql .= " `" . $this->repository->getTableName() . "` ";
+
+        $raw = $this->repository->getSerializer()->serialize($model, $this->repository->getFields());
+        $primary = $this->repository->getPrimaryField();
+        
+        echo '<pre>--';
+        var_dump($raw,$model);
+        unset($raw[$primary->getDb()]);
+        
+        var_dump($raw);die;
     }
 
 }

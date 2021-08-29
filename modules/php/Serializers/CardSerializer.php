@@ -2,7 +2,7 @@
 
 namespace Linko\Serializers;
 
-use Linko\Models\Player;
+use Linko\Models\Card;
 use Linko\Serializers\Core\SuperSerializer;
 
 /**
