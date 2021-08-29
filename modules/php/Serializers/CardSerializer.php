@@ -10,7 +10,7 @@ use Linko\Serializers\Core\SuperSerializer;
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class CardSerializer extends SuperSerializer {
+class PlayerSerializer extends SuperSerializer {
     
     public function getModelClass() {
         return Player::class;

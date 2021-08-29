@@ -2,7 +2,10 @@
 
 namespace Linko\Managers;
 
+use Linko\Models\Card;
 use Linko\Models\Player;
+use Linko\Repository\CardRepository;
+use Linko\Serializers\CardSerializer;
 use Linko\Tools\ArrayCollection;
 use Linko\Tools\Notifier;
 
@@ -23,74 +26,116 @@ class CardManager {
     CONST DRAW_NAME = "draw";
     CONST HAND_NAME = "hand";
 
-    private $deckModule;
+    private $deck;
     private $notify;
+    /**
+     * @var CardRepository
+     */
+    private $repository;
+    /**
+     * @var CardSerializer
+     */
+    private $serializer;
 
     public function __construct() {
         $this->notify = new Notifier();
-    }
-
-    public function setDeckModule($deckModule) {
-        $this->deckModule = $deckModule;
-        return $this;
-    }
-
-    public function getDeckModule() {
-        return $this->deckModule;
+        $this->deck= [];
+        $this->repository = new CardRepository();
+        $this->serializer = $this->repository->getSerializer();
     }
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - New Game Initialization
      * ---------------------------------------------------------------------- */
 
-    public function setupNewGame(ArrayCollection $players) {
-        if (null === $this->deckModule) {
-            throw new \feException('No deck module loaded : call setDeckModule'
-                            . '(self::getNew("module.common.deck")) '
-                            . 'before setupNewGame');
-        }
-        $this->deckModule->init("card");
+    private function createCard($cardValue, $location = self::DECK_NAME) {
+        $card = new Card();
+        $card->setLocation($location)
+                ->setType($cardValue)
+                ->setTypeArg($cardValue);
 
-        $cards = array();
+        return $card;
+    }
+    
+    private function initDeck(){
         for ($number = 1; $number <= self::TYPES_OF_NUMBERS; ++$number) {
-            $cards[] = array(
-                'type' => $number,
-                'type_arg' => $number + 1,
-                'nbr' => self::NUMBER_OF_NUMBERS
-            );
+            for ($ex = 1; $ex <= self::TYPES_OF_NUMBERS; ++$ex) {
+                $this->deck[] = $this->createCard($number);
+            }
+        }
+        for ($jok = 1; $jok <= self::NUMBER_OF_JOKERS; ++$jok){
+            $this->deck[]  = $this->createCard(self::VALUE_OF_JOKERS);
         }
 
-        $this->deckModule->createCards($cards, self::DECK_NAME);
-        $this->deckModule->moveAllCardsInLocation(null, self::DECK_NAME);
-        $this->deckModule->shuffle(self::DECK_NAME);
-
-        return $this->setupFirstCards($players);
-    }
-
-    private function setupFirstCards(ArrayCollection $players) {
-        $this->deckModule->pickCardsForLocation(
-                self::VISIBLE_DRAW,
-                self::DECK_NAME,
-                self::DRAW_NAME
-        );
-        foreach ($players as $player) {
-            $this->setupFirstHand($player);
+        shuffle($this->deck);
+        $count = sizeof($this->deck);
+        for($order = 0; $order < $count ; ++$order){
+            $this->deck[$order]->setLocationArg($count-$order);
         }
-
+        
+        $this->repository->create($this->deck);
+        
         return $this;
     }
 
-    private function setupFirstHand(Player $player) {
-        $cards = $this->deckModule->pickCards(
-                self::INTIALS_CARD,
-                'deck',
-                $player->getId()
-        );
-
-        $this->notify->newHand($player, $cards);
-
-        return $this;
+    public function setupNewGame(ArrayCollection $players) {
+        $this->initDeck();
+        
+        
+        
+        
+        
+        
     }
+
+//    public function setupNewGame(ArrayCollection $players) {
+////        if (null === $this->deckModule) {
+////            throw new \feException('No deck module loaded : call setDeckModule'
+////                            . '(self::getNew("module.common.deck")) '
+////                            . 'before setupNewGame');
+////        }
+//        $this->deckModule->init("card");
+//
+//        $cards = array();
+//        for ($number = 1; $number <= self::TYPES_OF_NUMBERS; ++$number) {
+//            $cards[] = array(
+//                'type' => $number,
+//                'type_arg' => $number + 1,
+//                'nbr' => self::NUMBER_OF_NUMBERS
+//            );
+//        }
+//
+//        $this->deckModule->createCards($cards, self::DECK_NAME);
+//        $this->deckModule->moveAllCardsInLocation(null, self::DECK_NAME);
+//        $this->deckModule->shuffle(self::DECK_NAME);
+//
+//        return $this->setupFirstCards($players);
+//    }
+//
+//    private function setupFirstCards(ArrayCollection $players) {
+//        $this->deckModule->pickCardsForLocation(
+//                self::VISIBLE_DRAW,
+//                self::DECK_NAME,
+//                self::DRAW_NAME
+//        );
+//        foreach ($players as $player) {
+//            $this->setupFirstHand($player);
+//        }
+//
+//        return $this;
+//    }
+//
+//    private function setupFirstHand(Player $player) {
+//        $cards = $this->deckModule->pickCards(
+//                self::INTIALS_CARD,
+//                'deck',
+//                $player->getId()
+//        );
+//
+//        $this->notify->newHand($player, $cards);
+//
+//        return $this;
+//    }
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Cards Finders
@@ -99,11 +144,10 @@ class CardManager {
     public function getCardsInHand(Player $player) {
         return $this->deckModule->getCardsInLocation(self::HAND_NAME, $player->getId());
     }
-    
-    
+
     public function getHandsInfos(ArrayCollection $players) {
         $res = [];
-        foreach ($players as $player){
+        foreach ($players as $player) {
             $res[$player->getId()] = count($this->getCardsInHand($player));
         }
         return $res;

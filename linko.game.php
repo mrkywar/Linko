@@ -51,7 +51,7 @@ class Linko extends Table {
 
         self::$instance = $this;
         $this->cardManager = new CardManager();
-        $this->cardManager->setDeckModule(self::getNew("module.common.deck"));
+        //$this->cardManager->setDeckModule(self::getNew("module.common.deck"));
         $this->playerManager = new PlayerManager();
 
         self::initGameStateLabels(array(
@@ -234,5 +234,9 @@ class Linko extends Table {
     public function translate($text) {
         return self::_($text);
     }
+    
+//    public function loadDeckModule(){
+//        return self::getNew("module.common.deck");
+//    }
 
 }

@@ -2,6 +2,7 @@
 
 namespace Linko\Tools;
 
+use Linko\Models\Core\Field;
 use Linko\Repository\Core\Repository;
 
 /**
@@ -13,14 +14,16 @@ class QueryBuilder extends \APP_DbObject {
 
     const TYPE_SELECT = "SELECT";
     const TYPE_INSERT = "INSERT";
+    const ORDER_ASC = "ASC";
+    const ORDER_DESC = "DESC";
 
-//    private $conditions;
+    private $conditions = [];
     private $repository;
     private $fieldTransposer;
+    private $orderBy = [];
     private $sql;
 
     public function __construct(Repository $repository) {
-//        $this->conditions = new ArrayCollection();
         $this->repository = $repository;
         $this->fieldTransposer = new DBFieldTransposer($this->repository);
     }
@@ -31,6 +34,9 @@ class QueryBuilder extends \APP_DbObject {
 
     private function execute() {
         $queryType = substr($this->sql, 0, strpos($this->sql, " "));
+
+        $this->prepareConditions()
+                ->prepareOrderBy();
 
         switch ($queryType) {
             case self::TYPE_SELECT:
@@ -68,36 +74,61 @@ class QueryBuilder extends \APP_DbObject {
         return $this;
     }
 
-    /**
-     * Get all items of used Model
-     * @return Model|ArrayCollection<Model>|null result of query
-     */
     public function getAll() {
-        return $this->preapareSelect()->execute();
+        $this->preapareSelect();
     }
 
-    /**
-     * Get items of used Model using primary field
-     * @param mixed $id primary value to find
-     * @return Model|ArrayCollection<Model>|null result of query
-     */
     public function findByPrimary($id) {
-        $this->preapareSelect();
         $primary = $this->repository->getPrimaryField();
-        $this->sql .= " WHERE `" . $primary->getDB() . "` ";
-        if (is_array($id)) {
-            $transposed = [];
-            foreach ($id as $sid) {
-                $transposed [] = $this->sql .= $this->fieldTransposer->transpose($sid, $primary);
-            }
-            $this->sql .= " IN (" . implode(",", $transposed) . ")";
-        } else {
-            $this->sql .= " = ";
-            $this->sql .= $this->fieldTransposer->transpose($id, $primary);
-        }
-        $this->sql .= $this->fieldTransposer->transpose($id, $primary);
+        return $this->preapareSelect()
+                        ->addWhere($primary, $id)
+                        ->execute();
+    }
 
-        return $this->execute();
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Conditions (WHERE)
+     * ---------------------------------------------------------------------- */
+
+    private function prepareConditions() {
+        $iteration = 0;
+        foreach ($this->conditions as $condition) {
+            $this->sql .= (0 === $iteration) ? " WHERE " : " AND ";
+            $this->sql .= $condition;
+            $iteration++;
+        }
+        return $this;
+    }
+
+    public function addWhere(Field $field, $value) {
+        $condition = "`" . $field->getDb() . "`";
+        if (is_array($value)) {
+            $transposed = [];
+            foreach ($value as $val) {
+                $transposed [] = $this->sql .= $this->fieldTransposer->transpose($val, $field);
+            }
+            $condition .= " IN (" . implode(",", $transposed) . ")";
+        } else {
+            $condition .= " = " . $this->fieldTransposer->transpose($value, $field);
+        }
+
+        $this->conditions[] = $condition;
+
+        return $this;
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Ordering
+     * ---------------------------------------------------------------------- */
+
+    public function addOrderBy(Field $field, $dir = self::ORDER_ASC) {
+        $this->orderBy[] = $field->getDb() . " " . $dir;
+        return $this;
+    }
+    
+    private function prepareOrderBy() {
+        if(sizeof($this->orderBy) > 0){
+            $this->sql .= " ORDER BY ".implode(",", $this->orderBy);
+        }
     }
 
     /* -------------------------------------------------------------------------

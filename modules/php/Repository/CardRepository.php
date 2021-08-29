@@ -3,23 +3,24 @@
 namespace Linko\Repository;
 
 use Linko\Repository\Core\SuperRepository;
-use Linko\Repository\FieldsFactories\PlayerFieldsFactory;
-use Linko\Serializers\PlayerSerializer;
+use Linko\Repository\FieldsFactories\CardFieldsFactory;
+use Linko\Serializers\CardSerializer;
 
 /**
  * Description of PlayerRepository
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class PlayerRepository extends SuperRepository {
+class CardRepository extends SuperRepository {
 
-    const TABLE_NAME = "player";
-    const FIELDS_PREFIX = "player_";
+    const TABLE_NAME = "card";
+    const FIELDS_PREFIX = "card_";
+
     
     public function __construct() {
-        $this->serializer = new PlayerSerializer();
+        $this->serializer = new CardSerializer();
         
-        $this->fields = PlayerFieldsFactory::create($this);
+        $this->fields = CardFieldsFactory::create($this);
     }
 
     /* -------------------------------------------------------------------------
