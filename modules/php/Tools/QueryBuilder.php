@@ -14,14 +14,39 @@ class QueryBuilder extends \APP_DbObject {
 
     const TYPE_SELECT = "SELECT";
     const TYPE_INSERT = "INSERT";
+    const TYPE_UPDATE = "UPDATE";
     const ORDER_ASC = "ASC";
     const ORDER_DESC = "DESC";
 
+    /**
+     * @var array
+     */
     private $conditions = [];
+
+    /**
+     * @var Repository
+     */
     private $repository;
+
+    /**
+     * @var DBFieldTransposer
+     */
     private $fieldTransposer;
+
+    /**
+     * @var array
+     */
     private $orderBy = [];
+
+    /**
+     * @var string
+     */
     private $sql;
+
+    /**
+     * @var int
+     */
+    private $limit;
 
     public function __construct(Repository $repository) {
         $this->repository = $repository;
@@ -29,18 +54,19 @@ class QueryBuilder extends \APP_DbObject {
     }
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - Execute Queries (private)
+     *                  BEGIN - Execute Queries
      * ---------------------------------------------------------------------- */
 
-    private function execute() {
-        $queryType = substr($this->sql, 0, strpos($this->sql, " "));
+    public function execute() {
 
-        $this->prepareConditions()
-                ->prepareOrderBy();
+        $queryType = substr($this->sql, 0, strpos($this->sql, " "));
 
         switch ($queryType) {
             case self::TYPE_SELECT:
-                return $this->executeSelect();
+                return $this->prepareConditions()
+                                ->prepareOrderBy()
+                                ->prepareLimit()
+                                ->executeSelect();
             case self::TYPE_INSERT:
                 self::DbQuery($this->sql);
                 return self::DbGetLastId();
@@ -52,14 +78,18 @@ class QueryBuilder extends \APP_DbObject {
 
         switch (sizeof($results)) {
             case 0:
+                var_dump($results, $this->sql);
+                die;
                 return null;
             case 1:
+
                 return $this->repository->getSerializer()->unserialize($results[0]);
             default :
                 $col = new ArrayCollection();
                 foreach ($results as $res) {
                     $col->add($this->repository->getSerializer()->unserialize($res));
                 }
+
                 return $col;
         }
     }
@@ -68,14 +98,14 @@ class QueryBuilder extends \APP_DbObject {
      *                  BEGIN - SELECT
      * ---------------------------------------------------------------------- */
 
-    private function preapareSelect() {
+    public function preapareSelect() {
         $this->sql = self::TYPE_SELECT . " * FROM ";
         $this->sql .= $this->repository->getTableName();
         return $this;
     }
 
     public function getAll() {
-        $this->preapareSelect();
+        return $this->preapareSelect()->execute();
     }
 
     public function findByPrimary($id) {
@@ -124,11 +154,28 @@ class QueryBuilder extends \APP_DbObject {
         $this->orderBy[] = $field->getDb() . " " . $dir;
         return $this;
     }
-    
+
     private function prepareOrderBy() {
-        if(sizeof($this->orderBy) > 0){
-            $this->sql .= " ORDER BY ".implode(",", $this->orderBy);
+        if (sizeof($this->orderBy) > 0) {
+            $this->sql .= " ORDER BY " . implode(",", $this->orderBy);
         }
+        return $this;
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Limit
+     * ---------------------------------------------------------------------- */
+
+    public function setLimit(int $limit) {
+        $this->limit = $limit;
+        return $this;
+    }
+
+    private function prepareLimit() {
+        if (null !== $this->limit) {
+            $this->sql .= " LIMIT " . $this->limit;
+        }
+        return $this;
     }
 
     /* -------------------------------------------------------------------------

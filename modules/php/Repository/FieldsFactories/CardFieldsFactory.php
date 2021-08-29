@@ -22,10 +22,10 @@ abstract class CardFieldsFactory extends SuperFieldFactory {
                 ->add(self::generateField("location", Repository::STRING_FORMAT, $repo->getFieldsPrefix(), true))
         ;
 
-        $locArg = self::generateField("location", Repository::STRING_FORMAT, "", true);
+        $locArg = self::generateField("locationArg", Repository::STRING_FORMAT, "", true);
         $locArg->setDb($repo->getFieldsPrefix() . "location_arg");
 
-        $typeArg = self::generateField("type", Repository::STRING_FORMAT, "", true);
+        $typeArg = self::generateField("typeArg", Repository::STRING_FORMAT, "", true);
         $typeArg->setDb($repo->getFieldsPrefix() . "type_arg");
 
         $fields->add($locArg)

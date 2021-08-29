@@ -78,7 +78,7 @@ class PlayerManager {
     public function getAllPlayersUi() {
         $players = $this->getAllPlayers();
         $uiFields = $this->repository->getFields();
-        
+
         $result = [];
         foreach ($players as $player){
             $result[$player->getId()] = $this->serializer->serialize($player, $uiFields);

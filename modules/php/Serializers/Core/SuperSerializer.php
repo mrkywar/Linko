@@ -78,17 +78,17 @@ abstract class SuperSerializer implements Serializer {
      */
     public function unserialize($rawDatas) {
         $modelClass = $this->getModelClass();
-        $player = new $modelClass();
+        $object = new $modelClass();
 
         $reflexion = new ReflectionClass($modelClass);
         $methods = $reflexion->getMethods(ReflectionMethod::IS_PUBLIC);
         $setMethods = $this->filterSetMethods($methods);
 
         foreach ($setMethods as $methodToCall) {
-            $this->set($player, $methodToCall, $rawDatas);
+            $this->set($object, $methodToCall, $rawDatas);
         }
 
-        return $player;
+        return $object;
     }
 
 }

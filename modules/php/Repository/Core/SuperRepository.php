@@ -97,6 +97,22 @@ abstract class SuperRepository implements Repository {
         }
         return $res;
     }
+    
+    /**
+     * 
+     * @param string $property
+     * @return Field
+     */
+    public function getFieldsByProperty($property) {
+        foreach ($this->getFields() as $field){
+            if($property === $field->getProperty()){
+                return $field;
+            }
+        }
+        return;
+    }
+
+
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Implement Base queries

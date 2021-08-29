@@ -5,6 +5,8 @@ namespace Linko\Repository;
 use Linko\Repository\Core\SuperRepository;
 use Linko\Repository\FieldsFactories\CardFieldsFactory;
 use Linko\Serializers\CardSerializer;
+use Linko\Tools\QueryBuilder;
+
 
 /**
  * Description of PlayerRepository
@@ -33,6 +35,26 @@ class CardRepository extends SuperRepository {
 
     public function getFieldsPrefix() {
         return self::FIELDS_PREFIX;
+    }
+    
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Implement specific queries
+     * ---------------------------------------------------------------------- */
+    
+    public function getAllInLocation($location , $locationArg = null) {
+        $fieldLocation = $this->getFieldsByProperty("location");
+        $fieldLocationArg = $this->getFieldsByProperty("locationArg");
+        
+        $qb = $this->getQueryBuilder()
+                ->preapareSelect()
+                ->addWhere($fieldLocation, $location)
+                ->addOrderBy($fieldLocationArg, QueryBuilder::ORDER_DESC);
+        if(null !== $locationArg){
+            $qb->addWhere($fieldLocationArg, $locationArg);
+        }
+        
+        return $qb->execute();
+        
     }
 
 }
