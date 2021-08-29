@@ -4,6 +4,7 @@ namespace Linko\Repository\Core;
 
 use Linko\Models\Core\Field;
 use Linko\Serializers\Core\Serializer;
+use Linko\Tools\ArrayCollection;
 use Linko\Tools\QueryBuilder;
 
 /**
@@ -44,14 +45,14 @@ abstract class SuperRepository implements Repository {
     /* -------------------------------------------------------------------------
      *                  BEGIN - Fields Management
      * ---------------------------------------------------------------------- */
-    
-    final public function getFields(){
-        return $this->fields;
-    }
 
     abstract public function getTableName();
 
     abstract public function getFieldsPrefix();
+    
+    final public function getFields(){
+        return $this->fields;
+    }
     
     /**
      * 
@@ -68,6 +69,10 @@ abstract class SuperRepository implements Repository {
         return;
     }
 
+    /**
+     * get all DBFields
+     * @return array all DBFields
+     */
     public function getDbFields() {
         $res = [];
         $fields = $this->getFields();
@@ -76,7 +81,21 @@ abstract class SuperRepository implements Repository {
 
         }
         return $res;
-
+    }
+    
+    /**
+     * get all UIFields (usfull for display)
+     * @return array all DBFields
+     */
+    public function getUiFields() {
+        $res = new ArrayCollection();
+        $fields = $this->getFields();
+        foreach ($fields as $field) {
+            if($field->isUi()){
+                $res->add($field);
+            }
+        }
+        return $res;
     }
 
     /* -------------------------------------------------------------------------
@@ -85,6 +104,10 @@ abstract class SuperRepository implements Repository {
 
     public function getAll() {
         return $this->getQueryBuilder()->getAll();
+    }
+    
+    public function getById($playerId) {
+        return $this->getQueryBuilder()->findByPrimary($playerId);
     }
 
     public function create($items) {

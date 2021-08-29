@@ -38,7 +38,7 @@ use Linko\Managers\CardManager;
 use Linko\Managers\PlayerManager;
 
 class Linko extends Table {
-    
+
     use TurnTrait; //-- Next Player
     use PlayCardsTrait; //-- Player Play Cards
 
@@ -85,11 +85,10 @@ class Linko extends Table {
 //        $oPlayers = $this->playerManager->getAllPlayers();
 //        var_dump($oPlayers);die;
 //        
-        
+
         $this->cardManager->setupNewGame($this->playerManager->getAllPlayers());
 
         $this->activeNextPlayer();
-
     }
 
     /*
@@ -103,15 +102,15 @@ class Linko extends Table {
      */
 
     protected function getAllDatas() {
-        //$pm = new Linko\Managers\PlayerManager();
-
         $result = array();
 
-        $players = $this->playerManager->getAllPlayers(true); //true : I want a array
-//        var_dump($players);die;
-        $result['players'] = $players;
-        
-        
+        $players = $this->playerManager->getAllPlayers();
+
+        $currentPlayer = $this->playerManager->getCurrentPlayer();
+        $result['players'] = $this->playerManager->getAllPlayersUi();
+        $result['hand'] = $this->cardManager->getCardsInHand($currentPlayer);
+//        $result['handInfos'] = $this->cardManager->getHandsInfos($players);
+//
 ////        $pm = new PlayerManager();
 ////        $pm->getAllPlayers();
 //
@@ -120,14 +119,11 @@ class Linko extends Table {
 //        // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
 //        $sql = "SELECT player_id id, player_score score FROM player ";
 //        $result['players'] = self::getCollectionFromDb($sql);
-
         // TODO: Gather all information about current game situation (visible by player $current_player_id).
 
         return $result;
     }
 
-    
-    
     /*
       getGameProgression:
 
@@ -144,10 +140,6 @@ class Linko extends Table {
 
         return 0;
     }
-
-
-
-
 
 //////////////////////////////////////////////////////////////////////////////
 //////////// Zombie
@@ -226,6 +218,21 @@ class Linko extends Table {
 //        // Please add your future database scheme changes here
 //
 //
+    }
+    
+    /* -------------------------------------------------------------------------
+     *                  BEGIN -  Exposing protected methods, 
+     *                          please use at your own risk 
+     * ---------------------------------------------------------------------- */
+
+    // Exposing protected method getCurrentPlayerId
+    public static function getCurrentPId() {
+        return self::getCurrentPlayerId();
+    }
+
+    // Exposing protected method translation
+    public function translate($text) {
+        return self::_($text);
     }
 
 }

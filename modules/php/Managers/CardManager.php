@@ -21,10 +21,10 @@ class CardManager {
     CONST VISIBLE_DRAW = 6; // 6 cards visible in the draw
     CONST DECK_NAME = "deck";
     CONST DRAW_NAME = "draw";
+    CONST HAND_NAME = "hand";
 
     private $deckModule;
     private $notify;
-
 
     public function __construct() {
         $this->notify = new Notifier();
@@ -86,9 +86,27 @@ class CardManager {
                 'deck',
                 $player->getId()
         );
-        
+
         $this->notify->newHand($player, $cards);
 
         return $this;
     }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Cards Finders
+     * ---------------------------------------------------------------------- */
+
+    public function getCardsInHand(Player $player) {
+        return $this->deckModule->getCardsInLocation(self::HAND_NAME, $player->getId());
+    }
+    
+    
+    public function getHandsInfos(ArrayCollection $players) {
+        $res = [];
+        foreach ($players as $player){
+            $res[$player->getId()] = count($this->getCardsInHand($player));
+        }
+        return $res;
+    }
+
 }

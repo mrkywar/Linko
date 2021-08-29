@@ -14,21 +14,23 @@ class QueryBuilder extends \APP_DbObject {
     const TYPE_SELECT = "SELECT";
     const TYPE_INSERT = "INSERT";
 
-    private $conditions;
+//    private $conditions;
     private $repository;
     private $fieldTransposer;
     private $sql;
 
     public function __construct(Repository $repository) {
-        $this->conditions = new ArrayCollection();
+//        $this->conditions = new ArrayCollection();
         $this->repository = $repository;
         $this->fieldTransposer = new DBFieldTransposer($this->repository);
     }
 
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Execute Queries (private)
+     * ---------------------------------------------------------------------- */
+
     private function execute() {
         $queryType = substr($this->sql, 0, strpos($this->sql, " "));
-//        var_dump($queryType, $this->sql);
-//        die;
 
         switch ($queryType) {
             case self::TYPE_SELECT:
@@ -67,15 +69,20 @@ class QueryBuilder extends \APP_DbObject {
     }
 
     /**
-     * 
-     * @return ArrayCollection
+     * Get all items of used Model
+     * @return Model|ArrayCollection<Model>|null result of query
      */
     public function getAll() {
         return $this->preapareSelect()->execute();
     }
 
+    /**
+     * Get items of used Model using primary field
+     * @param mixed $id primary value to find
+     * @return Model|ArrayCollection<Model>|null result of query
+     */
     public function findByPrimary($id) {
-        $this->prepareSelect();
+        $this->preapareSelect();
         $primary = $this->repository->getPrimaryField();
         $this->sql .= " WHERE `" . $primary->getDB() . "` ";
         if (is_array($id)) {
@@ -137,6 +144,10 @@ class QueryBuilder extends \APP_DbObject {
         return $this;
     }
 
+    /**
+     * Create new item(s) of Model
+     * @param Model|ArrayCollection<Model> $items item(s) to create
+     */
     public function create($items) {
         $this->prepareInsert($items)->execute();
     }
