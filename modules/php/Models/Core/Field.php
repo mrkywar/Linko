@@ -88,7 +88,7 @@ class Field {
         return $this->getIsUi();
     }
 
-    public function isPriamry(): bool {
+    public function isPrimary(): bool {
         return $this->getIsPrimary();
     }
 

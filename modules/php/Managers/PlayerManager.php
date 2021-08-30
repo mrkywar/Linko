@@ -27,28 +27,15 @@ class PlayerManager {
         $this->serializer = $this->repository->getSerializer();
     }
 
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - setup
+     * ---------------------------------------------------------------------- */
+
     /**
-     * 
-     * @param boolean $arrayFormat optionnal, true if you want an serrializable return
-     * @return type
+     * Method to initalize a new Game (call one time)
+     * @param array $players player to initialize
+     * @param array $options
      */
-    public function getAllPlayers($arrayFormat = false) {
-        $players = $this->repository->getAll();
-
-        if (!$arrayFormat) {
-            return $players;
-        } else {
-            $arrayPlayer = [];
-            foreach ($players as $player) {
-                $arrayPlayer[$player->getId()] = $this->serializer->serialize(
-                        $player,
-                        $this->repository->getFields()
-                );
-            }
-            return $arrayPlayer;
-        }
-    }
-
     public function setupNewGame(array $players, array $options) {
         $playersToCreate = new ArrayCollection();
 
@@ -57,7 +44,7 @@ class PlayerManager {
 
         foreach ($players as $playerId => $rawPlayer) {
             $color = array_shift($default_colors);
-            $player = $this->serializer->unserialize($rawPlayer);
+            $player = $this->serializer->unserialize($rawPlayer, $this->repository->getFields());
 
             $player->setId($playerId)
                     ->setColor($color);
@@ -70,6 +57,38 @@ class PlayerManager {
 
         Linko::getInstance()->reattributeColorsBasedOnPreferences($players, $gameinfos['player_colors']);
         Linko::getInstance()->reloadPlayersBasicInfos();
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Player Retriver
+     * ---------------------------------------------------------------------- */
+
+    /**
+     * To got all Player in the game
+     * @return type
+     */
+    public function getAllPlayers() {
+        return $this->repository->getAll();
+    }
+
+    /**
+     * To got all Player in the game for UI Dispay
+     * @return type
+     */
+    public function getAllPlayersUi() {
+        $players = $this->getAllPlayers();
+        $uiFields = $this->repository->getFields();
+
+        $result = [];
+        foreach ($players as $player) {
+            $result[$player->getId()] = $this->serializer->serialize($player, $uiFields);
+        }
+        return $result;
+    }
+
+    public function getCurrentPlayer() {
+        $id = Linko::getInstance()->getCurrentPId();
+        return $this->repository->getById($id);
     }
 
 }

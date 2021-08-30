@@ -2,6 +2,8 @@
 
 namespace Linko\Repository\Core;
 
+use Linko\Serializers\Core\Serializer;
+
 /**
  *
  * @author Mr_Kywar mr_kywar@gmail.com
@@ -19,6 +21,16 @@ interface Repository {
     public function getAll();
 
     public function create($items);
+    
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Serializer
+     * ---------------------------------------------------------------------- */
+
+    /**
+     * 
+     * @return Serializer
+     */
+    public function getSerializer(): Serializer;
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Fields Management
@@ -31,6 +43,6 @@ interface Repository {
     public function getFieldsPrefix();
 
     public function getDbFields();
-    
+
     public function getPrimaryField();
 }
