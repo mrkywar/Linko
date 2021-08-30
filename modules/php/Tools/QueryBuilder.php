@@ -38,6 +38,11 @@ class QueryBuilder extends \APP_DbObject {
      * @var string
      */
     private $queryString;
+
+    /**
+     * @var bool
+     */
+    private $isDebug = false;
     /* -------------------------------------------------------------------------
      *                  BEGIN - Select Properties
      * ---------------------------------------------------------------------- */
@@ -157,16 +162,21 @@ class QueryBuilder extends \APP_DbObject {
     private function executeSelect() {
         $results = self::getObjectListFromDB($this->queryString);
 
+        if ($this->isDebug) {
+            echo '<pre>';
+            var_dump($this->queryString, $results, $this->repository->getSerializer());
+        }
+
+        $serializer = $this->repository->getSerializer();
         switch (sizeof($results)) {
             case 0:
                 return null;
             case 1:
-
-                return $this->repository->getSerializer()->unserialize($results[0]);
+                return $serializer->unserialize($results[0], $this->repository->getFields());
             default :
                 $col = new ArrayCollection();
                 foreach ($results as $res) {
-                    $col->add($this->repository->getSerializer()->unserialize($res));
+                    $col->add($serializer->unserialize($res, $this->repository->getFields()));
                 }
 
                 return $col;
@@ -334,6 +344,15 @@ class QueryBuilder extends \APP_DbObject {
 
         var_dump($raw);
         die;
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - debug
+     * ---------------------------------------------------------------------- */
+
+    public function setIsDebug(bool $isDebug) {
+        $this->isDebug = $isDebug;
+        return $this;
     }
 
 }

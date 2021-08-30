@@ -46,14 +46,12 @@ class CardRepository extends SuperRepository {
         $fieldLocationArg = $this->getFieldsByProperty("locationArg");
         
         $qb = $this->getQueryBuilder()
-                ->preapareSelect()
+                ->select()
                 ->addWhere($fieldLocation, $location)
                 ->addOrderBy($fieldLocationArg, QueryBuilder::ORDER_DESC);
         if(null !== $locationArg){
             $qb->addWhere($fieldLocationArg, $locationArg);
         }
-        
-        var_dump("CR",$qb->getStatement());
         
         return $qb->execute();
         

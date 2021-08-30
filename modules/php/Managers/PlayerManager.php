@@ -44,7 +44,7 @@ class PlayerManager {
 
         foreach ($players as $playerId => $rawPlayer) {
             $color = array_shift($default_colors);
-            $player = $this->serializer->unserialize($rawPlayer);
+            $player = $this->serializer->unserialize($rawPlayer, $this->repository->getFields());
 
             $player->setId($playerId)
                     ->setColor($color);
@@ -70,7 +70,7 @@ class PlayerManager {
     public function getAllPlayers() {
         return $this->repository->getAll();
     }
-    
+
     /**
      * To got all Player in the game for UI Dispay
      * @return type
@@ -80,12 +80,10 @@ class PlayerManager {
         $uiFields = $this->repository->getFields();
 
         $result = [];
-        foreach ($players as $player){
+        foreach ($players as $player) {
             $result[$player->getId()] = $this->serializer->serialize($player, $uiFields);
         }
         return $result;
-        
-        
     }
 
     public function getCurrentPlayer() {

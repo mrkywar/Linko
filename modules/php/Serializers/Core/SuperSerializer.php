@@ -17,6 +17,12 @@ use ReflectionMethod;
  */
 abstract class SuperSerializer implements Serializer {
 
+    protected $isDebug;
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN -  Serialize Methods
+     * ---------------------------------------------------------------------- */
+
     /**
      * Object To Array 
      * @param Model $object
@@ -26,13 +32,13 @@ abstract class SuperSerializer implements Serializer {
         $raw = [];
 
         foreach ($fields as $field) {
-            $raw[$field->getDB()] = $this->retriveValue($object, $field);
+            $raw[$field->getDB()] = $this->serializeValue($object, $field);
         }
 
         return $raw;
     }
 
-    private function retriveValue(Model $object, Field $field) {
+    private function serializeValue(Model $object, Field $field) {
         $getter = "get" . ucfirst($field->getProperty());
         return $object->$getter();
     }
@@ -41,54 +47,34 @@ abstract class SuperSerializer implements Serializer {
      *                  BEGIN -  Unserialize Methods
      * ---------------------------------------------------------------------- */
 
-//    abstract public function initModel(): Model;
-
     abstract public function getModelClass();
 
-    private function isSetMethod(ReflectionMethod $method) {
-        return("set" === substr($method->getName(), 0, 3));
+    public function unserialize($rawDatas, ArrayCollection $fields) {
+        $modelClass = $this->getModelClass();
+        $object = new $modelClass();
+        
+        foreach ($fields as $field) {
+            $this->unserializeValue($object, $field, $rawDatas);
+        }
+        
+        return $object;
     }
 
-    private function filterSetMethods(array $methods) {
-        $filteredMethods = [];
-        foreach ($methods as $method) {
-            if ($this->isSetMethod($method)) {
-                $filteredMethods[] = $method;
-            }
-        }
-        return $filteredMethods;
-    }
-
-    private function set(Model &$model, ReflectionMethod $methodToCall, $rawDatas) {
-        $field = PlayerRepository::FIELDS_PREFIX;
-        $field .= strtolower(substr($methodToCall->getName(), 3));
-
-        if (isset($rawDatas[strtolower($field)])) {
-            $setter = $methodToCall->getName();
-            $model->$setter($rawDatas[$field]);
-        }
-
+    private function unserializeValue(Model &$object, Field $field, $rawDatas) {
+        $setter = "set" . ucfirst($field->getProperty());
+        $object->$setter($rawDatas[$field->getDb()]);
         return $this;
     }
 
-    /**
-     * Array To Object
-     * @param array $rawDatas
-     * @return Player
-     */
-    public function unserialize($rawDatas) {
-        $modelClass = $this->getModelClass();
-        $object = new $modelClass();
 
-        $reflexion = new ReflectionClass($modelClass);
-        $methods = $reflexion->getMethods(ReflectionMethod::IS_PUBLIC);
-        $setMethods = $this->filterSetMethods($methods);
 
-        foreach ($setMethods as $methodToCall) {
-            $this->set($object, $methodToCall, $rawDatas);
-        }
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - debug
+     * ---------------------------------------------------------------------- */
 
-        return $object;
+    public function setIsDebug(bool $isDebug) {
+        $this->isDebug = $isDebug;
+        return $this;
     }
 
 }
