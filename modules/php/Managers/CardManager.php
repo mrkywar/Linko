@@ -79,8 +79,6 @@ class CardManager {
 
         return $this;
     }
-    
-    
 
 //    private function drawCard(Player $player, $nbCards = 1, $from = self::DECK_NAME) {
 //        $locationArg = $this->repository->getFieldsByProperty("locationArg");
@@ -110,8 +108,7 @@ class CardManager {
     public function setupNewGame(ArrayCollection $players) {
         $this->initDeck();
         $this->deck = $this->repository->getAllInLocation(self::DECK_NAME);
-        
-        
+
 //        //
 //        for($i = 0; $i < self::VISIBLE_DRAW; $i++){
 //            
@@ -168,17 +165,21 @@ class CardManager {
         }
         return $res;
     }
-    
-    
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - Move Cards
      * ---------------------------------------------------------------------- */
-    
-    public function moveCard(Card $card, $destination, $destinationArg){
-        $card->setLocation($destination)
-                ->setLocationArg($destinationArg);
-        
-        $this->repository->update($card);
+
+    public function moveCards($cards, $destination, $destinationArg) {
+        foreach ($cards as &$card) {
+            $card->setLocation($destination)
+                    ->setLocationArg($destinationArg);
+        }
+        $updFields = new ArrayCollection();
+        $updFields->add($this->repository->getFieldByProperty("location"))
+                ->add($this->repository->getFieldByProperty("locationArg"));
+
+        $this->repository->update($cards, $updFields);
     }
 
 }

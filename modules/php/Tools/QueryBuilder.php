@@ -68,6 +68,11 @@ class QueryBuilder extends \APP_DbObject {
     /**
      * @var array
      */
+    private $fields;
+
+    /**
+     * @var array
+     */
     private $setters = [];
 
     /* -------------------------------------------------------------------------
@@ -121,8 +126,8 @@ class QueryBuilder extends \APP_DbObject {
                 break;
             case self::TYPE_UPDATE:
                 $this->perpareUpdate()
-                    ->prepareSetter()
-                    ->prepareConditions();
+                        ->prepareSetter()
+                        ->prepareConditions();
                 break;
         }
         return $this;
@@ -143,7 +148,7 @@ class QueryBuilder extends \APP_DbObject {
 
     private function preapareSelect() {
         $this->queryString = self::TYPE_SELECT . " * FROM ";
-        $this->queryString .= "`".$this->repository->getTableName()."`";
+        $this->queryString .= "`" . $this->repository->getTableName() . "`";
         return $this;
     }
 
@@ -164,7 +169,7 @@ class QueryBuilder extends \APP_DbObject {
 
     /**
      * Execute select 
-     * @return \Linko\Tools\ArrayCollection
+     * @return ArrayCollection
      */
     private function executeSelect() {
         $results = self::getObjectListFromDB($this->queryString);
@@ -308,7 +313,7 @@ class QueryBuilder extends \APP_DbObject {
 
     /**
      * Execute select 
-     * @return \Linko\Tools\ArrayCollection
+     * @return ArrayCollection
      */
     private function executeInsert() {
         self::DbQuery($this->queryString);
@@ -319,12 +324,21 @@ class QueryBuilder extends \APP_DbObject {
      *                  BEGIN - UPDATE
      * ---------------------------------------------------------------------- */
 
-    public function update(Model $model) {
+    public function update($model, $fields) {
         $this->items = $model;
-        
+        $this->fields = $fields;
+
         $primary = $this->repository->getPrimaryField();
-        $getter = "get". ucfirst($primary->getProperty());
-        $this->addWhere($primary, $model->$getter());
+        $getter = "get" . ucfirst($primary->getProperty());
+        if ($model instanceof ArrayCollection) {
+            $ids = [];
+            foreach ($model as $elem) {
+                $ids[] = $elem->$getter();
+            }
+            $this->addWhere($primary, $ids);
+        } else {
+            $this->addWhere($primary, $model->$getter());
+        }
         
         $this->queryType = self::TYPE_UPDATE;
 
@@ -332,38 +346,50 @@ class QueryBuilder extends \APP_DbObject {
     }
 
     private function perpareUpdate() {
-        $this->queryString = self::TYPE_UPDATE." ";
-        $this->queryString .= "`".$this->repository->getTableName()."`"; 
-        
+        $this->queryString = self::TYPE_UPDATE . " ";
+        $this->queryString .= "`" . $this->repository->getTableName() . "`";
+
+        if (null === $this->fields) {
+            $this->fields = $this->repository->getFields();
+        }
+
         return $this;
     }
-    
+
     private function prepareSetter() {
-        $this->queryString .= " SET ";
         $primary = $this->repository->getPrimaryField();
-        
-        $raw = $this->repository->getSerializer()->serialize($this->items, $this->repository->getFields());
-        unset($raw[$primary->getDb()]);
+        $this->setters = [];
+
+        $this->queryString .= " SET ";
+        if ($this->items instanceof ArrayCollection) {
+            //-- Only need one serie of fields
+            $raw = $this->repository->getSerializer()->serialize($this->items->first(), $this->fields);
+        } else {
+            $raw = $this->repository->getSerializer()->serialize($this->items, $this->fields);
+        }
+
+
+        if (isset($raw[$primary->getDb()])) {
+            unset($raw[$primary->getDb()]);
+        }
 
         $this->setters = [];
-        foreach ($raw as $dbField => $value){
+        foreach ($raw as $dbField => $value) {
             $field = $this->repository->getFieldByDB($dbField);
-            $setter = "`".$dbField."` = ";
+            $setter = "`" . $dbField . "` = ";
             $setter .= $this->fieldTransposer->transpose($value, $field);
             $this->setters[] = $setter;
         }
-        
+
         $this->queryString .= implode(",", $this->setters);
-        
+
         return $this;
-        
     }
-    
-    private function executeUpdate(){
+
+    private function executeUpdate() {
         self::DbQuery($this->queryString);
         return self::DbAffectedRow();
     }
-
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Select Queries

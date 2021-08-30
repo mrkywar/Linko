@@ -23,6 +23,10 @@ interface Repository {
 
     public function create($items);
 
+    public function getById($id);
+
+    public function update($model, $updField = null);
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - Serializer
      * ---------------------------------------------------------------------- */
@@ -45,7 +49,6 @@ interface Repository {
 
     public function getDbFields();
 
-   
     public function getPrimaryField();
 
     /**

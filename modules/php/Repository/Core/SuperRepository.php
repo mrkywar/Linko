@@ -133,8 +133,8 @@ abstract class SuperRepository implements Repository {
         return $this->getQueryBuilder()->getAll();
     }
 
-    public function getById($playerId) {
-        return $this->getQueryBuilder()->findByPrimary($playerId);
+    public function getById($id) {
+        return $this->getQueryBuilder()->findByPrimary($id);
     }
 
     public function create($items) {
@@ -143,9 +143,9 @@ abstract class SuperRepository implements Repository {
                         ->execute();
     }
 
-    public function update(Model $model) {
+    public function update($model, $updField=null) {
         return $this->getQueryBuilder()
-                        ->update($model)
+                        ->update($model, $updField)
                         ->execute();
     }
 
