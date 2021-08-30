@@ -42,8 +42,8 @@ class CardRepository extends SuperRepository {
      * ---------------------------------------------------------------------- */
     
     public function getAllInLocation($location , $locationArg = null) {
-        $fieldLocation = $this->getFieldsByProperty("location");
-        $fieldLocationArg = $this->getFieldsByProperty("locationArg");
+        $fieldLocation = $this->getFieldByProperty("location");
+        $fieldLocationArg = $this->getFieldByProperty("locationArg");
         
         $qb = $this->getQueryBuilder()
                 ->select()

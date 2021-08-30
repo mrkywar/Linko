@@ -4,11 +4,7 @@ namespace Linko\Serializers\Core;
 
 use Linko\Models\Core\Field;
 use Linko\Models\Model;
-use Linko\Models\Player;
-use Linko\Repository\PlayerRepository;
 use Linko\Tools\ArrayCollection;
-use ReflectionClass;
-use ReflectionMethod;
 
 /**
  * Description of SuperSerializer

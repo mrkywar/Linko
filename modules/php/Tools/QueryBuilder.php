@@ -119,6 +119,11 @@ class QueryBuilder extends \APP_DbObject {
                 $this->prepareInsert()
                         ->prepareValues();
                 break;
+            case self::TYPE_UPDATE:
+                $this->perpareUpdate()
+                    ->prepareSetter()
+                    ->prepareConditions();
+                break;
         }
         return $this;
     }
@@ -138,7 +143,7 @@ class QueryBuilder extends \APP_DbObject {
 
     private function preapareSelect() {
         $this->queryString = self::TYPE_SELECT . " * FROM ";
-        $this->queryString .= $this->repository->getTableName();
+        $this->queryString .= "`".$this->repository->getTableName()."`";
         return $this;
     }
 
@@ -150,6 +155,8 @@ class QueryBuilder extends \APP_DbObject {
                 return $this->executeSelect();
             case self::TYPE_INSERT:
                 return $this->executeInsert();
+            case self::TYPE_UPDATE:
+                return $this->executeUpdate();
         }
 
         $this->init(); // reinitialize QueryBuilder;
@@ -309,6 +316,56 @@ class QueryBuilder extends \APP_DbObject {
     }
 
     /* -------------------------------------------------------------------------
+     *                  BEGIN - UPDATE
+     * ---------------------------------------------------------------------- */
+
+    public function update(Model $model) {
+        $this->items = $model;
+        
+        $primary = $this->repository->getPrimaryField();
+        $getter = "get". ucfirst($primary->getProperty());
+        $this->addWhere($primary, $model->$getter());
+        
+        $this->queryType = self::TYPE_UPDATE;
+
+        return $this;
+    }
+
+    private function perpareUpdate() {
+        $this->queryString = self::TYPE_UPDATE." ";
+        $this->queryString .= "`".$this->repository->getTableName()."`"; 
+        
+        return $this;
+    }
+    
+    private function prepareSetter() {
+        $this->queryString .= " SET ";
+        $primary = $this->repository->getPrimaryField();
+        
+        $raw = $this->repository->getSerializer()->serialize($this->items, $this->repository->getFields());
+        unset($raw[$primary->getDb()]);
+
+        $this->setters = [];
+        foreach ($raw as $dbField => $value){
+            $field = $this->repository->getFieldByDB($dbField);
+            $setter = "`".$dbField."` = ";
+            $setter .= $this->fieldTransposer->transpose($value, $field);
+            $this->setters[] = $setter;
+        }
+        
+        $this->queryString .= implode(",", $this->setters);
+        
+        return $this;
+        
+    }
+    
+    private function executeUpdate(){
+        self::DbQuery($this->queryString);
+        return self::DbAffectedRow();
+    }
+
+
+    /* -------------------------------------------------------------------------
      *                  BEGIN - Select Queries
      * ---------------------------------------------------------------------- */
 
@@ -325,25 +382,6 @@ class QueryBuilder extends \APP_DbObject {
         return $this->select()
                         ->addWhere($primary, $id)
                         ->execute();
-    }
-
-    /* -------------------------------------------------------------------------
-     *                  BEGIN - UPDATE
-     * ---------------------------------------------------------------------- */
-
-    public function update(Model $model) {
-        $this->sql = self::TYPE_UPDATE;
-        $this->sql .= " `" . $this->repository->getTableName() . "` ";
-
-        $raw = $this->repository->getSerializer()->serialize($model, $this->repository->getFields());
-        $primary = $this->repository->getPrimaryField();
-
-        echo '<pre>--QB upd ';
-        var_dump($raw, $model);
-        unset($raw[$primary->getDb()]);
-
-        var_dump($raw);
-        die;
     }
 
     /* -------------------------------------------------------------------------

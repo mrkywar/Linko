@@ -51,7 +51,6 @@ class Linko extends Table {
 
         self::$instance = $this;
         $this->cardManager = new CardManager();
-        //$this->cardManager->setDeckModule(self::getNew("module.common.deck"));
         $this->playerManager = new PlayerManager();
 
         self::initGameStateLabels(array(
@@ -82,9 +81,6 @@ class Linko extends Table {
 
     protected function setupNewGame($players, $options = array()) {
         $this->playerManager->setupNewGame($players, $options);
-//        $oPlayers = $this->playerManager->getAllPlayers();
-//        var_dump($oPlayers);die;
-//        
 
         $this->cardManager->setupNewGame($this->playerManager->getAllPlayers());
 
