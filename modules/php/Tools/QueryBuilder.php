@@ -20,11 +20,6 @@ class QueryBuilder extends \APP_DbObject {
     const ORDER_DESC = "DESC";
 
     /**
-     * @var array
-     */
-    private $conditions = [];
-
-    /**
      * @var Repository
      */
     private $repository;
@@ -35,52 +30,132 @@ class QueryBuilder extends \APP_DbObject {
     private $fieldTransposer;
 
     /**
+     * @var string
+     */
+    private $queryType;
+
+    /**
+     * @var string
+     */
+    private $queryString;
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Select Properties
+     * ---------------------------------------------------------------------- */
+
+    /**
+     * @var array
+     */
+    private $conditions = [];
+
+    /**
      * @var array
      */
     private $orderBy = [];
 
     /**
-     * @var string
-     */
-    private $sql;
-
-    /**
      * @var int
      */
     private $limit;
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Update Properties
+     * ---------------------------------------------------------------------- */
 
     /**
      * @var array
      */
     private $setters = [];
 
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Create Properties
+     * ---------------------------------------------------------------------- */
+    private $items;
+
     public function __construct(Repository $repository) {
         $this->repository = $repository;
         $this->fieldTransposer = new DBFieldTransposer($this->repository);
+
+        $this->init();
+    }
+
+    private function init() {
+        $this->queryType = null;
+        //-- Select 
+        $this->conditions = [];
+        $this->orderBy = [];
+        $this->limit = null;
+        //-- update
+        $this->setters = [];
+        //-- create
+        $this->items = null;
+    }
+
+    public function getQueryType(): string {
+        return $this->queryType;
     }
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - Execute Queries
+     *                  BEGIN - Statement
      * ---------------------------------------------------------------------- */
 
-    public function execute() {
-
-        $queryType = substr($this->sql, 0, strpos($this->sql, " "));
-
-        switch ($queryType) {
-            case self::TYPE_SELECT:
-                return $this->prepareConditions()
-                                ->prepareOrderBy()
-                                ->prepareLimit()
-                                ->executeSelect();
-            case self::TYPE_INSERT:
-                self::DbQuery($this->sql);
-                return self::DbGetLastId();
-        }
+    public function getStatement() {
+        $this->prepareStatement();
+        return $this->queryString;
     }
 
+    private function prepareStatement() {
+        switch ($this->getQueryType()) {
+            case self::TYPE_SELECT:
+                $this->preapareSelect()
+                        ->prepareConditions()
+                        ->prepareOrderBy()
+                        ->prepareLimit();
+                break;
+            case self::TYPE_INSERT:
+                $this->prepareInsert()
+                        ->prepareValues();
+                break;
+        }
+        return $this;
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - SELECT
+     * ---------------------------------------------------------------------- */
+
+    /**
+     * set type of query to select
+     * @return $this
+     */
+    public function select() {
+        $this->queryType = self::TYPE_SELECT;
+        return $this;
+    }
+
+    private function preapareSelect() {
+        $this->queryString = self::TYPE_SELECT . " * FROM ";
+        $this->queryString .= $this->repository->getTableName();
+        return $this;
+    }
+
+    public function execute() {
+        $this->prepareStatement();
+
+        switch ($this->getQueryType()) {
+            case self::TYPE_SELECT:
+                return $this->executeSelect();
+            case self::TYPE_INSERT:
+                return $this->executeInsert();
+        }
+
+        $this->init(); // reinitialize QueryBuilder;
+    }
+
+    /**
+     * Execute select 
+     * @return \Linko\Tools\ArrayCollection
+     */
     private function executeSelect() {
-        $results = self::getObjectListFromDB($this->sql);
+        $results = self::getObjectListFromDB($this->queryString);
 
         switch (sizeof($results)) {
             case 0:
@@ -99,37 +174,18 @@ class QueryBuilder extends \APP_DbObject {
     }
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - SELECT
-     * ---------------------------------------------------------------------- */
-
-    public function preapareSelect() {
-        $this->sql = self::TYPE_SELECT . " * FROM ";
-        $this->sql .= $this->repository->getTableName();
-        return $this;
-    }
-
-    public function getAll() {
-        return $this->preapareSelect()->execute();
-    }
-
-    public function findByPrimary($id) {
-        $primary = $this->repository->getPrimaryField();
-        return $this->preapareSelect()
-                        ->addWhere($primary, $id)
-                        ->execute();
-    }
-
-    /* -------------------------------------------------------------------------
      *                  BEGIN - Conditions (WHERE)
      * ---------------------------------------------------------------------- */
 
     private function prepareConditions() {
         $iteration = 0;
+
         foreach ($this->conditions as $condition) {
-            $this->sql .= (0 === $iteration) ? " WHERE " : " AND ";
-            $this->sql .= $condition;
+            $this->queryString .= (0 === $iteration) ? " WHERE " : " AND ";
+            $this->queryString .= $condition;
             $iteration++;
         }
+
         return $this;
     }
 
@@ -138,7 +194,7 @@ class QueryBuilder extends \APP_DbObject {
         if (is_array($value)) {
             $transposed = [];
             foreach ($value as $val) {
-                $transposed [] = $this->sql .= $this->fieldTransposer->transpose($val, $field);
+                $transposed [] = $this->fieldTransposer->transpose($val, $field);
             }
             $condition .= " IN (" . implode(",", $transposed) . ")";
         } else {
@@ -161,7 +217,7 @@ class QueryBuilder extends \APP_DbObject {
 
     private function prepareOrderBy() {
         if (sizeof($this->orderBy) > 0) {
-            $this->sql .= " ORDER BY " . implode(",", $this->orderBy);
+            $this->queryString .= " ORDER BY " . implode(",", $this->orderBy);
         }
         return $this;
     }
@@ -177,7 +233,7 @@ class QueryBuilder extends \APP_DbObject {
 
     private function prepareLimit() {
         if (null !== $this->limit) {
-            $this->sql .= " LIMIT " . $this->limit;
+            $this->queryString .= " LIMIT " . $this->limit;
         }
         return $this;
     }
@@ -186,52 +242,79 @@ class QueryBuilder extends \APP_DbObject {
      *                  BEGIN - INSERT
      * ---------------------------------------------------------------------- */
 
-    private function prepareValues($raw) {
-        $values = [];
-        foreach ($this->repository->getFields() as $field) {
-            if (isset($raw[$field->getDB()])) {
-                $values[] = $this->fieldTransposer->transpose($raw[$field->getDB()], $field);
-            } else {
-                $values[] = "null";
-            }
-        }
-        return "(" . implode(",", $values) . ")";
+    /**
+     * set type of query to insert
+     * @param Model|ArrayCollection<Model> $items item(s) to create
+     * @return $this
+     */
+    public function insert($items = null) {
+        $this->items = $items;
+        $this->queryType = self::TYPE_INSERT;
+        return $this;
     }
 
-    private function prepareInsert($items) {
-        $fields = implode(', ', $this->repository->getDbFields());
+    private function prepareInsert() {
         $table = $this->repository->getTableName();
+        $fields = implode(', ', $this->repository->getDbFields());
 
-        $this->sql = self::TYPE_INSERT . " INTO";
-        $this->sql .= " `" . $table . "` ";
-        $this->sql .= "( " . $fields . ")";
-        $this->sql .= " VALUES ";
+        $this->queryString = self::TYPE_INSERT . " INTO ";
+        $this->queryString .= " `" . $table . "` ";
+        $this->queryString .= "( " . $fields . ")";
+        $this->queryString .= " VALUES ";
 
+        return $this;
+    }
+
+    private function prepareValues() {
+
+        $raws = [];
         $serializer = $this->repository->getSerializer();
-        if ($items instanceof ArrayCollection) {
-            //multiple
-            $raws = [];
-            foreach ($items as $item) {
-                $raw = $serializer->serialize($item, $this->repository->getFields());
-                $raws[] = $this->prepareValues($raw);
+
+        foreach ($this->items as $item) {
+            $raw = $serializer->serialize($item, $this->repository->getFields());
+            $values = [];
+            foreach ($this->repository->getFields() as $field) {
+                if (isset($raw[$field->getDB()])) {
+                    $values[] = $this->fieldTransposer->transpose($raw[$field->getDB()], $field);
+                } else {
+                    $values[] = "null";
+                }
             }
 
-            $this->sql .= implode(",", $raws);
-        } else {
-            //single
-            $raw = $serializer->serialize($items, $this->repository->getFields());
-            $this->sql .= $raw;
+            $raws [] = "(" . implode(",", $values) . ")";
         }
+
+        $this->queryString .= implode(",", $raws);
 
         return $this;
     }
 
     /**
-     * Create new item(s) of Model
-     * @param Model|ArrayCollection<Model> $items item(s) to create
+     * Execute select 
+     * @return \Linko\Tools\ArrayCollection
      */
-    public function create($items) {
-        $this->prepareInsert($items)->execute();
+    private function executeInsert() {
+        self::DbQuery($this->queryString);
+        return self::DbGetLastId();
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Select Queries
+     * ---------------------------------------------------------------------- */
+
+    public function getAll() {
+        return $this->select()->execute();
+    }
+
+    public function findByPrimary($id) {
+        $primary = $this->repository->getPrimaryField();
+
+        $this->select()
+                ->addWhere($primary, $id);
+
+        return $this->select()
+                        ->addWhere($primary, $id)
+                        ->execute();
     }
 
     /* -------------------------------------------------------------------------
@@ -244,12 +327,13 @@ class QueryBuilder extends \APP_DbObject {
 
         $raw = $this->repository->getSerializer()->serialize($model, $this->repository->getFields());
         $primary = $this->repository->getPrimaryField();
-        
-        echo '<pre>--';
-        var_dump($raw,$model);
+
+        echo '<pre>--QB upd ';
+        var_dump($raw, $model);
         unset($raw[$primary->getDb()]);
-        
-        var_dump($raw);die;
+
+        var_dump($raw);
+        die;
     }
 
 }

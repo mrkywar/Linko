@@ -107,6 +107,8 @@ class Linko extends Table {
         $players = $this->playerManager->getAllPlayers();
 
         $currentPlayer = $this->playerManager->getCurrentPlayer();
+        echo '<pre>';
+        var_dump($currentPlayer);die;
         $result['players'] = $this->playerManager->getAllPlayersUi();
         $result['hand'] = $this->cardManager->getCardsInHand($currentPlayer);
         

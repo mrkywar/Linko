@@ -53,6 +53,8 @@ class CardRepository extends SuperRepository {
             $qb->addWhere($fieldLocationArg, $locationArg);
         }
         
+        var_dump("CR",$qb->getStatement());
+        
         return $qb->execute();
         
     }
