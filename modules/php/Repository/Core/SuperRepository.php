@@ -38,11 +38,11 @@ abstract class SuperRepository implements Repository {
      * 
      * @return Serializer
      */
-    final public function getSerializer(): Serializer {
+    public function getSerializer(): Serializer {
         return $this->serializer;
     }
 
-    /* -------------------------------------------------------------------------
+        /* -------------------------------------------------------------------------
      *                  BEGIN - Fields Management
      * ---------------------------------------------------------------------- */
 
@@ -102,9 +102,23 @@ abstract class SuperRepository implements Repository {
      * @param string $property
      * @return Field
      */
-    public function getFieldsByProperty($property) {
+    public function getFieldByProperty($property) {
         foreach ($this->getFields() as $field) {
             if ($property === $field->getProperty()) {
+                return $field;
+            }
+        }
+        return;
+    }
+
+    /**
+     * 
+     * @param string $dbName
+     * @return Field
+     */
+    public function getFieldByDB($dbName) {
+        foreach ($this->getFields() as $field) {
+            if ($dbName === $field->getDb()) {
                 return $field;
             }
         }
@@ -119,16 +133,20 @@ abstract class SuperRepository implements Repository {
         return $this->getQueryBuilder()->getAll();
     }
 
-    public function getById($playerId) {
-        return $this->getQueryBuilder()->findByPrimary($playerId);
+    public function getById($id) {
+        return $this->getQueryBuilder()->findByPrimary($id);
     }
 
     public function create($items) {
-        return $this->getQueryBuilder()->create($items);
+        return $this->getQueryBuilder()
+                        ->insert($items)
+                        ->execute();
     }
 
-    public function update(Model $model) {
-        return $this->getQueryBuilder()->update($model);
+    public function update($model, $updField=null) {
+        return $this->getQueryBuilder()
+                        ->update($model, $updField)
+                        ->execute();
     }
 
 }

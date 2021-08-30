@@ -2,6 +2,7 @@
 
 namespace Linko\Repository\Core;
 
+use Linko\Models\Core\Field;
 use Linko\Serializers\Core\Serializer;
 
 /**
@@ -21,7 +22,11 @@ interface Repository {
     public function getAll();
 
     public function create($items);
-    
+
+    public function getById($id);
+
+    public function update($model, $updField = null);
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - Serializer
      * ---------------------------------------------------------------------- */
@@ -45,4 +50,18 @@ interface Repository {
     public function getDbFields();
 
     public function getPrimaryField();
+
+    /**
+     * 
+     * @param string $property
+     * @return Field
+     */
+    public function getFieldByProperty($property);
+
+    /**
+     * 
+     * @param string $dbName
+     * @return Field
+     */
+    public function getFieldByDB($dbName);
 }
