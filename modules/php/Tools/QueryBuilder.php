@@ -19,37 +19,13 @@ class QueryBuilder extends \APP_DbObject {
     const ORDER_DESC = "DESC";
 
     /**
-     * @var Repository
-     */
-    private $repository;
-
-    /**
-     * @var DBFieldTransposer
-     */
-    private $fieldTransposer;
-
-    /**
      * @var string
      */
     private $queryType;
 
-    /**
-     * @var string
-     */
-    private $queryString;
-
-    /**
-     * @var bool
-     */
-    private $isDebug = false;
     /* -------------------------------------------------------------------------
-     *                  BEGIN - Select Properties
+     *                  Properties - Select
      * ---------------------------------------------------------------------- */
-
-    /**
-     * @var array
-     */
-    private $conditions = [];
 
     /**
      * @var array
@@ -60,14 +36,20 @@ class QueryBuilder extends \APP_DbObject {
      * @var int
      */
     private $limit;
-    /* -------------------------------------------------------------------------
-     *                  BEGIN - Update Properties
-     * ---------------------------------------------------------------------- */
 
     /**
      * @var array
      */
-    private $fields;
+    private $conditions = [];
+
+    /**
+     * @var array
+     */
+    private $fields = [];
+
+    /* -------------------------------------------------------------------------
+     *                  Properties - Update
+     * ---------------------------------------------------------------------- */
 
     /**
      * @var array
@@ -75,32 +57,73 @@ class QueryBuilder extends \APP_DbObject {
     private $setters = [];
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - Create Properties
+     *                  Properties - Create
      * ---------------------------------------------------------------------- */
     private $items;
 
-    public function __construct(Repository $repository) {
-        $this->repository = $repository;
-        $this->fieldTransposer = new DBFieldTransposer($this->repository);
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - construct
+     * ---------------------------------------------------------------------- */
 
+    public function __construct(Repository $repository) {
         $this->init();
     }
 
     private function init() {
-        $this->queryType = null;
-        //-- Select 
-        $this->conditions = [];
+        //-- (re)init select
         $this->orderBy = [];
         $this->limit = null;
-        //-- update
+        $this->conditions = [];
+        $this->fields = [];
+
+        //-- (re)init update
         $this->setters = [];
-        //-- create
-        $this->items = null;
+
+        //-- (re)init insert
+        $this->setters = [];
     }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Getters & Setters 
+     * ---------------------------------------------------------------------- */
 
     public function getQueryType(): string {
         return $this->queryType;
     }
+
+    public function select() {
+        $this->queryType = self::TYPE_SELECT;
+        return $this;
+    }
+
+    public function insert() {
+        $this->queryType = self::TYPE_INSERT;
+        return $this;
+    }
+
+    public function update() {
+        $this->queryType = self::TYPE_UPDATE;
+        return $this;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+
+//-- OLD
+
+
+
+
+
+
+
+
+
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Statement
@@ -140,11 +163,6 @@ class QueryBuilder extends \APP_DbObject {
      * set type of query to select
      * @return $this
      */
-    public function select() {
-        $this->queryType = self::TYPE_SELECT;
-        return $this;
-    }
-
     private function preapareSelect() {
         $this->queryString = self::TYPE_SELECT . " * FROM ";
         $this->queryString .= "`" . $this->repository->getTableName() . "`";
@@ -160,15 +178,15 @@ class QueryBuilder extends \APP_DbObject {
                 $results = $this->executeSelect();
                 break;
             case self::TYPE_INSERT:
-                $results =  $this->executeInsert();
+                $results = $this->executeInsert();
                 break;
             case self::TYPE_UPDATE:
-                $results =  $this->executeUpdate();
+                $results = $this->executeUpdate();
                 break;
         }
 
         $this->init(); // reinitialize QueryBuilder;
-        
+
         return $results;
     }
 
@@ -184,20 +202,22 @@ class QueryBuilder extends \APP_DbObject {
             var_dump($this->queryString, $results, $this->repository->getSerializer());
         }
 
-        $serializer = $this->repository->getSerializer();
-        switch (sizeof($results)) {
-            case 0:
-                return null;
-            case 1:
-                return $serializer->unserialize($results[0], $this->repository->getFields());
-            default :
-                $col = [];
-                foreach ($results as $res) {
-                    $col[] = $serializer->unserialize($res, $this->repository->getFields());
-                }
+        return $results;
 
-                return $col;
-        }
+//        $serializer = $this->repository->getSerializer();
+//        switch (sizeof($results)) {
+//            case 0:
+//                return null;
+//            case 1:
+//                return $serializer->unserialize($results[0], $this->repository->getFields());
+//            default :
+//                $col = [];
+//                foreach ($results as $res) {
+//                    $col[] = $serializer->unserialize($res, $this->repository->getFields());
+//                }
+//
+//                return $col;
+//        }
     }
 
     /* -------------------------------------------------------------------------
@@ -274,12 +294,6 @@ class QueryBuilder extends \APP_DbObject {
      * @param $items item(s) to create
      * @return $this
      */
-    public function insert($items = null) {
-        $this->items = $items;
-        $this->queryType = self::TYPE_INSERT;
-        return $this;
-    }
-
     private function prepareInsert() {
         $table = $this->repository->getTableName();
         $fields = implode(', ', $this->repository->getDbFields());
@@ -329,26 +343,26 @@ class QueryBuilder extends \APP_DbObject {
      *                  BEGIN - UPDATE
      * ---------------------------------------------------------------------- */
 
-    public function update($model, $fields) {
-        $this->items = $model;
-        $this->fields = $fields;
-
-        $primary = $this->repository->getPrimaryField();
-        $getter = "get" . ucfirst($primary->getProperty());
-        if (is_array($model)) {
-            $ids = [];
-            foreach ($model as $elem) {
-                $ids[] = $elem->$getter();
-            }
-            $this->addWhere($primary, $ids);
-        } else {
-            $this->addWhere($primary, $model->$getter());
-        }
-        
-        $this->queryType = self::TYPE_UPDATE;
-
-        return $this;
-    }
+//    public function update($model, $fields) {
+//        $this->items = $model;
+//        $this->fields = $fields;
+//
+//        $primary = $this->repository->getPrimaryField();
+//        $getter = "get" . ucfirst($primary->getProperty());
+//        if (is_array($model)) {
+//            $ids = [];
+//            foreach ($model as $elem) {
+//                $ids[] = $elem->$getter();
+//            }
+//            $this->addWhere($primary, $ids);
+//        } else {
+//            $this->addWhere($primary, $model->$getter());
+//        }
+//
+//        $this->queryType = self::TYPE_UPDATE;
+//
+//        return $this;
+//    }
 
     private function perpareUpdate() {
         $this->queryString = self::TYPE_UPDATE . " ";
