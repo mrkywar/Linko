@@ -9,4 +9,5 @@ namespace Linko\Models\Core;
  */
 interface Model {
 
+    public function getPrimary();
 }

@@ -59,7 +59,7 @@ class Field {
     }
 
     public function setProperty(string $property) {
-        $this->property = $property;
+        $this->property = ucfirst($property);
         return $this;
     }
 
