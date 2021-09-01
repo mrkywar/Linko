@@ -15,28 +15,11 @@ use Linko\Tools\QueryBuilder;
 abstract class SuperRepository implements Repository {
 
     /**
-
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
-
-    /**
      * @var DBRequester
      */
     protected $dbRequester;
     protected $serializer;
     protected $fields;
-
-    /**
-     * 
-     * @return QueryBuilder
-     */
-    public function getQueryBuilder(): QueryBuilder {
-        if (null === $this->queryBuilder) {
-            $this->queryBuilder = new QueryBuilder();
-        }
-        return $this->queryBuilder;
-    }
 
     public function getDbRequester(): DBRequester {
         if (null === $this->dbRequester) {
@@ -52,6 +35,16 @@ abstract class SuperRepository implements Repository {
      */
     public function getSerializer(): Serializer {
         return $this->serializer;
+    }
+
+    /**
+     * 
+     * @return QueryBuilder
+     */
+    public function getQueryBuilder() {
+        $qb = new QueryBuilder();
+        $qb->setTableName($this->getTableName());
+        return $qb;
     }
 
     /* -------------------------------------------------------------------------
@@ -142,111 +135,32 @@ abstract class SuperRepository implements Repository {
      * ---------------------------------------------------------------------- */
 
     public function getAll() {
+        $qb = $this->getQueryBuilder()->select();
 
-
-
-        return $this->getQueryBuilder()
-                        ->select();
+        return $this->dbRequester->execute($qb);
     }
 
     public function getById($id) {
-        return $this->getQueryBuilder()->findByPrimary($id);
+        $qb = $this->getQueryBuilder()
+                ->select()
+                ->addClause($this->getPrimaryField(), $id);
+
+        return $this->dbRequester->execute($qb);
     }
 
     public function create($items) {
-        return $this->getQueryBuilder()
-                        ->insert($items)
-                        ->execute();
-    }
-
-    public function update($model, $updField = null) {
-        return $this->getQueryBuilder()
-                        ->update($model, $updField)
-                        ->execute();
+        $qb = $this->getQueryBuilder()
+                ->insert();
+        
+        if(is_array($items)){
+            foreach ($items as $item){
+                $qb->addValue($item);
+            }
+        }else{
+            $qb->addValue($items);
+        }
+        
+        return $this->dbRequester->execute($qb); 
     }
 
 }
-
-//-- OLD
-//
-//
-//
-//
-//    /**
-//     * Execute select 
-//     * @return ArrayCollection
-//     */
-//    private function executeInsert() {
-//        self::DbQuery($this->queryString);
-//        return self::DbGetLastId();
-//    }
-//
-//    /* -------------------------------------------------------------------------
-//     *                  BEGIN - UPDATE
-//     * ---------------------------------------------------------------------- */
-//
-//
-//    private function perpareUpdate() {
-//        $this->queryString = self::TYPE_UPDATE . " ";
-//        $this->queryString .= "`" . $this->repository->getTableName() . "`";
-//
-//        if (null === $this->fields) {
-//            $this->fields = $this->repository->getFields();
-//        }
-//
-//        return $this;
-//    }
-//
-//    private function prepareSetter() {
-//        $primary = $this->repository->getPrimaryField();
-//        $this->setters = [];
-//
-//        $this->queryString .= " SET ";
-//        if (is_array($this->items)) {
-//            //-- Only need one serie of fields
-//            $raw = $this->repository->getSerializer()->serialize($this->items[0], $this->fields);
-//        } else {
-//            $raw = $this->repository->getSerializer()->serialize($this->items, $this->fields);
-//        }
-//
-//
-//        if (isset($raw[$primary->getDb()])) {
-//            unset($raw[$primary->getDb()]);
-//        }
-//
-//        $this->setters = [];
-//        foreach ($raw as $dbField => $value) {
-//            $field = $this->repository->getFieldByDB($dbField);
-//            $setter = "`" . $dbField . "` = ";
-//            $setter .= $this->fieldTransposer->transpose($value, $field);
-//            $this->setters[] = $setter;
-//        }
-//
-//        $this->queryString .= implode(",", $this->setters);
-//
-//        return $this;
-//    }
-//
-//    private function executeUpdate() {
-//        self::DbQuery($this->queryString);
-//        return self::DbAffectedRow();
-//    }
-//
-//    /* -------------------------------------------------------------------------
-//     *                  BEGIN - Select Queries
-//     * ---------------------------------------------------------------------- */
-//
-//    public function getAll() {
-//        return $this->select()->execute();
-//    }
-//
-//    public function findByPrimary($id) {
-//        $primary = $this->repository->getPrimaryField();
-//
-//        $this->select()
-//                ->addWhere($primary, $id);
-//
-//        return $this->select()
-//                        ->addWhere($primary, $id)
-//                        ->execute();
-//    }

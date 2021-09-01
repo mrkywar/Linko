@@ -78,7 +78,10 @@ class QueryBuilder {
      *                  BEGIN - construct
      * ---------------------------------------------------------------------- */
 
-    public function __construct() {
+    public function __construct($tableName = null) {
+        if (null !== $tableName) {
+            $this->tableName = $tableName;
+        }
         $this->init();
     }
 
@@ -191,7 +194,7 @@ class QueryBuilder {
             $getter = "get" . $field->getProperty();
             $rawValue[$field->getDb()] = Transposer::transpose($field, $model->$getter());
         }
-        $this->values[$modelToAdd->getPrimary()] = "(" . $rawValue . ")";
+        $this->values[$model->getPrimary()] = "(" . $rawValue . ")";
 
         return $this;
     }
