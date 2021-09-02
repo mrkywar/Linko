@@ -1,5 +1,8 @@
 <?php
 
+use Linko\Managers\Factories\PlayerManagerFactory;
+
+
 /**
  * ------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
@@ -25,7 +28,7 @@ $swdNamespaceAutoload = function ($class) {
         if (file_exists($file)) {
             require_once $file;
         } else {
-            var_dump("Impossible to load bang class : $class");
+            var_dump("Impossible to load Linko class : $class");
         }
     }
 };
@@ -34,6 +37,8 @@ spl_autoload_register($swdNamespaceAutoload, true, true);
 require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 
 class Linko extends Table {
+    private static $instance;
+            
 
     function __construct() {
         parent::__construct();
@@ -46,6 +51,12 @@ class Linko extends Table {
                 //    "my_second_game_variant" => 101,
                 //      ...
         ));
+        
+        self::$instance = $this;
+    }
+    
+    public static function getInstance(){
+        return self::$instance;
     }
 
     protected function getGameName() {
@@ -62,6 +73,8 @@ class Linko extends Table {
      */
 
     protected function setupNewGame($players, $options = array()) {
+        
+        
         // Set the colors of the players with HTML color code
         // The default below is red/green/blue/orange/brown
         // The number of colors defined here must correspond to the maximum number of players allowed for the gams
@@ -107,6 +120,9 @@ class Linko extends Table {
      */
 
     protected function getAllDatas() {
+        $playerManager = PlayerManagerFactory::create();
+        $playerManager->initNewGame();
+        
         $result = array();
 
         $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!

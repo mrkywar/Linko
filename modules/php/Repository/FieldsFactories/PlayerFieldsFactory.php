@@ -2,6 +2,7 @@
 
 namespace Linko\Repository\FieldsFactories;
 
+use Linko\Models\Core\Field;
 use Linko\Repository\Core\Repository;
 use Linko\Repository\Core\SuperFieldFactory;
 

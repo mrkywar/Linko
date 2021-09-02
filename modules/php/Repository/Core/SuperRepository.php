@@ -18,7 +18,15 @@ abstract class SuperRepository implements Repository {
      * @var DBRequester
      */
     protected $dbRequester;
+
+    /**
+     * @var Serializer
+     */
     protected $serializer;
+
+    /**
+     * @var array 
+     */
     protected $fields;
 
     public function getDbRequester(): DBRequester {
@@ -55,10 +63,10 @@ abstract class SuperRepository implements Repository {
 
     abstract public function getFieldsPrefix();
 
-    final public function getFields() {
+    final public function getFields(): array {
         return $this->fields;
     }
-    
+
     final public function setFields(array $fields) {
         $this->fields = $fields;
     }
@@ -82,7 +90,7 @@ abstract class SuperRepository implements Repository {
      * get all DBFields
      * @return array all DBFields
      */
-    public function getDbFields() {
+    public function getDbFields(): array {
         $res = [];
         $fields = $this->getFields();
         foreach ($fields as $field) {
@@ -155,16 +163,16 @@ abstract class SuperRepository implements Repository {
     public function create($items) {
         $qb = $this->getQueryBuilder()
                 ->insert();
-        
-        if(is_array($items)){
-            foreach ($items as $item){
+
+        if (is_array($items)) {
+            foreach ($items as $item) {
                 $qb->addValue($item);
             }
-        }else{
+        } else {
             $qb->addValue($items);
         }
-        
-        return $this->dbRequester->execute($qb); 
+
+        return $this->dbRequester->execute($qb);
     }
 
 }
