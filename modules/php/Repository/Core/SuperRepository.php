@@ -58,6 +58,10 @@ abstract class SuperRepository implements Repository {
     final public function getFields() {
         return $this->fields;
     }
+    
+    final public function setFields(array $fields) {
+        $this->fields = $fields;
+    }
 
     /**
      * 

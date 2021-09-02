@@ -1,7 +1,10 @@
 <?php
-namespace Linko\Managers\Factories;
+namespace Linko\Managers;
 
+use Linko\Managers\Core\ManagerException;
 use Linko\Managers\PlayerManager;
+use Linko\Repository\PlayerRepository;
+use Linko\Serializers\PlayerSerializer;
 /**
  * Description of PlayerManagerFactory
  *
@@ -9,10 +12,19 @@ use Linko\Managers\PlayerManager;
  */
 abstract class PlayerManagerFactory {
     public static function create() {
+        //-- REPOSITORY
+        $repository = new PlayerRepository();
+        $repository->setFields(PlayerManagerFactory::create());
+        
+        //-- SERIALIZER
+        $serializer = new PlayerSerializer();
+        
+        //-- MANAGER
         $manager = new PlayerManager();
-        
-        
-        
+        $manager->setRepository($repository)
+                ->setSerializer($serializer);
+
+
         return $manager;
     }
     

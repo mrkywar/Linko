@@ -13,11 +13,11 @@ abstract class FieldValueTransposer {
     
     public static function transpose(Field $field, $value) {
         switch ($field->getFieldType()) {
-            case Repository::STRING_FORMAT:
+            case Field::STRING_FORMAT:
                 return "'" . addslashes($value) . "'";
-            case Repository::BOOLEAN_FORMAT:
+            case Field::BOOLEAN_FORMAT:
                 return (true === $value) ? 1 : 0;
-            case Repository::INTEGER_FORMAT:
+            case Field::INTEGER_FORMAT:
                 return "'" . (int) $value . "'";
             default:
                 return $value;

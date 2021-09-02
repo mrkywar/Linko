@@ -1,30 +1,32 @@
 <?php
-namespace Linko\Managers\Core;
+
+namespace Linko\Managers;
 
 use Linko\Repository\Core\Repository;
 use Linko\Serializers\Core\Serializer;
+
 /**
- * Description of Manager
+ * Description of Manager abstract class for Model Management (Player/Card for
+ * Exemple )
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-abstract class Manager {
- 
+class Manager {
+
     /**
-     * 
      * @var Repository
      */
     private $repository;
 
     /**
-     * 
      * @var Serializer
      */
     private $serializer;
-    
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 
      * ---------------------------------------------------------------------- */
+
     public function getRepository(): Repository {
         return $this->repository;
     }

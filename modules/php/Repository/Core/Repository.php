@@ -10,11 +10,6 @@ use Linko\Serializers\Core\Serializer;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 interface Repository {
-
-    const STRING_FORMAT = "string";
-    const INTEGER_FORMAT = "int";
-    const BOOLEAN_FORMAT = "boolean";
-
     /* -------------------------------------------------------------------------
      *                  BEGIN - Base queries
      * ---------------------------------------------------------------------- */
@@ -24,8 +19,6 @@ interface Repository {
     public function create($items);
 
     public function getById($id);
-
-    public function update($model, $updField = null);
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Serializer
@@ -43,11 +36,11 @@ interface Repository {
 
     public function getTableName();
 
-    public function getFields();
+    public function getFields(): array;
 
     public function getFieldsPrefix();
 
-    public function getDbFields();
+    public function getDbFields(): array;
 
     public function getPrimaryField();
 
@@ -64,4 +57,6 @@ interface Repository {
      * @return Field
      */
     public function getFieldByDB($dbName);
+    
+    public function setFields(array $fields);
 }
