@@ -16,7 +16,7 @@ class Manager {
     /**
      * @var Repository
      */
-    private $repository;
+    protected $repository;
 
     /**
      * @var Serializer
