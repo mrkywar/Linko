@@ -18,7 +18,15 @@ abstract class SuperRepository implements Repository {
      * @var DBRequester
      */
     protected $dbRequester;
+
+    /**
+     * @var Serializer
+     */
     protected $serializer;
+
+    /**
+     * @var array 
+     */
     protected $fields;
 
     public function getDbRequester(): DBRequester {
@@ -41,7 +49,7 @@ abstract class SuperRepository implements Repository {
      * 
      * @return QueryBuilder
      */
-    public function getQueryBuilder() {
+    public function getQueryBuilder(): QueryBuilder {
         $qb = new QueryBuilder();
         $qb->setTableName($this->getTableName());
         return $qb;
@@ -55,10 +63,10 @@ abstract class SuperRepository implements Repository {
 
     abstract public function getFieldsPrefix();
 
-    final public function getFields() {
+    final public function getFields(): array {
         return $this->fields;
     }
-    
+
     final public function setFields(array $fields) {
         $this->fields = $fields;
     }
@@ -82,11 +90,11 @@ abstract class SuperRepository implements Repository {
      * get all DBFields
      * @return array all DBFields
      */
-    public function getDbFields() {
+    public function getDbFields(): array {
         $res = [];
         $fields = $this->getFields();
         foreach ($fields as $field) {
-            $res [] = $this->getFieldsPrefix() . $field->getProperty();
+            $res [] = $field->getDb();
         }
         return $res;
     }
@@ -141,7 +149,7 @@ abstract class SuperRepository implements Repository {
     public function getAll() {
         $qb = $this->getQueryBuilder()->select();
 
-        return $this->dbRequester->execute($qb);
+        return $this->getDbRequester()->execute($qb);
     }
 
     public function getById($id) {
@@ -149,22 +157,25 @@ abstract class SuperRepository implements Repository {
                 ->select()
                 ->addClause($this->getPrimaryField(), $id);
 
-        return $this->dbRequester->execute($qb);
+        return $this->getDbRequester()->execute($qb);
     }
 
     public function create($items) {
         $qb = $this->getQueryBuilder()
-                ->insert();
-        
-        if(is_array($items)){
-            foreach ($items as $item){
+                ->insert()
+                ->setFields($this->getFields());
+
+        if (is_array($items)) {
+            foreach ($items as $item) {
                 $qb->addValue($item);
             }
-        }else{
+        } else {
             $qb->addValue($items);
         }
         
-        return $this->dbRequester->execute($qb); 
+//        var_dump($qb);die;
+
+        return $this->getDbRequester()->execute($qb);
     }
 
 }

@@ -24,7 +24,7 @@ abstract class QueryStatementFactory {
             case QueryString::TYPE_UPDATE:
                 self::createUpdateQuery($qb, $queryString);
                 break;
-            case QueryString::TYPE_CUSTOM: 
+            case QueryString::TYPE_CUSTOM:
                 $queryString = $qb->getStatement();
                 break;
         }
@@ -36,12 +36,21 @@ abstract class QueryStatementFactory {
      *                  BEGIN - SELECT
      * ---------------------------------------------------------------------- */
 
+    private static function createFieldList(QueryBuilder $qb) {
+        $fieldDb = [];
+        foreach ($qb->getFields() as $field) {
+            $fieldDb[] = " `" . $field->getDb() . "` ";
+        }
+
+        return " (" . implode(",", $fieldDb) . ") ";
+    }
+
     private static function createSelectQuery(QueryBuilder $qb, &$statement) {
         $statement .= QueryBuilder::TYPE_SELECT;
 
         //-- Fields (list or *)
         if (null !== $qb->getFields()) {
-            $statement .= implode(",", $qb->getFields());
+            $statement .= self::createFieldList($qb);
         } else {
             $statement .= " * ";
         }
@@ -73,10 +82,9 @@ abstract class QueryStatementFactory {
         //-- Setter
         $statement .= " SET ";
         $statement .= implode(",", $qb->getSetters());
-        
+
         //-- Clauses
         $statement .= self::generateClauses($qb);
-        
     }
 
     /* -------------------------------------------------------------------------
@@ -103,7 +111,7 @@ abstract class QueryStatementFactory {
         $statement .= "`" . $qb->getTableName() . "`";
 
         //-- Fields
-        $statement .= implode(",", $qb->getFields());
+        $statement .= self::createFieldList($qb);
 
         //-- Values 
         $statement .= " VALUES ";

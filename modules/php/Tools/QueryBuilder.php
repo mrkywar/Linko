@@ -194,7 +194,7 @@ class QueryBuilder {
             $getter = "get" . $field->getProperty();
             $rawValue[$field->getDb()] = Transposer::transpose($field, $model->$getter());
         }
-        $this->values[$model->getId()] = "(" . $rawValue . ")";
+        $this->values[$model->getId()] = "(" . implode(",", $rawValue) . ")";
 
         return $this;
     }

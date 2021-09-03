@@ -15,14 +15,14 @@ class DBRequester extends \APP_DbObject {
     public function execute(QueryBuilder $qb) {
         $queryString = QueryStatementFactory::create($qb);
 
-        switch ($this->getQueryType()) {
+        switch ($qb->getQueryType()) {
             case QueryString::TYPE_SELECT:
                 return self::getObjectListFromDB($queryString);
             case QueryString::TYPE_INSERT:
-                self::DbQuery($this->queryString);
+                self::DbQuery($queryString);
                 return self::DbGetLastId();
             case QueryString::TYPE_UPDATE:
-                self::DbQuery($this->queryString);
+                self::DbQuery($queryString);
                 return self::DbAffectedRow();
             default :
                 throw new DBException("DBR : Execute : Not Implemented Yet");

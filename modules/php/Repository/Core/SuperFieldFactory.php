@@ -2,6 +2,8 @@
 
 namespace Linko\Repository\Core;
 
+use Linko\Models\Core\Field;
+
 /**
  * Description of SuperFieldFactory
  *
