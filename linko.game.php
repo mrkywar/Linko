@@ -1,5 +1,8 @@
 <?php
 
+use Linko\Managers\Factories\CardManagerFactory;
+use Linko\Managers\Factories\PlayerManagerFactory;
+
 /**
  * ------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
@@ -18,13 +21,13 @@
  */
 $swdNamespaceAutoload = function ($class) {
     $classParts = explode('\\', $class);
-    if ("Linko" === $classParts[0]) {
+    if ($classParts[0] == 'Linko') {
         array_shift($classParts);
         $file = dirname(__FILE__) . '/modules/php/' . implode(DIRECTORY_SEPARATOR, $classParts) . '.php';
         if (file_exists($file)) {
             require_once $file;
         } else {
-            var_dump("Missing Linko class : $class");
+            var_dump("Impossible to load Linko class : $class");
         }
     }
 };
@@ -32,26 +35,13 @@ spl_autoload_register($swdNamespaceAutoload, true, true);
 
 require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 
-use Linko\Game\PlayCardsTrait;
-use Linko\Game\TurnTrait;
-use Linko\Managers\CardManager;
-use Linko\Managers\PlayerManager;
-
 class Linko extends Table {
 
-    use TurnTrait; //-- Next Player
-    use PlayCardsTrait; //-- Player Play Cards
-
+    private static $instance;
     private $playerManager;
     private $cardManager;
-    private static $instance = null;
-
-    public function __construct() {
+                function __construct() {
         parent::__construct();
-
-        self::$instance = $this;
-        $this->cardManager = new CardManager();
-        $this->playerManager = new PlayerManager();
 
         self::initGameStateLabels(array(
                 //    "my_first_global_variable" => 10,
@@ -61,14 +51,20 @@ class Linko extends Table {
                 //    "my_second_game_variant" => 101,
                 //      ...
         ));
-    }
 
-    protected function getGameName() {
-        return "linko";
+        $this->playerManager = PlayerManagerFactory::create();
+        $this->cardManager = CardManagerFactory::create();
+
+        self::$instance = $this;
     }
 
     public static function getInstance() {
         return self::$instance;
+    }
+
+    protected function getGameName() {
+        // Used for translations and stuff. Please do not modify.
+        return "linko";
     }
 
     /*
@@ -80,11 +76,27 @@ class Linko extends Table {
      */
 
     protected function setupNewGame($players, $options = array()) {
-        $this->playerManager->setupNewGame($players, $options);
+        $this->playerManager->initNewGame($players, $options);
+        $this->cardManager->initNewGame();
+        
+//        $gameinfos = self::getGameinfos();
+////        $default_colors = $gameinfos['player_colors'];
+//        self::reattributeColorsBasedOnPreferences($players, $gameinfos['player_colors']);
+//        self::reloadPlayersBasicInfos();
 
-        $this->cardManager->setupNewGame($this->playerManager->getAllPlayers());
+        /*         * ********** Start the game initialization **** */
 
+        // Init global values with their initial values
+        //self::setGameStateInitialValue( 'my_first_global_variable', 0 );
+        // Init game statistics
+        // (note: statistics used in this file must be defined in your stats.inc.php file)
+        //self::initStat( 'table', 'table_teststat1', 0 );    // Init a table statistics
+        //self::initStat( 'player', 'player_teststat1', 0 );  // Init a player statistics (for all players)
+        // TODO: setup the initial game situation here
+        // Activate first player (which is in general a good idea :) )
         $this->activeNextPlayer();
+
+        /*         * ********** End of the game initialization **** */
     }
 
     /*
@@ -98,30 +110,17 @@ class Linko extends Table {
      */
 
     protected function getAllDatas() {
+//        $playerManager = PlayerManagerFactory::create();
+
+
         $result = array();
 
-        $players = $this->playerManager->getAllPlayers();
+        $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
+        // Get information about players
+        // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
+        $sql = "SELECT player_id id, player_score score FROM player ";
+        $result['players'] = self::getCollectionFromDb($sql);
 
-        $currentPlayer = $this->playerManager->getCurrentPlayer();
-        $result['players'] = $this->playerManager->getAllPlayersUi();
-        $result['hand'] = $this->cardManager->getCardsInHand($currentPlayer);
-        
-        $this->cardManager->moveCards($result['hand'], "TEST", 0);
-        var_dump('2',$result['hand']);die;
-        
-        
-        
-//        $result['hand'] = $this->cardManager->getCardsInHand($currentPlayer);
-//        $result['handInfos'] = $this->cardManager->getHandsInfos($players);
-//
-////        $pm = new PlayerManager();
-////        $pm->getAllPlayers();
-//
-//        $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
-//        // Get information about players
-//        // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
-//        $sql = "SELECT player_id id, player_score score FROM player ";
-//        $result['players'] = self::getCollectionFromDb($sql);
         // TODO: Gather all information about current game situation (visible by player $current_player_id).
 
         return $result;
@@ -143,6 +142,99 @@ class Linko extends Table {
 
         return 0;
     }
+
+//////////////////////////////////////////////////////////////////////////////
+//////////// Utility functions
+////////////    
+
+    /*
+      In this space, you can put any utility methods useful for your game logic
+     */
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+//////////// Player actions
+//////////// 
+
+    /*
+      Each time a player is doing some game action, one of the methods below is called.
+      (note: each method below must match an input method in linko.action.php)
+     */
+
+    /*
+
+      Example:
+      function playCard( $card_id )
+      {
+      // Check that this is the player's turn and that it is a "possible action" at this game state (see states.inc.php)
+      self::checkAction( 'playCard' );
+
+      $player_id = self::getActivePlayerId();
+
+      // Add your game logic to play a card there
+      ...
+
+      // Notify all players about the card played
+      self::notifyAllPlayers( "cardPlayed", clienttranslate( '${player_name} plays ${card_name}' ), array(
+      'player_id' => $player_id,
+      'player_name' => self::getActivePlayerName(),
+      'card_name' => $card_name,
+      'card_id' => $card_id
+      ) );
+
+      }
+
+     */
+
+
+//////////////////////////////////////////////////////////////////////////////
+//////////// Game state arguments
+////////////
+
+    /*
+      Here, you can create methods defined as "game state arguments" (see "args" property in states.inc.php).
+      These methods function is to return some additional information that is specific to the current
+      game state.
+     */
+
+    /*
+
+      Example for game state "MyGameState":
+
+      function argMyGameState()
+      {
+      // Get some values from the current game situation in database...
+
+      // return values:
+      return array(
+      'variable1' => $value1,
+      'variable2' => $value2,
+      ...
+      );
+      }
+     */
+
+//////////////////////////////////////////////////////////////////////////////
+//////////// Game state actions
+////////////
+
+    /*
+      Here, you can create methods defined as "game state actions" (see "action" property in states.inc.php).
+      The action method of state X is called everytime the current game state is set to X.
+     */
+
+    /*
+
+      Example for game state "MyGameState":
+      function stMyGameState()
+      {
+      // Do some stuff ...
+
+      // (very often) go to another gamestate
+      $this->gamestate->nextState( 'some_gamestate_transition' );
+      }
+     */
 
 //////////////////////////////////////////////////////////////////////////////
 //////////// Zombie
@@ -222,24 +314,5 @@ class Linko extends Table {
 //
 //
     }
-    
-    /* -------------------------------------------------------------------------
-     *                  BEGIN -  Exposing protected methods, 
-     *                          please use at your own risk 
-     * ---------------------------------------------------------------------- */
-
-    // Exposing protected method getCurrentPlayerId
-    public static function getCurrentPId() {
-        return self::getCurrentPlayerId();
-    }
-
-    // Exposing protected method translation
-    public function translate($text) {
-        return self::_($text);
-    }
-    
-//    public function loadDeckModule(){
-//        return self::getNew("module.common.deck");
-//    }
 
 }

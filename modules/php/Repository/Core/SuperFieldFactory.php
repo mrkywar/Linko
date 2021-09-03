@@ -11,7 +11,7 @@ use Linko\Models\Core\Field;
  */
 abstract class SuperFieldFactory {
 
-    final protected static function generateField(
+    final protected static function newField(
             $fieldName,
             $fieldType,
             $DBprefix = "",

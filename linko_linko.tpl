@@ -1,5 +1,6 @@
 {OVERALL_GAME_HEADER}
 
+
 <div id="gamepanel">
     <div class="container">
 
@@ -7,6 +8,7 @@
     <div class="clear"></div>
 
 </div>
+
 <script type="text/javascript">
 
 // Javascript HTML templates

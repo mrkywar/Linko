@@ -2,8 +2,10 @@
 
 namespace Linko\Models;
 
+use Linko\Models\Core\Model;
+
 /**
- * Description of Card
+ * Description of Player
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */

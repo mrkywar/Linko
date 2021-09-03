@@ -1,5 +1,4 @@
 <?php
-
 namespace Linko\Models\Core;
 
 /**
@@ -8,6 +7,10 @@ namespace Linko\Models\Core;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 class Field {
+    
+    const STRING_FORMAT = "string";
+    const INTEGER_FORMAT = "int";
+    const BOOLEAN_FORMAT = "boolean";
 
     /**
      * @var string
@@ -60,7 +63,7 @@ class Field {
     }
 
     public function setProperty(string $property) {
-        $this->property = $property;
+        $this->property = ucfirst($property);
         return $this;
     }
 

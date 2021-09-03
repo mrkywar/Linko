@@ -2,12 +2,14 @@
 
 namespace Linko\Models;
 
+use Linko\Models\Core\Model;
+
 /**
  * Description of Player
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class Player implements Model{
+class Player implements Model {
 
     private $id;
     private $no;
@@ -69,5 +71,4 @@ class Player implements Model{
         $this->avatar = $avatar;
         return $this;
     }
-
 }

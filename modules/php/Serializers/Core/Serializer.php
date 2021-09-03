@@ -2,8 +2,7 @@
 
 namespace Linko\Serializers\Core;
 
-use Linko\Models\Model;
-use Linko\Tools\ArrayCollection;
+use Linko\Models\Core\Model;
 
 /**
  *
@@ -11,8 +10,8 @@ use Linko\Tools\ArrayCollection;
  */
 interface Serializer {
 
-    public function serialize(Model $object, ArrayCollection $fields);
+    public function serialize(Model $object, array $fields);
 
-    public function unserialize($rawDatas, ArrayCollection $fields);
+    public function unserialize($rawDatas, array $fields);
 
 }

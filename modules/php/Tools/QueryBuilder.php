@@ -3,31 +3,18 @@
 namespace Linko\Tools;
 
 use Linko\Models\Core\Field;
-use Linko\Models\Model;
-use Linko\Repository\Core\Repository;
+use Linko\Models\Core\Model;
+use Linko\Models\Core\QueryString;
+use Linko\Tools\Core\FieldValueTransposer as Transposer;
+
+//use Linko\Tools\Core\QueryStatementFacrory as StatementFactory;
 
 /**
  * Description of QueryBuilder
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class QueryBuilder extends \APP_DbObject {
-
-    const TYPE_SELECT = "SELECT";
-    const TYPE_INSERT = "INSERT";
-    const TYPE_UPDATE = "UPDATE";
-    const ORDER_ASC = "ASC";
-    const ORDER_DESC = "DESC";
-
-    /**
-     * @var Repository
-     */
-    private $repository;
-
-    /**
-     * @var DBFieldTransposer
-     */
-    private $fieldTransposer;
+class QueryBuilder {
 
     /**
      * @var string
@@ -37,20 +24,26 @@ class QueryBuilder extends \APP_DbObject {
     /**
      * @var string
      */
-    private $queryString;
+    private $tableName;
 
     /**
-     * @var bool
+     * @var string
      */
-    private $isDebug = false;
+    private $statement;
+
     /* -------------------------------------------------------------------------
-     *                  BEGIN - Select Properties
+     *                  Properties - Select
      * ---------------------------------------------------------------------- */
 
     /**
      * @var array
      */
-    private $conditions = [];
+    private $fields = [];
+
+    /**
+     * @var array
+     */
+    private $clauses = [];
 
     /**
      * @var array
@@ -61,14 +54,10 @@ class QueryBuilder extends \APP_DbObject {
      * @var int
      */
     private $limit;
-    /* -------------------------------------------------------------------------
-     *                  BEGIN - Update Properties
-     * ---------------------------------------------------------------------- */
 
-    /**
-     * @var array
-     */
-    private $fields;
+    /* -------------------------------------------------------------------------
+     *                  Properties - Update
+     * ---------------------------------------------------------------------- */
 
     /**
      * @var array
@@ -76,347 +65,193 @@ class QueryBuilder extends \APP_DbObject {
     private $setters = [];
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - Create Properties
+     *                  Properties - Create
      * ---------------------------------------------------------------------- */
-    private $items;
 
-    public function __construct(Repository $repository) {
-        $this->repository = $repository;
-        $this->fieldTransposer = new DBFieldTransposer($this->repository);
+    /**
+     * 
+     * @var array
+     */
+    private $values;
 
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - construct
+     * ---------------------------------------------------------------------- */
+
+    public function __construct($tableName = null) {
+        if (null !== $tableName) {
+            $this->tableName = $tableName;
+        }
         $this->init();
     }
 
     private function init() {
-        $this->queryType = null;
-        //-- Select 
-        $this->conditions = [];
+        $this->statement = "";
+        //-- (re)init select
         $this->orderBy = [];
         $this->limit = null;
-        //-- update
+        $this->clauses = [];
+        $this->fields = [];
+
+        //-- (re)init update
         $this->setters = [];
-        //-- create
-        $this->items = null;
-    }
 
-    public function getQueryType(): string {
-        return $this->queryType;
+        //-- (re)init insert
+        $this->setters = [];
     }
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - Statement
+     *                  BEGIN - Adders & Setters 
      * ---------------------------------------------------------------------- */
 
-    public function getStatement() {
-        $this->prepareStatement();
-        return $this->queryString;
-    }
-
-    private function prepareStatement() {
-        switch ($this->getQueryType()) {
-            case self::TYPE_SELECT:
-                $this->preapareSelect()
-                        ->prepareConditions()
-                        ->prepareOrderBy()
-                        ->prepareLimit();
-                break;
-            case self::TYPE_INSERT:
-                $this->prepareInsert()
-                        ->prepareValues();
-                break;
-            case self::TYPE_UPDATE:
-                $this->perpareUpdate()
-                        ->prepareSetter()
-                        ->prepareConditions();
-                break;
-        }
-        return $this;
-    }
-
-    /* -------------------------------------------------------------------------
-     *                  BEGIN - SELECT
-     * ---------------------------------------------------------------------- */
-
-    /**
-     * set type of query to select
-     * @return $this
-     */
     public function select() {
-        $this->queryType = self::TYPE_SELECT;
+        $this->queryType = QueryString::TYPE_SELECT;
         return $this;
     }
 
-    private function preapareSelect() {
-        $this->queryString = self::TYPE_SELECT . " * FROM ";
-        $this->queryString .= "`" . $this->repository->getTableName() . "`";
+    public function insert() {
+        $this->queryType = QueryString::TYPE_INSERT;
         return $this;
     }
 
-    public function execute() {
-        $this->prepareStatement();
-
-        switch ($this->getQueryType()) {
-            case self::TYPE_SELECT:
-                return $this->executeSelect();
-            case self::TYPE_INSERT:
-                return $this->executeInsert();
-            case self::TYPE_UPDATE:
-                return $this->executeUpdate();
-        }
-
-        $this->init(); // reinitialize QueryBuilder;
-    }
-
-    /**
-     * Execute select 
-     * @return ArrayCollection
-     */
-    private function executeSelect() {
-        $results = self::getObjectListFromDB($this->queryString);
-
-        if ($this->isDebug) {
-            echo '<pre>';
-            var_dump($this->queryString, $results, $this->repository->getSerializer());
-        }
-
-        $serializer = $this->repository->getSerializer();
-        switch (sizeof($results)) {
-            case 0:
-                return null;
-            case 1:
-                return $serializer->unserialize($results[0], $this->repository->getFields());
-            default :
-                $col = new ArrayCollection();
-                foreach ($results as $res) {
-                    $col->add($serializer->unserialize($res, $this->repository->getFields()));
-                }
-
-                return $col;
-        }
-    }
-
-    /* -------------------------------------------------------------------------
-     *                  BEGIN - Conditions (WHERE)
-     * ---------------------------------------------------------------------- */
-
-    private function prepareConditions() {
-        $iteration = 0;
-
-        foreach ($this->conditions as $condition) {
-            $this->queryString .= (0 === $iteration) ? " WHERE " : " AND ";
-            $this->queryString .= $condition;
-            $iteration++;
-        }
-
+    public function update() {
+        $this->queryType = QueryString::TYPE_UPDATE;
         return $this;
     }
 
-    public function addWhere(Field $field, $value) {
-        $condition = "`" . $field->getDb() . "`";
+    public function setTableName(string $tableName) {
+        $this->tableName = $tableName;
+        return $this;
+    }
+
+    public function setFields(array $fields) {
+        $this->fields = $fields;
+        return $this;
+    }
+
+    public function addField(Field $field) {
+        $this->fields[$field->getDb()] = "`" . $field->getDb() . "`";
+        return $this;
+    }
+
+    public function setClauses(array $clauses) {
+        $this->clauses = $clauses;
+        return $this;
+    }
+
+    public function addClause(Field $field, $value) {
+        $clause = "`" . $field->getDb() . "`";
         if (is_array($value)) {
-            $transposed = [];
+            $rawValues = [];
             foreach ($value as $val) {
-                $transposed [] = $this->fieldTransposer->transpose($val, $field);
+                $rawValues [] = Transposer::transpose($field, $val);
             }
-            $condition .= " IN (" . implode(",", $transposed) . ")";
+            $clause .= " IN " . implode(",", Transposer::transpose($field, $rawValues));
         } else {
-            $condition .= " = " . $this->fieldTransposer->transpose($value, $field);
+            $clause .= " = " . implode(",", Transposer::transpose($field, $value));
         }
 
-        $this->conditions[] = $condition;
+        $this->clauses[$field->getDb()] = $clause;
 
         return $this;
     }
 
-    /* -------------------------------------------------------------------------
-     *                  BEGIN - Ordering
-     * ---------------------------------------------------------------------- */
-
-    public function addOrderBy(Field $field, $dir = self::ORDER_ASC) {
-        $this->orderBy[] = $field->getDb() . " " . $dir;
+    public function setOrderBy(array $orderBy) {
+        $this->orderBy = $orderBy;
         return $this;
     }
 
-    private function prepareOrderBy() {
-        if (sizeof($this->orderBy) > 0) {
-            $this->queryString .= " ORDER BY " . implode(",", $this->orderBy);
-        }
+    public function addOrderBy(Field $field, $dir = QueryString::ORDER_ASC) {
+        $this->orderBy[$field->getDb()] = $field->getDb() . " " . $dir;
         return $this;
     }
-
-    /* -------------------------------------------------------------------------
-     *                  BEGIN - Limit
-     * ---------------------------------------------------------------------- */
 
     public function setLimit(int $limit) {
         $this->limit = $limit;
         return $this;
     }
 
-    private function prepareLimit() {
-        if (null !== $this->limit) {
-            $this->queryString .= " LIMIT " . $this->limit;
-        }
+    public function setSetters(array $setters) {
+        $this->setters = $setters;
         return $this;
     }
 
-    /* -------------------------------------------------------------------------
-     *                  BEGIN - INSERT
-     * ---------------------------------------------------------------------- */
+    public function addSetter(Field $field, $value) {
+        $setter = "`" . $field->getDb() . "`";
+        $setter .= " = " . Transposer::transpose($field, $value);
+        $this->setters[$field->getDb()] = $setter;
+        return $this;
+    }
+
+    public function setValues(array $values) {
+        $this->values = $values;
+        return $this;
+    }
+
+    public function addValue(Model $model, Field $primary) {
+        $rawValue = [];
+        foreach ($this->fields as $field) {
+            $getter = "get" . $field->getProperty();
+            $rawValue[$field->getDb()] = Transposer::transpose($field, $model->$getter());
+        }
+        if (isset($rawValue[$primary->getDb()]) && null === $model->getId()) {
+            $rawValue[$primary->getDb()] = 'null'; // insert need an null id for autoincrement
+        }
+
+        $this->values[] = "(" . implode(",", $rawValue) . ")";
+
+        return $this;
+    }
 
     /**
-     * set type of query to insert
-     * @param Model|ArrayCollection<Model> $items item(s) to create
+     * WARNING USE WITH CAUTION !!
+     * @param string $statement
      * @return $this
      */
-    public function insert($items = null) {
-        $this->items = $items;
-        $this->queryType = self::TYPE_INSERT;
+    public function setStatement(string $statement) {
+        $this->statement = $statement;
+        $this->queryType = QueryString::TYPE_CUSTOM;
         return $this;
-    }
-
-    private function prepareInsert() {
-        $table = $this->repository->getTableName();
-        $fields = implode(', ', $this->repository->getDbFields());
-
-        $this->queryString = self::TYPE_INSERT . " INTO ";
-        $this->queryString .= " `" . $table . "` ";
-        $this->queryString .= "( " . $fields . ")";
-        $this->queryString .= " VALUES ";
-
-        return $this;
-    }
-
-    private function prepareValues() {
-
-        $raws = [];
-        $serializer = $this->repository->getSerializer();
-
-        foreach ($this->items as $item) {
-            $raw = $serializer->serialize($item, $this->repository->getFields());
-            $values = [];
-            foreach ($this->repository->getFields() as $field) {
-                if (isset($raw[$field->getDB()])) {
-                    $values[] = $this->fieldTransposer->transpose($raw[$field->getDB()], $field);
-                } else {
-                    $values[] = "null";
-                }
-            }
-
-            $raws [] = "(" . implode(",", $values) . ")";
-        }
-
-        $this->queryString .= implode(",", $raws);
-
-        return $this;
-    }
-
-    /**
-     * Execute select 
-     * @return ArrayCollection
-     */
-    private function executeInsert() {
-        self::DbQuery($this->queryString);
-        return self::DbGetLastId();
     }
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - UPDATE
+     *                  BEGIN - Getters 
      * ---------------------------------------------------------------------- */
 
-    public function update($model, $fields) {
-        $this->items = $model;
-        $this->fields = $fields;
-
-        $primary = $this->repository->getPrimaryField();
-        $getter = "get" . ucfirst($primary->getProperty());
-        if ($model instanceof ArrayCollection) {
-            $ids = [];
-            foreach ($model as $elem) {
-                $ids[] = $elem->$getter();
-            }
-            $this->addWhere($primary, $ids);
-        } else {
-            $this->addWhere($primary, $model->$getter());
-        }
-        
-        $this->queryType = self::TYPE_UPDATE;
-
-        return $this;
+    public function getQueryType(): string {
+        return $this->queryType;
     }
 
-    private function perpareUpdate() {
-        $this->queryString = self::TYPE_UPDATE . " ";
-        $this->queryString .= "`" . $this->repository->getTableName() . "`";
-
-        if (null === $this->fields) {
-            $this->fields = $this->repository->getFields();
-        }
-
-        return $this;
+    public function getTableName(): string {
+        return $this->tableName;
     }
 
-    private function prepareSetter() {
-        $primary = $this->repository->getPrimaryField();
-        $this->setters = [];
-
-        $this->queryString .= " SET ";
-        if ($this->items instanceof ArrayCollection) {
-            //-- Only need one serie of fields
-            $raw = $this->repository->getSerializer()->serialize($this->items->first(), $this->fields);
-        } else {
-            $raw = $this->repository->getSerializer()->serialize($this->items, $this->fields);
-        }
-
-
-        if (isset($raw[$primary->getDb()])) {
-            unset($raw[$primary->getDb()]);
-        }
-
-        $this->setters = [];
-        foreach ($raw as $dbField => $value) {
-            $field = $this->repository->getFieldByDB($dbField);
-            $setter = "`" . $dbField . "` = ";
-            $setter .= $this->fieldTransposer->transpose($value, $field);
-            $this->setters[] = $setter;
-        }
-
-        $this->queryString .= implode(",", $this->setters);
-
-        return $this;
+    public function getFields(): array {
+        return $this->fields;
     }
 
-    private function executeUpdate() {
-        self::DbQuery($this->queryString);
-        return self::DbAffectedRow();
+    public function getClauses(): array {
+        return $this->clauses;
     }
 
-    /* -------------------------------------------------------------------------
-     *                  BEGIN - Select Queries
-     * ---------------------------------------------------------------------- */
-
-    public function getAll() {
-        return $this->select()->execute();
+    public function getOrderBy(): array {
+        return $this->orderBy;
     }
 
-    public function findByPrimary($id) {
-        $primary = $this->repository->getPrimaryField();
-
-        $this->select()
-                ->addWhere($primary, $id);
-
-        return $this->select()
-                        ->addWhere($primary, $id)
-                        ->execute();
+    public function getLimit(): int {
+        return $this->limit;
     }
 
-    /* -------------------------------------------------------------------------
-     *                  BEGIN - debug
-     * ---------------------------------------------------------------------- */
+    public function getSetters(): array {
+        return $this->setters;
+    }
 
-    public function setIsDebug(bool $isDebug) {
-        $this->isDebug = $isDebug;
-        return $this;
+    public function getValues(): array {
+        return $this->values;
+    }
+
+    public function getStatement(): string {
+        return $this->statement;
     }
 
 }

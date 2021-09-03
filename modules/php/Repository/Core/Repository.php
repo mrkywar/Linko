@@ -4,17 +4,14 @@ namespace Linko\Repository\Core;
 
 use Linko\Models\Core\Field;
 use Linko\Serializers\Core\Serializer;
+use Linko\Tools\DBRequester;
+use Linko\Tools\QueryBuilder;
 
 /**
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 interface Repository {
-
-    const STRING_FORMAT = "string";
-    const INTEGER_FORMAT = "int";
-    const BOOLEAN_FORMAT = "boolean";
-
     /* -------------------------------------------------------------------------
      *                  BEGIN - Base queries
      * ---------------------------------------------------------------------- */
@@ -25,8 +22,6 @@ interface Repository {
 
     public function getById($id);
 
-    public function update($model, $updField = null);
-
     /* -------------------------------------------------------------------------
      *                  BEGIN - Serializer
      * ---------------------------------------------------------------------- */
@@ -36,6 +31,15 @@ interface Repository {
      * @return Serializer
      */
     public function getSerializer(): Serializer;
+    
+    
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - DB Link
+     * ---------------------------------------------------------------------- */
+    
+    public function getDbRequester(): DBRequester;
+    
+    public function getQueryBuilder() : QueryBuilder;
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Fields Management
@@ -43,11 +47,11 @@ interface Repository {
 
     public function getTableName();
 
-    public function getFields();
+    public function getFields(): array;
 
     public function getFieldsPrefix();
 
-    public function getDbFields();
+    public function getDbFields(): array;
 
     public function getPrimaryField();
 
@@ -64,4 +68,15 @@ interface Repository {
      * @return Field
      */
     public function getFieldByDB($dbName);
+    
+    public function setFields(array $fields);
+    
+    
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Debug
+     * ---------------------------------------------------------------------- */
+
+    public function getIsDebug(): bool;
+
+    public function setIsDebug(bool $isDebug): Repository;
 }

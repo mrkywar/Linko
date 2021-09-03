@@ -2,9 +2,9 @@
 
 namespace Linko\Repository\FieldsFactories;
 
+use Linko\Models\Core\Field;
 use Linko\Repository\Core\Repository;
 use Linko\Repository\Core\SuperFieldFactory;
-use Linko\Tools\ArrayCollection;
 
 /**
  * Description of PlayerFieldsFactory
@@ -14,15 +14,16 @@ use Linko\Tools\ArrayCollection;
 abstract class PlayerFieldsFactory extends SuperFieldFactory {
 
     public static function create(Repository $repo) {
-        $fields = new ArrayCollection();
+        $fields = [];
 
-        $fields->add(self::generateField("id", Repository::INTEGER_FORMAT, $repo->getFieldsPrefix(), true, true))
-                ->add(self::generateField("name", Repository::STRING_FORMAT, $repo->getFieldsPrefix(), true))
-                ->add(self::generateField("canal", Repository::STRING_FORMAT, $repo->getFieldsPrefix()))
-                ->add(self::generateField("color", Repository::STRING_FORMAT, $repo->getFieldsPrefix(), true))
-                ->add(self::generateField("avatar", Repository::STRING_FORMAT, $repo->getFieldsPrefix(), true))
+        //-- newField($fieldName,$fieldType,$DBprefix = "", $isUi = false,$isPrimary = false)
+        $fields[] = self::newField("id", Field::INTEGER_FORMAT, $repo->getFieldsPrefix(), true, true);
+        $fields[] = self::newField("name", Field::STRING_FORMAT, $repo->getFieldsPrefix(), true);
+        $fields[] = self::newField("canal", Field::STRING_FORMAT, $repo->getFieldsPrefix());
+        $fields[] = self::newField("color", Field::STRING_FORMAT, $repo->getFieldsPrefix(), true);
+        $fields[] = self::newField("avatar", Field::STRING_FORMAT, $repo->getFieldsPrefix(), true);
         ;
-        
+
         return $fields;
     }
 

@@ -3,9 +3,8 @@
 namespace Linko\Repository\Core;
 
 use Linko\Models\Core\Field;
-use Linko\Models\Model;
 use Linko\Serializers\Core\Serializer;
-use Linko\Tools\ArrayCollection;
+use Linko\Tools\DBRequester;
 use Linko\Tools\QueryBuilder;
 
 /**
@@ -16,22 +15,33 @@ use Linko\Tools\QueryBuilder;
 abstract class SuperRepository implements Repository {
 
     /**
-     * 
-     * @var QueryBuilder
+     * @var DBRequester
      */
-    protected $queryBuilder;
+    protected $dbRequester;
+
+    /**
+     * @var Serializer
+     */
     protected $serializer;
+
+    /**
+     * @var array 
+     */
     protected $fields;
 
     /**
      * 
-     * @return QueryBuilder
+     * @var bool
      */
-    public function getQueryBuilder() {
-        if (null === $this->queryBuilder) {
-            $this->queryBuilder = new QueryBuilder($this);
+    private $isDebug;
+
+    public function getDbRequester(): DBRequester {
+        if (null === $this->dbRequester) {
+            $this->dbRequester = new DBRequester();
         }
-        return $this->queryBuilder;
+
+
+        return $this->dbRequester;
     }
 
     /**
@@ -42,7 +52,17 @@ abstract class SuperRepository implements Repository {
         return $this->serializer;
     }
 
-        /* -------------------------------------------------------------------------
+    /**
+     * 
+     * @return QueryBuilder
+     */
+    public function getQueryBuilder(): QueryBuilder {
+        $qb = new QueryBuilder();
+        $qb->setTableName($this->getTableName());
+        return $qb;
+    }
+
+    /* -------------------------------------------------------------------------
      *                  BEGIN - Fields Management
      * ---------------------------------------------------------------------- */
 
@@ -50,8 +70,12 @@ abstract class SuperRepository implements Repository {
 
     abstract public function getFieldsPrefix();
 
-    final public function getFields() {
+    final public function getFields(): array {
         return $this->fields;
+    }
+
+    final public function setFields(array $fields) {
+        $this->fields = $fields;
     }
 
     /**
@@ -73,11 +97,11 @@ abstract class SuperRepository implements Repository {
      * get all DBFields
      * @return array all DBFields
      */
-    public function getDbFields() {
+    public function getDbFields(): array {
         $res = [];
         $fields = $this->getFields();
         foreach ($fields as $field) {
-            $res [] = $this->getFieldsPrefix() . $field->getProperty();
+            $res [] = $field->getDb();
         }
         return $res;
     }
@@ -87,11 +111,11 @@ abstract class SuperRepository implements Repository {
      * @return array all DBFields
      */
     public function getUiFields() {
-        $res = new ArrayCollection();
+        $res = [];
         $fields = $this->getFields();
         foreach ($fields as $field) {
             if ($field->isUi()) {
-                $res->add($field);
+                $res [] = $field;
             }
         }
         return $res;
@@ -130,23 +154,50 @@ abstract class SuperRepository implements Repository {
      * ---------------------------------------------------------------------- */
 
     public function getAll() {
-        return $this->getQueryBuilder()->getAll();
+        $qb = $this->getQueryBuilder()->select();
+
+        return $this->getDbRequester()->execute($qb);
     }
 
     public function getById($id) {
-        return $this->getQueryBuilder()->findByPrimary($id);
+        $qb = $this->getQueryBuilder()
+                ->select()
+                ->addClause($this->getPrimaryField(), $id);
+
+        return $this->getDbRequester()->execute($qb);
     }
 
     public function create($items) {
-        return $this->getQueryBuilder()
-                        ->insert($items)
-                        ->execute();
+        $qb = $this->getQueryBuilder()
+                ->insert()
+                ->setFields($this->getFields());
+
+        $primary = $this->getPrimaryField();
+
+        if (is_array($items)) {
+            foreach ($items as $item) {
+                $qb->addValue($item, $primary);
+            }
+        } else {
+            $qb->addValue($items, $primary);
+        }
+
+        return $this->getDbRequester()->execute($qb);
     }
 
-    public function update($model, $updField=null) {
-        return $this->getQueryBuilder()
-                        ->update($model, $updField)
-                        ->execute();
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Debug
+     * ---------------------------------------------------------------------- */
+
+    final public function getIsDebug(): bool {
+        return $this->isDebug;
+    }
+
+    final public function setIsDebug(bool $isDebug): Repository {
+        $this->isDebug = $isDebug;
+        $this->getDbRequester()->setIsDebug($isDebug);
+
+        return $this;
     }
 
 }
