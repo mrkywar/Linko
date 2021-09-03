@@ -111,11 +111,11 @@ abstract class SuperRepository implements Repository {
      * @return array all DBFields
      */
     public function getUiFields() {
-        $res = new ArrayCollection();
+        $res = [];
         $fields = $this->getFields();
         foreach ($fields as $field) {
             if ($field->isUi()) {
-                $res->add($field);
+                $res [] = $field;
             }
         }
         return $res;
@@ -172,12 +172,14 @@ abstract class SuperRepository implements Repository {
                 ->insert()
                 ->setFields($this->getFields());
 
+        $primary = $this->getPrimaryField();
+
         if (is_array($items)) {
             foreach ($items as $item) {
-                $qb->addValue($item);
+                $qb->addValue($item, $primary);
             }
         } else {
-            $qb->addValue($items);
+            $qb->addValue($items, $primary);
         }
 
         return $this->getDbRequester()->execute($qb);

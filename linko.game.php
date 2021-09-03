@@ -77,7 +77,7 @@ class Linko extends Table {
 
     protected function setupNewGame($players, $options = array()) {
         $this->playerManager->initNewGame($players, $options);
-        $this->cardManager->initNewGame();
+//        $this->cardManager->initNewGame();
         
 //        $gameinfos = self::getGameinfos();
 ////        $default_colors = $gameinfos['player_colors'];

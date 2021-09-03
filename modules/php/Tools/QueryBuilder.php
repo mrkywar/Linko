@@ -188,13 +188,17 @@ class QueryBuilder {
         return $this;
     }
 
-    public function addValue(Model $model) {
+    public function addValue(Model $model, Field $primary) {
         $rawValue = [];
         foreach ($this->fields as $field) {
             $getter = "get" . $field->getProperty();
             $rawValue[$field->getDb()] = Transposer::transpose($field, $model->$getter());
         }
-        $this->values[$model->getId()] = "(" . implode(",", $rawValue) . ")";
+        if (isset($rawValue[$primary->getDb()])) {
+            $rawValue[$primary->getDb()] = 'null'; // insert need an null id for autoincrement
+        }
+
+        $this->values[] = "(" . implode(",", $rawValue) . ")";
 
         return $this;
     }

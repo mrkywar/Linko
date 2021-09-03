@@ -48,7 +48,7 @@ class CardManager extends Manager {
         }
 
         $this->repository
-                //->setIsDebug(true)
+//                ->setIsDebug(true)
                 ->create($this->deck);
 
         return $this;
