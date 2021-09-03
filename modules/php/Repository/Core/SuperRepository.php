@@ -29,10 +29,17 @@ abstract class SuperRepository implements Repository {
      */
     protected $fields;
 
+    /**
+     * 
+     * @var bool
+     */
+    private $isDebug;
+
     public function getDbRequester(): DBRequester {
         if (null === $this->dbRequester) {
             $this->dbRequester = new DBRequester();
         }
+
 
         return $this->dbRequester;
     }
@@ -104,11 +111,11 @@ abstract class SuperRepository implements Repository {
      * @return array all DBFields
      */
     public function getUiFields() {
-        $res = new ArrayCollection();
+        $res = [];
         $fields = $this->getFields();
         foreach ($fields as $field) {
             if ($field->isUi()) {
-                $res->add($field);
+                $res [] = $field;
             }
         }
         return $res;
@@ -165,17 +172,32 @@ abstract class SuperRepository implements Repository {
                 ->insert()
                 ->setFields($this->getFields());
 
+        $primary = $this->getPrimaryField();
+
         if (is_array($items)) {
             foreach ($items as $item) {
-                $qb->addValue($item);
+                $qb->addValue($item, $primary);
             }
         } else {
-            $qb->addValue($items);
+            $qb->addValue($items, $primary);
         }
-        
-//        var_dump($qb);die;
 
         return $this->getDbRequester()->execute($qb);
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Debug
+     * ---------------------------------------------------------------------- */
+
+    final public function getIsDebug(): bool {
+        return $this->isDebug;
+    }
+
+    final public function setIsDebug(bool $isDebug): Repository {
+        $this->isDebug = $isDebug;
+        $this->getDbRequester()->setIsDebug($isDebug);
+
+        return $this;
     }
 
 }

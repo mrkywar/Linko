@@ -70,4 +70,13 @@ interface Repository {
     public function getFieldByDB($dbName);
     
     public function setFields(array $fields);
+    
+    
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Debug
+     * ---------------------------------------------------------------------- */
+
+    public function getIsDebug(): bool;
+
+    public function setIsDebug(bool $isDebug): Repository;
 }

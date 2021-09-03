@@ -1,5 +1,6 @@
 <?php
 
+use Linko\Managers\Factories\CardManagerFactory;
 use Linko\Managers\Factories\PlayerManagerFactory;
 
 /**
@@ -38,8 +39,8 @@ class Linko extends Table {
 
     private static $instance;
     private $playerManager;
-
-    function __construct() {
+    private $cardManager;
+                function __construct() {
         parent::__construct();
 
         self::initGameStateLabels(array(
@@ -52,6 +53,7 @@ class Linko extends Table {
         ));
 
         $this->playerManager = PlayerManagerFactory::create();
+        $this->cardManager = CardManagerFactory::create();
 
         self::$instance = $this;
     }
@@ -75,6 +77,7 @@ class Linko extends Table {
 
     protected function setupNewGame($players, $options = array()) {
         $this->playerManager->initNewGame($players, $options);
+        $this->cardManager->initNewGame();
         
 //        $gameinfos = self::getGameinfos();
 ////        $default_colors = $gameinfos['player_colors'];
