@@ -1,19 +1,27 @@
 <?php
 
-namespace Linko\Serializers;
-
-use Linko\Models\Player;
-use Linko\Serializers\Core\SuperSerializer;
+namespace Linko\Repository;
 
 /**
- * Description of PlayerSerializer
+ * Description of PlayerRepository
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class PlayerSerializer extends SuperSerializer {
+class PlayerRepository extends Core\SuperRepository {
 
-    public function getModelClass() {
-        return Player::class;
+    private CONST TABLE_NAME = "player";
+    private CONST FIELDS_PREFIX = "player_";
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Implement SuperRepository
+     * ---------------------------------------------------------------------- */
+
+    public function getFieldsPrefix() {
+        return self::FIELDS_PREFIX;
+    }
+
+    public function getTableName() {
+        return self::TABLE_NAME;
     }
 
 }

@@ -1,6 +1,4 @@
-  
 <?php
-
 namespace Linko\Managers;
 
 use Linko\Models\Card;

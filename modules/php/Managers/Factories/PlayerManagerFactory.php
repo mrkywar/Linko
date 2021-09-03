@@ -1,10 +1,7 @@
 <?php
 namespace Linko\Managers\Factories;
 
-use Linko\Managers\PlayerManager;
-use Linko\Repository\FieldsFactories\PlayerFieldsFactory;
-use Linko\Repository\PlayerRepository;
-use Linko\Serializers\PlayerSerializer;
+
 
 /**
  * Description of PlayerManagerFactory
