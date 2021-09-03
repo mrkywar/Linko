@@ -194,7 +194,7 @@ class QueryBuilder {
             $getter = "get" . $field->getProperty();
             $rawValue[$field->getDb()] = Transposer::transpose($field, $model->$getter());
         }
-        if (isset($rawValue[$primary->getDb()])) {
+        if (isset($rawValue[$primary->getDb()]) && null === $model->getId()) {
             $rawValue[$primary->getDb()] = 'null'; // insert need an null id for autoincrement
         }
 

@@ -48,7 +48,6 @@ class CardManager extends Manager {
         }
 
         $this->repository
-//                ->setIsDebug(true)
                 ->create($this->deck);
 
         return $this;
@@ -58,7 +57,8 @@ class CardManager extends Manager {
         $card = new Card();
         $card->setLocation($location)
                 ->setType($cardValue)
-                ->setTypeArg($cardValue);
+                ->setTypeArg($cardValue)
+                ->setId(null);
 
         return $card;
     }
