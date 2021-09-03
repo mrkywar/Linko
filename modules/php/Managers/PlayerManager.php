@@ -32,8 +32,8 @@ class PlayerManager extends Manager {
 
         $this->repository->create($players);
 
-//        Linko::getInstance()->reattributeColorsBasedOnPreferences($players, $gameinfos['player_colors']);
-//        Linko::getInstance()->reloadPlayersBasicInfos();
+        Linko::getInstance()->reattributeColorsBasedOnPreferences($rawPlayers, $gameinfos['player_colors']);
+        Linko::getInstance()->reloadPlayersBasicInfos();
     }
 
 }
