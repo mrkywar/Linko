@@ -11,9 +11,18 @@ use Linko\Tools\Core\QueryStatementFactory;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 class DBRequester extends \APP_DbObject {
-
+    
+    /**
+     * 
+     * @var bool
+     */
+    private $isDebug;
+    
     public function execute(QueryBuilder $qb) {
         $queryString = QueryStatementFactory::create($qb);
+        if($this->isDebug){
+            var_dump($queryString);die;
+        }
 
         switch ($qb->getQueryType()) {
             case QueryString::TYPE_SELECT:
@@ -28,5 +37,21 @@ class DBRequester extends \APP_DbObject {
                 throw new DBException("DBR : Execute : Not Implemented Yet");
         }
     }
+    
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Debug
+     * ---------------------------------------------------------------------- */
+    
+    public function getIsDebug(): bool {
+        return $this->isDebug;
+    }
+
+    public function setIsDebug(bool $isDebug) {
+        $this->isDebug = $isDebug;
+        return $this;
+    }
+
+
 
 }

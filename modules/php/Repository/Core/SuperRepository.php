@@ -29,10 +29,17 @@ abstract class SuperRepository implements Repository {
      */
     protected $fields;
 
+    /**
+     * 
+     * @var bool
+     */
+    private $isDebug;
+
     public function getDbRequester(): DBRequester {
         if (null === $this->dbRequester) {
             $this->dbRequester = new DBRequester();
         }
+
 
         return $this->dbRequester;
     }
@@ -172,10 +179,23 @@ abstract class SuperRepository implements Repository {
         } else {
             $qb->addValue($items);
         }
-        
-//        var_dump($qb);die;
 
         return $this->getDbRequester()->execute($qb);
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Debug
+     * ---------------------------------------------------------------------- */
+
+    final public function getIsDebug(): bool {
+        return $this->isDebug;
+    }
+
+    final public function setIsDebug(bool $isDebug): Repository {
+        $this->isDebug = $isDebug;
+        $this->getDbRequester()->setIsDebug($isDebug);
+
+        return $this;
     }
 
 }
