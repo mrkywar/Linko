@@ -2,7 +2,6 @@
 
 use Linko\Managers\Factories\PlayerManagerFactory;
 
-
 /**
  * ------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
@@ -19,7 +18,6 @@ use Linko\Managers\Factories\PlayerManagerFactory;
  * In this PHP file, you are going to defines the rules of the game.
  *
  */
-
 $swdNamespaceAutoload = function ($class) {
     $classParts = explode('\\', $class);
     if ($classParts[0] == 'Linko') {
@@ -37,8 +35,9 @@ spl_autoload_register($swdNamespaceAutoload, true, true);
 require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 
 class Linko extends Table {
+
     private static $instance;
-            
+    private $playerManager;
 
     function __construct() {
         parent::__construct();
@@ -51,11 +50,13 @@ class Linko extends Table {
                 //    "my_second_game_variant" => 101,
                 //      ...
         ));
-        
+
+        $this->playerManager = PlayerManagerFactory::create();
+
         self::$instance = $this;
     }
-    
-    public static function getInstance(){
+
+    public static function getInstance() {
         return self::$instance;
     }
 
@@ -73,8 +74,8 @@ class Linko extends Table {
      */
 
     protected function setupNewGame($players, $options = array()) {
-        
-        
+        $this->playerManager->initNewGame($players, $options);
+
         // Set the colors of the players with HTML color code
         // The default below is red/green/blue/orange/brown
         // The number of colors defined here must correspond to the maximum number of players allowed for the gams
@@ -120,9 +121,9 @@ class Linko extends Table {
      */
 
     protected function getAllDatas() {
-        $playerManager = PlayerManagerFactory::create();
-        $playerManager->initNewGame();
-        
+//        $playerManager = PlayerManagerFactory::create();
+
+
         $result = array();
 
         $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!

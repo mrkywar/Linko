@@ -4,6 +4,8 @@ namespace Linko\Repository\Core;
 
 use Linko\Models\Core\Field;
 use Linko\Serializers\Core\Serializer;
+use Linko\Tools\DBRequester;
+use Linko\Tools\QueryBuilder;
 
 /**
  *
@@ -29,6 +31,15 @@ interface Repository {
      * @return Serializer
      */
     public function getSerializer(): Serializer;
+    
+    
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - DB Link
+     * ---------------------------------------------------------------------- */
+    
+    public function getDbRequester(): DBRequester;
+    
+    public function getQueryBuilder() : QueryBuilder;
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Fields Management

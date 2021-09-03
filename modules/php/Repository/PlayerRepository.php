@@ -17,11 +17,11 @@ class PlayerRepository extends Core\SuperRepository {
      * ---------------------------------------------------------------------- */
 
     public function getFieldsPrefix() {
-        return self::TABLE_NAME;
+        return self::FIELDS_PREFIX;
     }
 
     public function getTableName() {
-        return self::FIELDS_PREFIX;
+        return self::TABLE_NAME;
     }
 
 }

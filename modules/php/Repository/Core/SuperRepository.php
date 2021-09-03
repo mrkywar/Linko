@@ -49,7 +49,7 @@ abstract class SuperRepository implements Repository {
      * 
      * @return QueryBuilder
      */
-    public function getQueryBuilder() {
+    public function getQueryBuilder(): QueryBuilder {
         $qb = new QueryBuilder();
         $qb->setTableName($this->getTableName());
         return $qb;

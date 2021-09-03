@@ -2,6 +2,8 @@
 
 namespace Linko\Managers;
 
+use Linko;
+
 /**
  * Description of PlayerManager
  *
@@ -9,11 +11,29 @@ namespace Linko\Managers;
  */
 class PlayerManager extends Manager {
 
-    public function initNewGame($player = null, $options = null) {
-        $gameinfo = \Linko::getInstance()->getGameinfos();
+    private $repository;
 
-        var_dump($gameinfo);
-        die;
+    public function initNewGame($rawPlayers = null, $options = null) {
+        $this->repository = $this->getRepository();
+
+        $gameinfos = Linko::getInstance()->getGameinfos();
+        $fields = $this->repository->getFields();
+        $players = [];
+
+        $default_colors = $gameinfos['player_colors'];
+
+        foreach ($rawPlayers as $player_id => $rawPlayer) {
+            $color = array_shift($default_colors);
+            $player = $this->getSerializer()->unserialize($rawPlayer, $fields);
+            $player->setId($player_id)
+                    ->setColor($color);
+            $players[] = $player;
+        }
+
+        $this->repository->create($players);
+
+        Linko::getInstance()->reattributeColorsBasedOnPreferences($players, $gameinfos['player_colors']);
+        Linko::getInstance()->reloadPlayersBasicInfos();
     }
 
 }
