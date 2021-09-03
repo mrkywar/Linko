@@ -1,10 +1,10 @@
 <?php
 namespace Linko\Managers;
 
-use Linko\Managers\Core\ManagerException;
-use Linko\Managers\PlayerManager;
 use Linko\Repository\PlayerRepository;
 use Linko\Serializers\PlayerSerializer;
+
+
 /**
  * Description of PlayerManagerFactory
  *
