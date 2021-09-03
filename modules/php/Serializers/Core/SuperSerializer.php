@@ -2,6 +2,9 @@
 
 namespace Linko\Serializers\Core;
 
+use Linko\Models\Core\Field;
+use Linko\Models\Core\Model;
+
 /**
  * Description of SuperSerializer
  *
@@ -18,7 +21,7 @@ abstract class SuperSerializer implements Serializer {
      * @param Model $object
      * @return array $rawDatas
      */
-    public function serialize(Model $object, ArrayCollection $fields) {
+    public function serialize(Model $object, array $fields) {
         $raw = [];
 
         foreach ($fields as $field) {
@@ -39,7 +42,7 @@ abstract class SuperSerializer implements Serializer {
 
     abstract public function getModelClass();
 
-    public function unserialize($rawDatas, ArrayCollection $fields) {
+    public function unserialize($rawDatas, array $fields) {
         $modelClass = $this->getModelClass();
         $object = new $modelClass();
         
