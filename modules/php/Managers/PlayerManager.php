@@ -32,8 +32,21 @@ class PlayerManager extends Manager {
 
         $this->repository->create($players);
 
-        Linko::getInstance()->reattributeColorsBasedOnPreferences($players, $gameinfos['player_colors']);
-        Linko::getInstance()->reloadPlayersBasicInfos();
+//        Linko::getInstance()->reattributeColorsBasedOnPreferences($players, $gameinfos['player_colors']);
+//        Linko::getInstance()->reloadPlayersBasicInfos();
     }
 
 }
+
+//
+//
+//$sql = "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar) VALUES ";
+//        $values = array();
+//        foreach ($players as $player_id => $player) {
+//            $color = array_shift($default_colors);
+//            $values[] = "('" . $player_id . "','$color','" . $player['player_canal'] . "','" . addslashes($player['player_name']) . "','" . addslashes($player['player_avatar']) . "')";
+//        }
+//        $sql .= implode($values, ',');
+//        self::DbQuery($sql);
+//        self::reattributeColorsBasedOnPreferences($players, $gameinfos['player_colors']);
+//        self::reloadPlayersBasicInfos();

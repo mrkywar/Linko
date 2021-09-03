@@ -94,7 +94,7 @@ abstract class SuperRepository implements Repository {
         $res = [];
         $fields = $this->getFields();
         foreach ($fields as $field) {
-            $res [] = $this->getFieldsPrefix() . $field->getProperty();
+            $res [] = $field->getDb();
         }
         return $res;
     }
@@ -149,7 +149,7 @@ abstract class SuperRepository implements Repository {
     public function getAll() {
         $qb = $this->getQueryBuilder()->select();
 
-        return $this->dbRequester->execute($qb);
+        return $this->getDbRequester()->execute($qb);
     }
 
     public function getById($id) {
@@ -157,12 +157,13 @@ abstract class SuperRepository implements Repository {
                 ->select()
                 ->addClause($this->getPrimaryField(), $id);
 
-        return $this->dbRequester->execute($qb);
+        return $this->getDbRequester()->execute($qb);
     }
 
     public function create($items) {
         $qb = $this->getQueryBuilder()
-                ->insert();
+                ->insert()
+                ->setFields($this->getFields());
 
         if (is_array($items)) {
             foreach ($items as $item) {
@@ -171,8 +172,10 @@ abstract class SuperRepository implements Repository {
         } else {
             $qb->addValue($items);
         }
+        
+//        var_dump($qb);die;
 
-        return $this->dbRequester->execute($qb);
+        return $this->getDbRequester()->execute($qb);
     }
 
 }
