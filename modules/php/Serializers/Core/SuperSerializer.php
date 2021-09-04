@@ -43,7 +43,7 @@ abstract class SuperSerializer implements Serializer {
 
     abstract public function getModelClass();
 
-    public function unserialize($rawDatas, array $fields) {
+    public function unserializeOnce($rawDatas, array $fields) {
         $modelClass = $this->getModelClass();
         $object = new $modelClass();
 
@@ -52,6 +52,14 @@ abstract class SuperSerializer implements Serializer {
         }
 
         return $object;
+    }
+
+    public function unserialize($rawDatas, array $fields) {
+        $objects = [];
+        foreach ($rawDatas as $raw) {
+            $objects[] = $this->unserializeOnce($raw, $fields);
+        }
+        return $objects;
     }
 
     private function unserializeValue(Model &$object, Field $field, $rawDatas) {

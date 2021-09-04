@@ -48,32 +48,32 @@ class CardRepository extends SuperRepository {
             $qb->setLimit($limit);
         }
 
-        return $this->getDbRequester()->execute($qb);
+        $results = $this->getDbRequester()->execute($qb);
+
+        return $this->serializer->unserialize($results, $this->getFields());
     }
 
     public function moveCardsToLocation($cards, $location, $locationArg = 0) {
         $locationField = $this->getFieldByProperty("location");
         $locationArgField = $this->getFieldByProperty("locationArg");
         $primary = $this->getPrimaryField();
-        
+
         $qb = $this->getQueryBuilder()
                 ->update()
                 ->addSetter($locationField, $location)
                 ->addSetter($locationArgField, $locationArg);
-        
-        if(is_array($cards)){
+
+        if (is_array($cards)) {
             $ids = [];
-            foreach ($cards as $card){
-                $ids[]=$card->getId();    
+            foreach ($cards as $card) {
+                $ids[] = $card->getId();
             }
             $qb->addClause($primary, $ids);
-        }else{
+        } else {
             $qb->addClause($primary, $cards->getId());
         }
-        
+
         return $this->getDbRequester()->execute($qb);
-        
-        
     }
 
 }

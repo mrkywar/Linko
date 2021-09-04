@@ -49,16 +49,19 @@ class Deck {
 
     public function drawCards($numberOfCards, $location, $locationArg = null) {
         $cards = $this->getRepository()
+                //->setIsDebug(true)
                 ->getCardsInLocation(self::DECK_NAME, null, $numberOfCards);
-
+        
         if (sizeof($cards) !== $numberOfCards) {
             throw new DeckException("Not enouth cards aviable");
         }
-
+        var_dump($cards);die;
+        
+        
         $this->getRepository()
                 ->moveCardsToLocation($cards, $location, $locationArg);
-
-        return $this;
+//
+//        return $this;
     }
 
 }

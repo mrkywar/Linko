@@ -12,7 +12,7 @@ use Linko\Tools\QueryBuilder;
  */
 abstract class QueryStatementFactory {
 
-    public static function create(QueryBuilder $qb) {
+    public static function create(QueryBuilder &$qb) {
         $queryString = "";
         switch ($qb->getQueryType()) {
             case QueryString::TYPE_SELECT:
@@ -28,6 +28,8 @@ abstract class QueryStatementFactory {
                 $queryString = $qb->getStatement();
                 break;
         }
+        
+        $qb->reset();
 
         return $queryString;
     }
@@ -49,7 +51,7 @@ abstract class QueryStatementFactory {
         $statement .= QueryString::TYPE_SELECT;
 
         //-- Fields (list or *)
-        if (null !== $qb->getFields()) {
+        if (!empty($qb->getFields())) {
             $statement .= self::createFieldList($qb);
         } else {
             $statement .= " * ";

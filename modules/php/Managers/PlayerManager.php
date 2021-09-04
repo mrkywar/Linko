@@ -21,7 +21,7 @@ class PlayerManager extends Manager {
 
         foreach ($rawPlayers as $player_id => $rawPlayer) {
             $color = array_shift($default_colors);
-            $player = $this->getSerializer()->unserialize($rawPlayer, $fields);
+            $player = $this->getSerializer()->unserializeOnce($rawPlayer, $fields);
             $player->setId($player_id)
                     ->setColor($color);
             $players[] = $player;

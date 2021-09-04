@@ -99,6 +99,10 @@ class QueryBuilder {
         //-- (re)init insert
         $this->setters = [];
     }
+    
+    public function reset() {
+        $this->init();
+    }
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Adders & Setters 
@@ -162,7 +166,7 @@ class QueryBuilder {
     }
 
     public function addOrderBy(Field $field, $dir = QueryString::ORDER_ASC) {
-        $this->orderBy[$field->getDb()] = $field->getDb() . " " . $dir;
+        $this->orderBy[$field->getDb()] = "`".$field->getDb() . "` " . $dir;
         return $this;
     }
 
