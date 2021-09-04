@@ -46,7 +46,7 @@ abstract class QueryStatementFactory {
     }
 
     private static function createSelectQuery(QueryBuilder $qb, &$statement) {
-        $statement .= QueryBuilder::TYPE_SELECT;
+        $statement .= QueryString::TYPE_SELECT;
 
         //-- Fields (list or *)
         if (null !== $qb->getFields()) {

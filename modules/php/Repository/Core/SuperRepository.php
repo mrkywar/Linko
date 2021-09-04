@@ -128,7 +128,7 @@ abstract class SuperRepository implements Repository {
      */
     public function getFieldByProperty($property) {
         foreach ($this->getFields() as $field) {
-            if ($property === $field->getProperty()) {
+            if (ucfirst($property) === $field->getProperty()) {
                 return $field;
             }
         }

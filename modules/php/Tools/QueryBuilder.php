@@ -148,7 +148,7 @@ class QueryBuilder {
             }
             $clause .= " IN " . implode(",", Transposer::transpose($field, $rawValues));
         } else {
-            $clause .= " = " . implode(",", Transposer::transpose($field, $value));
+            $clause .= " = " . Transposer::transpose($field, $value);
         }
 
         $this->clauses[$field->getDb()] = $clause;
