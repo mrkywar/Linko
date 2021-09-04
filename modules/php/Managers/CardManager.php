@@ -62,5 +62,27 @@ class CardManager extends Manager {
 
         return $card;
     }
+    
+    
+
+
+
+
+
+
+
+
+
+
+//    public function functionName($param) {
+//        
+//    }
+    
+    
+    
+    
+    
+    
+    
 
 }
