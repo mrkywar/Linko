@@ -3,7 +3,7 @@
 namespace Linko\Models\Core;
 
 /**
- * Description of QueryString
+ * QueryString retrieves the list of query strings
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */

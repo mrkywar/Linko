@@ -7,7 +7,7 @@ use Linko\Repository\FieldsFactories\CardFieldsFactory;
 use Linko\Serializers\CardSerializer;
 
 /**
- * Description of PlayerManagerFactory
+ * Factory to create CardManager objects
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */

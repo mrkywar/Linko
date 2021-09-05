@@ -9,5 +9,9 @@ namespace Linko\Models\Core;
  */
 interface Model {
 
+    /**
+     * Get Id is required for each model
+     * @return int
+     */
     public function getId();
 }

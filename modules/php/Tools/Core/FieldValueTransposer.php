@@ -4,13 +4,18 @@ namespace Linko\Tools\Core;
 use Linko\Models\Core\Field;
 
 /**
- * Description of FieldValueTransposer
+ * Transpose and prepare fields values for DB queries
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 abstract class FieldValueTransposer {
     
-    
+    /**
+     * Transpose value for query
+     * @param Field $field : Field to transpose
+     * @param type $value : Value to transpose
+     * @return string
+     */
     public static function transpose(Field $field, $value) {
         switch ($field->getFieldType()) {
             case Field::STRING_FORMAT:

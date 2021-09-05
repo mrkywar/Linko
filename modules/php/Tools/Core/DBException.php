@@ -3,7 +3,7 @@
 namespace Linko\Tools\Core;
 
 /**
- * Description of DBException
+ * Support DataBase Exceptions
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */

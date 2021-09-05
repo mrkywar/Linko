@@ -5,14 +5,18 @@ namespace Linko\Managers;
 use Linko;
 
 /**
- * Description of PlayerManager
+ * toolbox to manage players
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 class PlayerManager extends Manager {
-
-    public function initNewGame($rawPlayers = null, $options = null) {
-
+    
+    /**
+     * new game initilaze
+     * @param array $players : List of player array serialized get from table
+     * @param array $options : /!\ Not used at the moment
+     */
+    public function initNewGame(array $rawPlayers = array(), array $options = array()) {
         $gameinfos = Linko::getInstance()->getGameinfos();
         $fields = $this->repository->getFields();
         $players = [];
