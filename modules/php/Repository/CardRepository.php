@@ -2,12 +2,15 @@
 
 namespace Linko\Repository;
 
+use Linko\Models\Core\QueryString;
+use Linko\Repository\Core\SuperRepository;
+
 /**
  * Description of PlayerRepository
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class CardRepository extends Core\SuperRepository {
+class CardRepository extends SuperRepository {
 
     private CONST TABLE_NAME = "card";
     private CONST FIELDS_PREFIX = "card_";
@@ -22,6 +25,55 @@ class CardRepository extends Core\SuperRepository {
 
     public function getTableName() {
         return self::TABLE_NAME;
+    }
+
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Cards 
+     * ---------------------------------------------------------------------- */
+
+    public function getCardsInLocation($location, $locationArg = null, $limit = null) {
+        $locationField = $this->getFieldByProperty("location");
+        $locationArgField = $this->getFieldByProperty("locationArg");
+
+        $qb = $this->getQueryBuilder()
+                ->select()
+                ->addClause($locationField, $location);
+        if (null === $locationArg) {
+            $qb->addOrderBy($locationArgField, QueryString::ORDER_DESC);
+        } else {
+            $qb->addClause($locationArgField, $locationArg);
+        }
+
+        if (null !== $limit) {
+            $qb->setLimit($limit);
+        }
+
+        $results = $this->getDbRequester()->execute($qb);
+
+        return $this->serializer->unserialize($results, $this->getFields());
+    }
+
+    public function moveCardsToLocation($cards, $location, $locationArg = 0) {
+        $locationField = $this->getFieldByProperty("location");
+        $locationArgField = $this->getFieldByProperty("locationArg");
+        $primary = $this->getPrimaryField();
+
+        $qb = $this->getQueryBuilder()
+                ->update()
+                ->addSetter($locationField, $location)
+                ->addSetter($locationArgField, $locationArg);
+
+        if (is_array($cards)) {
+            $ids = [];
+            foreach ($cards as $card) {
+                $ids[] = $card->getId();
+            }
+            $qb->addClause($primary, $ids);
+        } else {
+            $qb->addClause($primary, $cards->getId());
+        }
+
+        return $this->getDbRequester()->execute($qb);
     }
 
 }

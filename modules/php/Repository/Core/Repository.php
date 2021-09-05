@@ -32,6 +32,8 @@ interface Repository {
      */
     public function getSerializer(): Serializer;
     
+    public function setSerializer(Serializer $serializer): Repository;
+    
     
     /* -------------------------------------------------------------------------
      *                  BEGIN - DB Link

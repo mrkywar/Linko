@@ -99,6 +99,10 @@ class QueryBuilder {
         //-- (re)init insert
         $this->setters = [];
     }
+    
+    public function reset() {
+        $this->init();
+    }
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Adders & Setters 
@@ -146,9 +150,10 @@ class QueryBuilder {
             foreach ($value as $val) {
                 $rawValues [] = Transposer::transpose($field, $val);
             }
-            $clause .= " IN " . implode(",", Transposer::transpose($field, $rawValues));
+//            var_dump($rawValues);die;
+            $clause .= " IN ( " . implode(",", $rawValues)." )";
         } else {
-            $clause .= " = " . implode(",", Transposer::transpose($field, $value));
+            $clause .= " = " . Transposer::transpose($field, $value);
         }
 
         $this->clauses[$field->getDb()] = $clause;
@@ -162,7 +167,7 @@ class QueryBuilder {
     }
 
     public function addOrderBy(Field $field, $dir = QueryString::ORDER_ASC) {
-        $this->orderBy[$field->getDb()] = $field->getDb() . " " . $dir;
+        $this->orderBy[$field->getDb()] = "`".$field->getDb() . "` " . $dir;
         return $this;
     }
 

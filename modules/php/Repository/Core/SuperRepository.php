@@ -51,7 +51,18 @@ abstract class SuperRepository implements Repository {
     public function getSerializer(): Serializer {
         return $this->serializer;
     }
+    
+    /**
+     * 
+     * @param Serializer $serializer
+     * @return $this
+     */
+    public function setSerializer(Serializer $serializer): Repository {
+        $this->serializer = $serializer;
+        return $this;
+    }
 
+    
     /**
      * 
      * @return QueryBuilder
@@ -128,7 +139,7 @@ abstract class SuperRepository implements Repository {
      */
     public function getFieldByProperty($property) {
         foreach ($this->getFields() as $field) {
-            if ($property === $field->getProperty()) {
+            if (ucfirst($property) === $field->getProperty()) {
                 return $field;
             }
         }
