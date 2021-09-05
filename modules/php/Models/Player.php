@@ -18,6 +18,10 @@ class Player implements Model {
     private $canal;
     private $avatar;
 
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Getters & Setters 
+     * ---------------------------------------------------------------------- */
+
     public function getId() {
         return $this->id;
     }
@@ -71,4 +75,5 @@ class Player implements Model {
         $this->avatar = $avatar;
         return $this;
     }
+
 }

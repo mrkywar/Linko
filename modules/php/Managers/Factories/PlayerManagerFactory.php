@@ -4,7 +4,7 @@ namespace Linko\Managers\Factories;
 
 
 /**
- * Description of PlayerManagerFactory
+ * Factory to create PlayerManager objects
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */

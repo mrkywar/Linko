@@ -8,7 +8,10 @@ use Linko\Tools\DBRequester;
 use Linko\Tools\QueryBuilder;
 
 /**
- * Description of SuperRepository
+ * SuperRepository allows you to globally manage the model / Data link
+ * Call order :
+ * [DBRequester] <--> [QueryBuilder] <--> [Repository] <--> [Manager]
+ * @todo SHOW if some more methods can have final declaration
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
@@ -30,11 +33,18 @@ abstract class SuperRepository implements Repository {
     protected $fields;
 
     /**
-     * 
      * @var bool
      */
     private $isDebug;
+    
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Getters & Setters 
+     * ---------------------------------------------------------------------- */
 
+    /**
+     * Get DBRequester for execute a query 
+     * @return DBRequester
+     */
     public function getDbRequester(): DBRequester {
         if (null === $this->dbRequester) {
             $this->dbRequester = new DBRequester();
@@ -61,8 +71,7 @@ abstract class SuperRepository implements Repository {
         $this->serializer = $serializer;
         return $this;
     }
-
-    
+ 
     /**
      * 
      * @return QueryBuilder
@@ -81,16 +90,24 @@ abstract class SuperRepository implements Repository {
 
     abstract public function getFieldsPrefix();
 
+    /**
+     * Get list of fields (array<Field>)
+     * @return array
+     */
     final public function getFields(): array {
         return $this->fields;
     }
 
+    /**
+     * set list of fields (array<Field>)
+     * @return array
+     */
     final public function setFields(array $fields) {
         $this->fields = $fields;
     }
 
     /**
-     * 
+     * Retrive the primary Field
      * @return Field
      */
     public function getPrimaryField() {
@@ -105,8 +122,9 @@ abstract class SuperRepository implements Repository {
     }
 
     /**
-     * get all DBFields
-     * @return array all DBFields
+     * get all DBFields 
+     * @todo Check if it's usefull
+     * @return array all DBFields (array<string>)
      */
     public function getDbFields(): array {
         $res = [];
@@ -119,7 +137,7 @@ abstract class SuperRepository implements Repository {
 
     /**
      * get all UIFields (usfull for display)
-     * @return array all DBFields
+     * @return array all DBFields (array<Field>)
      */
     public function getUiFields() {
         $res = [];
@@ -133,7 +151,7 @@ abstract class SuperRepository implements Repository {
     }
 
     /**
-     * 
+     * Retrive a field by this property
      * @param string $property
      * @return Field
      */
@@ -147,7 +165,7 @@ abstract class SuperRepository implements Repository {
     }
 
     /**
-     * 
+     * Retrive a field by this dbfield
      * @param string $dbName
      * @return Field
      */
@@ -164,12 +182,22 @@ abstract class SuperRepository implements Repository {
      *                  BEGIN - Implement Base queries
      * ---------------------------------------------------------------------- */
 
+    /**
+     * Retrive all items in DB (return a array of rawDatas)
+     * @return array
+     */
     public function getAll() {
         $qb = $this->getQueryBuilder()->select();
 
         return $this->getDbRequester()->execute($qb);
     }
 
+    /**
+     * Retrive items in DB by Id (return a array of rawDatas)
+     * Usable with array of ids
+     * @param type $id (can be an unique Id or array of Id)
+     * @return type
+     */
     public function getById($id) {
         $qb = $this->getQueryBuilder()
                 ->select()
@@ -178,6 +206,11 @@ abstract class SuperRepository implements Repository {
         return $this->getDbRequester()->execute($qb);
     }
 
+    /**
+     * Create items (insert) in DB
+     * @param type $items
+     * @return type
+     */
     public function create($items) {
         $qb = $this->getQueryBuilder()
                 ->insert()
@@ -200,10 +233,20 @@ abstract class SuperRepository implements Repository {
      *                  BEGIN - Debug
      * ---------------------------------------------------------------------- */
 
+    /**
+     * Get debug status (true if enable)
+     * @return bool
+     */
     final public function getIsDebug(): bool {
         return $this->isDebug;
     }
 
+    /**
+     * Set debug status (true to enable). Alway chain set the debug status 
+     * to Requester
+     * @param bool $isDebug
+     * @return Repository
+     */
     final public function setIsDebug(bool $isDebug): Repository {
         $this->isDebug = $isDebug;
         $this->getDbRequester()->setIsDebug($isDebug);

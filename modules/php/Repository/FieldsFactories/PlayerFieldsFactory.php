@@ -7,7 +7,7 @@ use Linko\Repository\Core\Repository;
 use Linko\Repository\Core\SuperFieldFactory;
 
 /**
- * Description of PlayerFieldsFactory
+ * Factory to create Player Fields List for link Model <--> DB
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */

@@ -12,6 +12,10 @@ use Linko\Serializers\Core\SuperSerializer;
  */
 class PlayerSerializer extends SuperSerializer {
 
+    /**
+     * give the class of associated model
+     * @return type
+     */
     public function getModelClass() {
         return Player::class;
     }

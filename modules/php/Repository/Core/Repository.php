@@ -8,7 +8,10 @@ use Linko\Tools\DBRequester;
 use Linko\Tools\QueryBuilder;
 
 /**
- *
+ * Repositories do link between DB & Model
+ * Call order :
+ * [DBRequester] <--> [QueryBuilder] <--> [Repository] <--> [Manager]
+ * 
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 interface Repository {
