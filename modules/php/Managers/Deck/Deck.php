@@ -55,10 +55,11 @@ class Deck {
         if (sizeof($cards) !== $numberOfCards) {
             throw new DeckException("Not enouth cards aviable");
         }
-        var_dump($cards);die;
+//        var_dump($cards);die;
         
         
         $this->getRepository()
+//                ->setIsDebug(true)
                 ->moveCardsToLocation($cards, $location, $locationArg);
 //
 //        return $this;

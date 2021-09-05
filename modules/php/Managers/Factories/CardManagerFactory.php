@@ -20,6 +20,7 @@ abstract class CardManagerFactory {
 
         //-- SERIALIZER
         $serializer = new CardSerializer();
+        $repository->setSerializer($serializer);
 
         //-- MANAGER
         $manager = new CardManager();

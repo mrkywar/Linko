@@ -20,6 +20,7 @@ abstract class PlayerManagerFactory {
 
         //-- SERIALIZER
         $serializer = new PlayerSerializer();
+        $repository->setSerializer($serializer);
 
         //-- MANAGER
         $manager = new PlayerManager();

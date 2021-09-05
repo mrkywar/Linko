@@ -51,7 +51,18 @@ abstract class SuperRepository implements Repository {
     public function getSerializer(): Serializer {
         return $this->serializer;
     }
+    
+    /**
+     * 
+     * @param Serializer $serializer
+     * @return $this
+     */
+    public function setSerializer(Serializer $serializer): Repository {
+        $this->serializer = $serializer;
+        return $this;
+    }
 
+    
     /**
      * 
      * @return QueryBuilder

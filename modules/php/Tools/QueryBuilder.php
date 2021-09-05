@@ -150,7 +150,8 @@ class QueryBuilder {
             foreach ($value as $val) {
                 $rawValues [] = Transposer::transpose($field, $val);
             }
-            $clause .= " IN " . implode(",", Transposer::transpose($field, $rawValues));
+//            var_dump($rawValues);die;
+            $clause .= " IN ( " . implode(",", $rawValues)." )";
         } else {
             $clause .= " = " . Transposer::transpose($field, $value);
         }
