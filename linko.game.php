@@ -1,7 +1,9 @@
 <?php
 
+use Linko\Managers\CardManager;
 use Linko\Managers\Factories\CardManagerFactory;
 use Linko\Managers\Factories\PlayerManagerFactory;
+use Linko\Managers\PlayerManager;
 
 /**
  * ------
@@ -38,9 +40,18 @@ require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 class Linko extends Table {
 
     private static $instance;
+
+    /**
+     * @var PlayerManager
+     */
     private $playerManager;
+
+    /**
+     * @var CardManager
+     */
     private $cardManager;
-                function __construct() {
+
+    function __construct() {
         parent::__construct();
 
         self::initGameStateLabels(array(
@@ -58,6 +69,10 @@ class Linko extends Table {
         self::$instance = $this;
     }
 
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Getters  
+     * ---------------------------------------------------------------------- */
+
     public static function getInstance() {
         return self::$instance;
     }
@@ -66,6 +81,18 @@ class Linko extends Table {
         // Used for translations and stuff. Please do not modify.
         return "linko";
     }
+
+    public function getPlayerManager(): PlayerManager {
+        return $this->playerManager;
+    }
+
+    public function getCardManager(): CardManager {
+        return $this->cardManager;
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Required Game Methods 
+     * ---------------------------------------------------------------------- */
 
     /*
       setupNewGame:
@@ -78,11 +105,6 @@ class Linko extends Table {
     protected function setupNewGame($players, $options = array()) {
         $this->playerManager->initNewGame($players, $options);
         $this->cardManager->initNewGame($players, $options);
-        
-//        $gameinfos = self::getGameinfos();
-////        $default_colors = $gameinfos['player_colors'];
-//        self::reattributeColorsBasedOnPreferences($players, $gameinfos['player_colors']);
-//        self::reloadPlayersBasicInfos();
 
         /*         * ********** Start the game initialization **** */
 
@@ -115,13 +137,17 @@ class Linko extends Table {
 
         $result = array();
 
-        $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
-        // Get information about players
-        // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
+        $result['Rplayers'] =  $this->getPlayerManager()
+                ->getRepository()
+                ->getAll();
+
+//        $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
+//        // Get information about players
+//        // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
         $sql = "SELECT player_id id, player_score score FROM player ";
         $result['players'] = self::getCollectionFromDb($sql);
-
-        // TODO: Gather all information about current game situation (visible by player $current_player_id).
+//
+//        // TODO: Gather all information about current game situation (visible by player $current_player_id).
 
         return $result;
     }

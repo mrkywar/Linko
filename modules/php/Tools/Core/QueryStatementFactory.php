@@ -44,7 +44,7 @@ abstract class QueryStatementFactory {
             $fieldDb[] = " `" . $field->getDb() . "` ";
         }
 
-        return " (" . implode(",", $fieldDb) . ") ";
+        return implode(",", $fieldDb);
     }
 
     private static function createSelectQuery(QueryBuilder $qb, &$statement) {

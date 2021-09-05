@@ -171,7 +171,7 @@ class QueryBuilder {
         return $this;
     }
 
-    public function setLimit(int $limit) {
+    public function setLimit($limit) {
         $this->limit = $limit;
         return $this;
     }
@@ -243,7 +243,7 @@ class QueryBuilder {
         return $this->orderBy;
     }
 
-    public function getLimit(): int {
+    public function getLimit() {
         return $this->limit;
     }
 
