@@ -8,6 +8,7 @@ use Linko\Repository\Core\SuperFieldFactory;
 
 /**
  * Description of PlayerFieldsFactory
+ * /!\ Alway set the primary field first !!
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
@@ -22,7 +23,7 @@ abstract class PlayerFieldsFactory extends SuperFieldFactory {
         $fields[] = self::newField("canal", Field::STRING_FORMAT, $repo->getFieldsPrefix());
         $fields[] = self::newField("color", Field::STRING_FORMAT, $repo->getFieldsPrefix(), true);
         $fields[] = self::newField("avatar", Field::STRING_FORMAT, $repo->getFieldsPrefix(), true);
-        $fields[] = self::newField("beginer", Field::BINARY_FORMAT, $repo->getFieldsPrefix(), true);
+//        $fields[] = self::newField("beginner", Field::BINARY_FORMAT, $repo->getFieldsPrefix(), true);
         $fields[] = self::newField("score", Field::INTEGER_FORMAT, $repo->getFieldsPrefix(), true);
         $fields[] = self::newField("zombie", Field::BOOLEAN_FORMAT, $repo->getFieldsPrefix(), true);
         
@@ -34,18 +35,7 @@ abstract class PlayerFieldsFactory extends SuperFieldFactory {
         return $fields;
         
         
-        
-//            private $beginner;
-//    private $isAi;
-//    private $score;
-//    private $zombie;
-//    private $eliminated;
-//
-////color_back: null
-////eliminated: 0
-////is_ai: "0"
-////score: "0"
-////zombie: 0
+    
     }
 
 }

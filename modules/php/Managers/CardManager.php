@@ -1,4 +1,5 @@
 <?php
+
 namespace Linko\Managers;
 
 use Linko\Managers\Deck\Deck;
@@ -28,18 +29,22 @@ class CardManager extends Manager {
 
     public function initNewGame(array $players = array(), $options = null) {
         $this->initDeck();
-        
+
         //-- Give initals cards
         foreach (array_keys($players) as $playerId) {
-            $cardsToGive = $this->deck
+            $this->deck
                     ->drawCards(self::INTIALS_CARD, Deck::HAND_NAME, $playerId);
         }
+
+        //-- Init visible Draw
+        $this->deck
+                ->drawCards(self::VISIBLE_DRAW, Deck::DRAW_NAME);
     }
 
     private function initDeck() {
         $this->deck = new Deck();
         $this->deck->setRepository($this->repository);
-        
+
         $deck = [];
         for ($number = 1; $number <= self::TYPES_OF_NUMBERS; ++$number) {
             for ($ex = 1; $ex <= self::NUMBER_OF_NUMBERS; ++$ex) {
@@ -72,8 +77,4 @@ class CardManager extends Manager {
         return $card;
     }
 
-    //    public function getDeckCards() {
-//        return $this->getRepository()
-//                        ->getCardsInLocation(self::DECK_NAME);
-//    }
 }

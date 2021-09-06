@@ -43,7 +43,7 @@ abstract class QueryStatementFactory {
         $fieldDb = [];
         foreach ($qb->getFields() as $field) {
             if (Field::BINARY_FORMAT === $field->getFieldType()) {
-                $fieldBd[] = " CAST(`" . $field->getDb() . "` as CHAR) as "
+                $fieldDb[] = " CONVERT (`" . $field->getDb() . "`, CHAR) as "
                         . "`" . $field->getDb() . "`";
             } else {
                 $fieldDb[] = " `" . $field->getDb() . "` ";

@@ -26,7 +26,13 @@ class DBRequester extends \APP_DbObject {
 
         switch ($qb->getQueryType()) {
             case QueryString::TYPE_SELECT:
-                return self::getObjectListFromDB($queryString);
+                $results = self::getObjectListFromDB($queryString);
+                for($i = 0; $i < sizeof($results); $i++){
+                    $fields = array_keys($results[$i]);
+                    $results[$results[$i][$fields[0]]] = $results[$i];
+                    unset($results[$i]);
+                }
+                return $results;
             case QueryString::TYPE_INSERT:
                 self::DbQuery($queryString);
                 return self::DbGetLastId();

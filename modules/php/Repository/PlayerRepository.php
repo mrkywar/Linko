@@ -27,7 +27,7 @@ class PlayerRepository extends Core\SuperRepository {
     /* -------------------------------------------------------------------------
      *            BEGIN - Override 
      * ---------------------------------------------------------------------- */
-    public function getAll() {
+    public function getAll() {       
         $qb = $this->getQueryBuilder()
                 ->select()
                 ->setFields($this->getUiFields());

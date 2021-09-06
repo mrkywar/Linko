@@ -8,6 +8,7 @@ use Linko\Repository\Core\SuperFieldFactory;
 
 /**
  * Description of PlayerFieldsFactory
+ * /!\ Alway set the primary field first !!
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
