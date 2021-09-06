@@ -22,20 +22,14 @@ class DBRequester extends \APP_DbObject {
 
     public function execute(QueryBuilder $qb) {
         $queryString = QueryStatementFactory::create($qb);
-//        if ($this->isDebug) {
-//            var_dump($queryString);
-//            die;
-//        }
+        if ($this->isDebug) {
+            var_dump($queryString);
+            die;
+        }
 
         switch ($qb->getQueryType()) {
             case QueryString::TYPE_SELECT:
                 $results = self::getObjectListFromDB($queryString);
-                $res = $this->initKeys($results, $qb->getKeyIndex());
-                if ($this->isDebug) {
-                    echo "<pre>";
-                    var_dump($res,$qb->getKeyIndex());
-                    die;
-                }
                 return $this->initKeys($results, $qb->getKeyIndex());
             case QueryString::TYPE_INSERT:
                 self::DbQuery($queryString);
