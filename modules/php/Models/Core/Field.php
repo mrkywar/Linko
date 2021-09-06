@@ -11,6 +11,7 @@ class Field {
     const STRING_FORMAT = "string";
     const INTEGER_FORMAT = "int";
     const BOOLEAN_FORMAT = "boolean";
+    const BINARY_FORMAT = "binary";
 
     /**
      * @var string

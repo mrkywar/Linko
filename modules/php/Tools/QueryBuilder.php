@@ -134,7 +134,7 @@ class QueryBuilder {
     }
 
     public function addField(Field $field) {
-        $this->fields[$field->getDb()] = "`" . $field->getDb() . "`";
+        $this->fields[$field->getDb()] = $field;
         return $this;
     }
 
