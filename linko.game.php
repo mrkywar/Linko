@@ -134,10 +134,25 @@ class Linko extends Table {
     protected function getAllDatas() {
         $result = array();
 
-        $result['players'] =  $this->getPlayerManager()
-                ->getRepository()
-//               ->setIsDebug(true)
-                ->getAll();
+        $playerRepo = $this->getPlayerManager()->getRepository();
+
+        $result['players'] = $playerRepo->getAll();
+
+        $currentPlayer = $playerRepo
+//                ->setIsDebug(true)
+                ->getById(Linko::getInstance()->getCurrentPlayerId());
+        
+        echo "<pre>";
+        var_dump($currentPlayer);die;
+
+//        $result['hand'] = $this->getCardManager()
+//                ->getRepository()
+//                ->getPlayerHand($currentPlayer);
+
+//        $result['hand'] = $this->getCardManager()
+//                ->getRepository()
+//                ->getPlayerHand($currentPlayerId);
+        //getCardsInLocation($location, $locationArg = null, $limit = null) 
 
         return $result;
     }

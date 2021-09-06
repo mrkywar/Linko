@@ -7,8 +7,6 @@ use Linko\Models\Core\Model;
 use Linko\Models\Core\QueryString;
 use Linko\Tools\Core\FieldValueTransposer as Transposer;
 
-//use Linko\Tools\Core\QueryStatementFacrory as StatementFactory;
-
 /**
  * Description of QueryBuilder
  *
@@ -30,6 +28,12 @@ class QueryBuilder {
      * @var string
      */
     private $statement;
+    
+    /**
+     * to setup a keyIndex
+     * @var Field|null
+     */
+    private $keyIndex;
 
     /* -------------------------------------------------------------------------
      *                  Properties - Select
@@ -87,6 +91,7 @@ class QueryBuilder {
 
     private function init() {
         $this->statement = "";
+        $this->keyIndex = null;
         //-- (re)init select
         $this->orderBy = [];
         $this->limit = null;
@@ -207,7 +212,12 @@ class QueryBuilder {
 
         return $this;
     }
-
+    
+    public function setKeyIndex(?Field $keyIndex) {
+        $this->keyIndex = $keyIndex;
+        return $this;
+    }
+    
     /**
      * WARNING USE WITH CAUTION !!
      * @param string $statement
@@ -257,6 +267,10 @@ class QueryBuilder {
 
     public function getStatement(): string {
         return $this->statement;
+    }
+    
+    public function getKeyIndex(): ?Field {
+        return $this->keyIndex;
     }
 
 }

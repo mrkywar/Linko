@@ -30,7 +30,8 @@ class PlayerRepository extends Core\SuperRepository {
     public function getAll() {       
         $qb = $this->getQueryBuilder()
                 ->select()
-                ->setFields($this->getUiFields());
+                ->setFields($this->getUiFields())
+                ->setKeyIndex($this->getPrimaryField());
 
         return $this->getDbRequester()->execute($qb);
     }

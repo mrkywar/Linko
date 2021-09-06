@@ -51,7 +51,7 @@ abstract class SuperRepository implements Repository {
     public function getSerializer(): Serializer {
         return $this->serializer;
     }
-    
+
     /**
      * 
      * @param Serializer $serializer
@@ -62,7 +62,6 @@ abstract class SuperRepository implements Repository {
         return $this;
     }
 
-    
     /**
      * 
      * @return QueryBuilder
@@ -164,10 +163,21 @@ abstract class SuperRepository implements Repository {
      *                  BEGIN - Implement Base queries
      * ---------------------------------------------------------------------- */
 
+    protected function execute(QueryBuilder $qb, $doSerialize = true) {
+        $results = $this->getDbRequester()->execute($qb);
+
+        if ($doSerialize) {
+            return $this->getSerializer()
+                            ->unserialize($results, $this->getFields());
+        } else {
+            return $results;
+        }
+    }
+
     public function getAll() {
         $qb = $this->getQueryBuilder()->select();
 
-        return $this->getDbRequester()->execute($qb);
+        return $this->execute($qb);
     }
 
     public function getById($id) {
@@ -175,7 +185,7 @@ abstract class SuperRepository implements Repository {
                 ->select()
                 ->addClause($this->getPrimaryField(), $id);
 
-        return $this->getDbRequester()->execute($qb);
+        return $this->execute($qb);
     }
 
     public function create($items) {
@@ -193,7 +203,7 @@ abstract class SuperRepository implements Repository {
             $qb->addValue($items, $primary);
         }
 
-        return $this->getDbRequester()->execute($qb);
+        return $this->execute($qb);
     }
 
     /* -------------------------------------------------------------------------

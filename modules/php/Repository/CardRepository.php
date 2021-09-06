@@ -48,9 +48,7 @@ class CardRepository extends SuperRepository {
             $qb->setLimit($limit);
         }
 
-        $results = $this->getDbRequester()->execute($qb);
-
-        return $this->serializer->unserialize($results, $this->getFields());
+        return $this->execute($qb);
     }
 
     public function moveCardsToLocation($cards, $location, $locationArg = 0) {
@@ -73,7 +71,11 @@ class CardRepository extends SuperRepository {
             $qb->addClause($primary, $cards->getId());
         }
 
-        return $this->getDbRequester()->execute($qb);
+        return $this->execute($qb);
+    }
+    
+    public function getPlayerHand(Player $player) {
+        return $this->getCardsInLocation(Deck::HAND_NAME, $player->getId());
     }
 
 }
