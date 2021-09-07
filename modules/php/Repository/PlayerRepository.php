@@ -23,15 +23,17 @@ class PlayerRepository extends Core\SuperRepository {
     public function getTableName() {
         return self::TABLE_NAME;
     }
-    
+
     /* -------------------------------------------------------------------------
      *            BEGIN - Override 
      * ---------------------------------------------------------------------- */
-    public function getAll() {       
+
+    public function getAll() {
         $qb = $this->getQueryBuilder()
                 ->select()
                 ->setFields($this->getUiFields())
-                ->setKeyIndex($this->getPrimaryField());
+                ->setKeyIndex($this->getPrimaryField())
+        ;
 
         return $this->getDbRequester()->execute($qb);
     }

@@ -269,7 +269,7 @@ class QueryBuilder {
         return $this->statement;
     }
     
-    public function getKeyIndex(): ?Field {
+    public function getKeyIndex() {
         return $this->keyIndex;
     }
 

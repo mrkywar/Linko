@@ -1,8 +1,9 @@
 <?php
-
 namespace Linko\Repository;
 
+use Linko\Managers\Deck\Deck;
 use Linko\Models\Core\QueryString;
+use Linko\Models\Player;
 use Linko\Repository\Core\SuperRepository;
 
 /**

@@ -21,8 +21,10 @@ class DBRequester extends \APP_DbObject {
     private $isDebug;
 
     public function execute(QueryBuilder $qb) {
+        $fieldIndex = $qb->getKeyIndex();
         $queryString = QueryStatementFactory::create($qb);
         if ($this->isDebug) {
+//            echo "<pre>";
             var_dump($queryString);
             die;
         }
@@ -30,7 +32,14 @@ class DBRequester extends \APP_DbObject {
         switch ($qb->getQueryType()) {
             case QueryString::TYPE_SELECT:
                 $results = self::getObjectListFromDB($queryString);
-                return $this->initKeys($results, $qb->getKeyIndex());
+
+                if (null === $fieldIndex) {
+                    return $results;
+                } else {
+                    return $this->initKeys($results, $fieldIndex->getDb());
+                }
+                break;
+
             case QueryString::TYPE_INSERT:
                 self::DbQuery($queryString);
                 return self::DbGetLastId();
@@ -42,17 +51,17 @@ class DBRequester extends \APP_DbObject {
         }
     }
 
-    private function initKeys($results, ?Field $key) {
-        if (null === $key) {
-            return $results;
-        } else {
-            $indexed = [];
-
-            for ($i = 0; $i < sizeof($results); $i++) {
-                $indexed[$results[$i][$key->getDb()]] = $results[$i];
-            }
-            return $indexed;
+    private function initKeys($results, string $indexField) {
+        $indexed = [];
+        if($this->isDebug){
+            echo " RECIVED ?";
+            var_dump($indexField);die;
         }
+
+        for ($i = 0; $i < sizeof($results); $i++) {
+            $indexed[$results[$i][$indexField]] = $results[$i];
+        }
+        return $indexed;
     }
 
     /* -------------------------------------------------------------------------
