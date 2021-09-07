@@ -25,7 +25,8 @@ class Deck {
      * ---------------------------------------------------------------------- */
 
     public function getCards() {
-        return $this->getRepository()->getAll();
+        return $this->getRepository()
+                        ->getAll();
     }
 
     public function setCards($cards) {

@@ -41,11 +41,9 @@ class CardRepository extends SuperRepository {
      * @param type $location : Location to be drilled
      * @param type $locationArg : Location Arg to be drilled (optional) if not set Location Arg will be sorted insted
      * @param type $limit : Number of card to get (optional) if not set, get all
-     * @param type $doUnserialize : indicates if the result must be in the form of an object array or not (optional) by default true
      * @return array<Card> : Cards in Location
      */
-    
-    public function getCardsInLocation($location, $locationArg = null, $limit = null, $doUnserialize = true) {
+    public function getCardsInLocation($location, $locationArg = null, $limit = null) {
         $locationField = $this->getFieldByProperty("location");
         $locationArgField = $this->getFieldByProperty("locationArg");
 
@@ -62,7 +60,7 @@ class CardRepository extends SuperRepository {
             $qb->setLimit($limit);
         }
 
-        return $this->execute($qb, $doSerialize);
+        return $this->execute($qb);
     }
 
     /**
@@ -95,8 +93,26 @@ class CardRepository extends SuperRepository {
         return $this->execute($qb);
     }
 
+    /**
+     * Retrive the cards in a player 
+     * @param Player $player
+     * @return array<Card> : Cards in Location
+     */
     public function getPlayerHand(Player $player) {
-        return $this->getCardsInLocation(Deck::HAND_NAME, $player->getId(), null, false);
+        return $this->getCardsInLocation(Deck::HAND_NAME, $player->getId(), null);
     }
+    
+    
+    public function getHandsInfos(array $players){
+        $results = [];
+        
+        foreach ($players as $player){
+            $results[$player->getId()] = count($this->getPlayerHand($player));
+        }     
+        
+        return $results;
+    }
+    
+    
 
 }
