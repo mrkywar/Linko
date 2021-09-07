@@ -45,19 +45,7 @@ abstract class QueryStatementFactory {
      * ---------------------------------------------------------------------- */
 
 
-    private static function createFieldList(QueryBuilder $qb) {
-        $fieldDb = [];
-        foreach ($qb->getFields() as $field) {
-            if (Field::BINARY_FORMAT === $field->getFieldType()) {
-                $fieldDb[] = " CONVERT (`" . $field->getDb() . "`, CHAR) as "
-                        . "`" . $field->getDb() . "`";
-            } else {
-                $fieldDb[] = " `" . $field->getDb() . "` ";
-            }
-        }
-
-        return implode(",", $fieldDb);
-    }
+    
 
 
     /**
@@ -99,10 +87,15 @@ abstract class QueryStatementFactory {
     private static function createFieldList(QueryBuilder $qb) {
         $fieldDb = [];
         foreach ($qb->getFields() as $field) {
-            $fieldDb[] = " `" . $field->getDb() . "` ";
+            if (Field::BINARY_FORMAT === $field->getFieldType()) {
+                $fieldDb[] = " CONVERT (`" . $field->getDb() . "`, CHAR) as "
+                        . "`" . $field->getDb() . "`";
+            } else {
+                $fieldDb[] = " `" . $field->getDb() . "` ";
+            }
         }
 
-        return " (" . implode(",", $fieldDb) . ") ";
+        return implode(",", $fieldDb);
     }
 
     /* -------------------------------------------------------------------------

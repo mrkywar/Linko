@@ -36,7 +36,7 @@ abstract class SuperRepository implements Repository {
      * @var bool
      */
     private $isDebug;
-    
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 
      * ---------------------------------------------------------------------- */
@@ -71,7 +71,7 @@ abstract class SuperRepository implements Repository {
         $this->serializer = $serializer;
         return $this;
     }
-  
+
     /**
      * 
      * @return QueryBuilder
@@ -182,10 +182,16 @@ abstract class SuperRepository implements Repository {
      *                  BEGIN - Implement Base queries
      * ---------------------------------------------------------------------- */
 
-
-    protected function execute(QueryBuilder $qb, $doSerialize = true) {
+    /**
+     * execute a queryBuilder
+     * @param QueryBuilder $qb QueryBuilder to execute
+     * @param type $doUnserialize indicates if the result must be in the form 
+     * of an object array or not (optional) by default true
+     * @return type
+     */
+    protected function execute(QueryBuilder $qb, $doUnserialize = true) {
         $queryResults = $this->getDbRequester()->execute($qb);
-        if(!is_array($queryResults)){
+        if (!is_array($queryResults)) {
             return $queryResults;
         }
 
@@ -193,14 +199,14 @@ abstract class SuperRepository implements Repository {
             case 0:
                 return null;
             case 1:
-                if ($doSerialize) {
+                if ($doUnserialize) {
                     return $this->getSerializer()
                                     ->unserializeOnce($queryResults[0], $this->getFields());
                 } else {
                     return $queryResults[0];
                 }
             default :
-                if ($doSerialize) {
+                if ($doUnserialize) {
                     return $this->getSerializer()
                                     ->unserialize($queryResults, $this->getFields());
                 } else {
@@ -209,12 +215,10 @@ abstract class SuperRepository implements Repository {
         }
     }
 
-
     /**
      * Retrive all items in DB (return a array of rawDatas)
      * @return array
      */
-
     public function getAll() {
         $qb = $this->getQueryBuilder()->select();
 

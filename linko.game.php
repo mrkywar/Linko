@@ -143,6 +143,7 @@ class Linko extends Table {
         
         $result['hand'] = $this->getCardManager()
                 ->getRepository()
+//                ->setIsDebug(true)
                 ->getPlayerHand($currentPlayer);
 
 //        $result['hand'] = $this->getCardManager()

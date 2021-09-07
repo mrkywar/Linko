@@ -29,7 +29,9 @@ class Deck {
     }
 
     public function setCards($cards) {
+//        var_dump($cards);die;
         $this->getRepository()
+//                ->setIsDebug(true)
                 ->create($cards);
         return $this;
     }
@@ -60,6 +62,7 @@ class Deck {
      */
     public function drawCards(int $numberOfCards, string $destination, string $destinationArg = null) {
         $cards = $this->getRepository()
+//                ->setIsDebug(true)
                 ->getCardsInLocation(self::DECK_NAME, null, $numberOfCards);
 
         //-- Check that the number of cards drawn is the one requested 

@@ -62,7 +62,7 @@ class CardRepository extends SuperRepository {
             $qb->setLimit($limit);
         }
 
-        return $this->execute($qb, $doSerialize);
+        return $this->execute($qb, $doUnserialize);
     }
 
     /**
