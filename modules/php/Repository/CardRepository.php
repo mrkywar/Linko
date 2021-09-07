@@ -107,10 +107,12 @@ class CardRepository extends SuperRepository {
         $results = [];
         
         foreach ($players as $player){
-            $results[$player->getId()] = $this->getPlayerHand($player);
+            $results[$player->getId()] = count($this->getPlayerHand($player));
         }     
         
         return $results;
     }
+    
+    
 
 }
