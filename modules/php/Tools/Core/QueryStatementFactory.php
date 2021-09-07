@@ -119,7 +119,7 @@ abstract class QueryStatementFactory {
         $statement .= "`" . $qb->getTableName() . "`";
 
         //-- Fields
-        $statement .= self::createFieldList($qb);
+        $statement .= "(" . self::createFieldList($qb) . ")";
 
         //-- Values 
         $statement .= " VALUES ";

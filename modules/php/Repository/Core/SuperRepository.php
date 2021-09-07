@@ -165,6 +165,9 @@ abstract class SuperRepository implements Repository {
 
     protected function execute(QueryBuilder $qb, $doSerialize = true) {
         $queryResults = $this->getDbRequester()->execute($qb);
+        if(!is_array($queryResults)){
+            return $queryResults;
+        }
 
         switch (sizeof($queryResults)) {
             case 0:

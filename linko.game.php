@@ -136,15 +136,14 @@ class Linko extends Table {
 
         $playerRepo = $this->getPlayerManager()->getRepository();
 
-        $result['players'] = $playerRepo->getAll();
+        $result['players'] = $playerRepo->getAll();  
 
         $currentPlayer = $playerRepo
-//                   ->setIsDebug(true)
                 ->getById(Linko::getInstance()->getCurrentPlayerId());
         
-//        $result['hand'] = $this->getCardManager()
-//                ->getRepository()
-//                ->getPlayerHand($currentPlayer);
+        $result['hand'] = $this->getCardManager()
+                ->getRepository()
+                ->getPlayerHand($currentPlayer);
 
 //        $result['hand'] = $this->getCardManager()
 //                ->getRepository()

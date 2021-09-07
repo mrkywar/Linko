@@ -1,4 +1,5 @@
 <?php
+
 namespace Linko\Repository;
 
 use Linko\Managers\Deck\Deck;
@@ -32,7 +33,7 @@ class CardRepository extends SuperRepository {
      *            BEGIN - Cards 
      * ---------------------------------------------------------------------- */
 
-    public function getCardsInLocation($location, $locationArg = null, $limit = null) {
+    public function getCardsInLocation($location, $locationArg = null, $limit = null, $doSerialize = true) {
         $locationField = $this->getFieldByProperty("location");
         $locationArgField = $this->getFieldByProperty("locationArg");
 
@@ -49,7 +50,7 @@ class CardRepository extends SuperRepository {
             $qb->setLimit($limit);
         }
 
-        return $this->execute($qb);
+        return $this->execute($qb, $doSerialize);
     }
 
     public function moveCardsToLocation($cards, $location, $locationArg = 0) {
@@ -74,9 +75,9 @@ class CardRepository extends SuperRepository {
 
         return $this->execute($qb);
     }
-    
+
     public function getPlayerHand(Player $player) {
-        return $this->getCardsInLocation(Deck::HAND_NAME, $player->getId());
+        return $this->getCardsInLocation(Deck::HAND_NAME, $player->getId(), null, false);
     }
 
 }
