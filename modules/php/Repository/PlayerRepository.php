@@ -39,7 +39,7 @@ class PlayerRepository extends SuperRepository {
                 ->setKeyIndex($this->getPrimaryField())
         ;
 
-        return $this->getDbRequester()->execute($qb);
+        return $this->execute($qb);
     }
 
 }

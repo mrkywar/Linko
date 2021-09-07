@@ -51,6 +51,8 @@ class CardManager extends Manager {
     private function initDeck() {
         $this->deck = new Deck();
         $this->deck->setRepository($this->repository);
+        
+        $this->getRepository()->setDoUnserialization(true);
 
         $deck = [];
         for ($number = 1; $number <= self::TYPES_OF_NUMBERS; ++$number) {

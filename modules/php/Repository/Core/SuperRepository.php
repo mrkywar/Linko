@@ -37,6 +37,11 @@ abstract class SuperRepository implements Repository {
      */
     private $isDebug;
 
+    /**
+     * @var bool
+     */
+    protected $doUnserialization = false;
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 
      * ---------------------------------------------------------------------- */
@@ -81,7 +86,25 @@ abstract class SuperRepository implements Repository {
         $qb->setTableName($this->getTableName());
         return $qb;
     }
+    
+    /**
+     * get the unserialization requirement
+     * @return bool
+     */
+    public function getDoUnserialization(): bool {
+        return $this->doUnserialization;
+    }
 
+    /**
+     * set the unserialization requirement
+     * @return bool
+     */
+    public function setDoUnserialization(bool $doUnserialization): Repository {
+        $this->doUnserialization = $doUnserialization;
+        return $this;
+    }
+
+    
     /* -------------------------------------------------------------------------
      *                  BEGIN - Fields Management
      * ---------------------------------------------------------------------- */
@@ -189,7 +212,7 @@ abstract class SuperRepository implements Repository {
      * of an object array or not (optional) by default true
      * @return type
      */
-    protected function execute(QueryBuilder $qb, $doUnserialize = true) {
+    protected function execute(QueryBuilder $qb) {
         $queryResults = $this->getDbRequester()->execute($qb);
         if (!is_array($queryResults)) {
             return $queryResults;
@@ -199,14 +222,14 @@ abstract class SuperRepository implements Repository {
             case 0:
                 return null;
             case 1:
-                if ($doUnserialize) {
+                if ($this->doUnserialization) {
                     return $this->getSerializer()
                                     ->unserializeOnce($queryResults[0], $this->getFields());
                 } else {
                     return $queryResults[0];
                 }
             default :
-                if ($doUnserialize) {
+                if ($this->doUnserialization) {
                     return $this->getSerializer()
                                     ->unserialize($queryResults, $this->getFields());
                 } else {

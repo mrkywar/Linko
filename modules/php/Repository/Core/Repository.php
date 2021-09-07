@@ -26,7 +26,7 @@ interface Repository {
     public function getById($id);
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - Serializer
+     *                  BEGIN - Serializer & Serialization
      * ---------------------------------------------------------------------- */
 
     /**
@@ -37,6 +37,9 @@ interface Repository {
     
     public function setSerializer(Serializer $serializer): Repository;
     
+    public function getDoUnserialization(): bool;
+    
+    public function setDoUnserialization(bool $doUnserialization): Repository;
     
     /* -------------------------------------------------------------------------
      *                  BEGIN - DB Link

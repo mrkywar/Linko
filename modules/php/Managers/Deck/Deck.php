@@ -25,7 +25,8 @@ class Deck {
      * ---------------------------------------------------------------------- */
 
     public function getCards() {
-        return $this->getRepository()->getAll();
+        return $this->getRepository()
+                        ->getAll();
     }
 
     public function setCards($cards) {
@@ -63,6 +64,7 @@ class Deck {
     public function drawCards(int $numberOfCards, string $destination, string $destinationArg = null) {
         $cards = $this->getRepository()
 //                ->setIsDebug(true)
+//                ->setDoUnserialization(true)
                 ->getCardsInLocation(self::DECK_NAME, null, $numberOfCards);
 
         //-- Check that the number of cards drawn is the one requested 
