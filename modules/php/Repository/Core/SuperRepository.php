@@ -61,7 +61,7 @@ abstract class SuperRepository implements Repository {
     public function getSerializer(): Serializer {
         return $this->serializer;
     }
-    
+
     /**
      * 
      * @param Serializer $serializer
@@ -71,7 +71,7 @@ abstract class SuperRepository implements Repository {
         $this->serializer = $serializer;
         return $this;
     }
- 
+  
     /**
      * 
      * @return QueryBuilder
@@ -182,14 +182,43 @@ abstract class SuperRepository implements Repository {
      *                  BEGIN - Implement Base queries
      * ---------------------------------------------------------------------- */
 
+
+    protected function execute(QueryBuilder $qb, $doSerialize = true) {
+        $queryResults = $this->getDbRequester()->execute($qb);
+        if(!is_array($queryResults)){
+            return $queryResults;
+        }
+
+        switch (sizeof($queryResults)) {
+            case 0:
+                return null;
+            case 1:
+                if ($doSerialize) {
+                    return $this->getSerializer()
+                                    ->unserializeOnce($queryResults[0], $this->getFields());
+                } else {
+                    return $queryResults[0];
+                }
+            default :
+                if ($doSerialize) {
+                    return $this->getSerializer()
+                                    ->unserialize($queryResults, $this->getFields());
+                } else {
+                    return $queryResults;
+                }
+        }
+    }
+
+
     /**
      * Retrive all items in DB (return a array of rawDatas)
      * @return array
      */
+
     public function getAll() {
         $qb = $this->getQueryBuilder()->select();
 
-        return $this->getDbRequester()->execute($qb);
+        return $this->execute($qb);
     }
 
     /**
@@ -203,7 +232,7 @@ abstract class SuperRepository implements Repository {
                 ->select()
                 ->addClause($this->getPrimaryField(), $id);
 
-        return $this->getDbRequester()->execute($qb);
+        return $this->execute($qb);
     }
 
     /**
@@ -226,7 +255,7 @@ abstract class SuperRepository implements Repository {
             $qb->addValue($items, $primary);
         }
 
-        return $this->getDbRequester()->execute($qb);
+        return $this->execute($qb);
     }
 
     /* -------------------------------------------------------------------------

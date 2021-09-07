@@ -17,6 +17,11 @@ class Player implements Model {
     private $color;
     private $canal;
     private $avatar;
+    private $beginner;
+    private $isAi;
+    private $score;
+    private $zombie;
+    private $eliminated;
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 
@@ -46,6 +51,26 @@ class Player implements Model {
         return $this->avatar;
     }
 
+    public function getBeginner() {
+        return $this->beginner;
+    }
+
+    public function getIsAi() {
+        return $this->isAi;
+    }
+
+    public function getScore() {
+        return $this->score;
+    }
+
+    public function getZombie() {
+        return $this->zombie;
+    }
+
+    public function getEliminated() {
+        return $this->eliminated;
+    }
+
     public function setId($id) {
         $this->id = $id;
         return $this;
@@ -73,6 +98,31 @@ class Player implements Model {
 
     public function setAvatar($avatar) {
         $this->avatar = $avatar;
+        return $this;
+    }
+
+    public function setBeginner($beginner) {
+        $this->beginner = $beginner;
+        return $this;
+    }
+
+    public function setIsAi($isAi) {
+        $this->isAi = $isAi;
+        return $this;
+    }
+
+    public function setScore($score) {
+        $this->score = $score;
+        return $this;
+    }
+
+    public function setZombie($zombie) {
+        $this->zombie = $zombie;
+        return $this;
+    }
+
+    public function setEliminated($eliminated) {
+        $this->eliminated = $eliminated;
         return $this;
     }
 

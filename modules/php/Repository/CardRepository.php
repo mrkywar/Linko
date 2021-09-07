@@ -2,7 +2,9 @@
 
 namespace Linko\Repository;
 
+use Linko\Managers\Deck\Deck;
 use Linko\Models\Core\QueryString;
+use Linko\Models\Player;
 use Linko\Repository\Core\SuperRepository;
 
 /**
@@ -33,14 +35,17 @@ class CardRepository extends SuperRepository {
      *            BEGIN - Specific Repository Methods
      * ---------------------------------------------------------------------- */
 
+
     /**
      * Retrive list of card in a given location
      * @param type $location : Location to be drilled
      * @param type $locationArg : Location Arg to be drilled (optional) if not set Location Arg will be sorted insted
      * @param type $limit : Number of card to get (optional) if not set, get all
+     * @param type $doUnserialize : indicates if the result must be in the form of an object array or not (optional) by default true
      * @return array<Card> : Cards in Location
      */
-    public function getCardsInLocation($location, $locationArg = null, $limit = null) {
+    
+    public function getCardsInLocation($location, $locationArg = null, $limit = null, $doUnserialize = true) {
         $locationField = $this->getFieldByProperty("location");
         $locationArgField = $this->getFieldByProperty("locationArg");
 
@@ -57,9 +62,7 @@ class CardRepository extends SuperRepository {
             $qb->setLimit($limit);
         }
 
-        $results = $this->getDbRequester()->execute($qb);
-
-        return $this->serializer->unserialize($results, $this->getFields());
+        return $this->execute($qb, $doSerialize);
     }
 
     /**
@@ -89,7 +92,11 @@ class CardRepository extends SuperRepository {
             $qb->addClause($primary, $cards->getId());
         }
 
-        return $this->getDbRequester()->execute($qb);
+        return $this->execute($qb);
+    }
+
+    public function getPlayerHand(Player $player) {
+        return $this->getCardsInLocation(Deck::HAND_NAME, $player->getId(), null, false);
     }
 
 }

@@ -31,6 +31,12 @@ class QueryBuilder {
      * @var string
      */
     private $statement;
+    
+    /**
+     * to setup a keyIndex
+     * @var Field|null
+     */
+    private $keyIndex;
 
     /* -------------------------------------------------------------------------
      *                  Properties - Select
@@ -88,6 +94,7 @@ class QueryBuilder {
 
     private function init() {
         $this->statement = "";
+        $this->keyIndex = null;
         //-- (re)init select
         $this->orderBy = [];
         $this->limit = null;
@@ -135,7 +142,7 @@ class QueryBuilder {
     }
 
     public function addField(Field $field) {
-        $this->fields[$field->getDb()] = "`" . $field->getDb() . "`";
+        $this->fields[$field->getDb()] = $field;
         return $this;
     }
 
@@ -172,7 +179,7 @@ class QueryBuilder {
         return $this;
     }
 
-    public function setLimit(int $limit) {
+    public function setLimit($limit) {
         $this->limit = $limit;
         return $this;
     }
@@ -208,7 +215,12 @@ class QueryBuilder {
 
         return $this;
     }
-
+    
+    public function setKeyIndex(?Field $keyIndex) {
+        $this->keyIndex = $keyIndex;
+        return $this;
+    }
+    
     /**
      * WARNING USE WITH CAUTION !!
      * @param string $statement
@@ -244,7 +256,7 @@ class QueryBuilder {
         return $this->orderBy;
     }
 
-    public function getLimit(): int {
+    public function getLimit() {
         return $this->limit;
     }
 
@@ -258,6 +270,10 @@ class QueryBuilder {
 
     public function getStatement(): string {
         return $this->statement;
+    }
+    
+    public function getKeyIndex() {
+        return $this->keyIndex;
     }
 
 }

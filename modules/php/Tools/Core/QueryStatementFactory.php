@@ -2,6 +2,7 @@
 
 namespace Linko\Tools\Core;
 
+use Linko\Models\Core\Field;
 use Linko\Models\Core\QueryString;
 use Linko\Tools\QueryBuilder;
 
@@ -42,6 +43,22 @@ abstract class QueryStatementFactory {
     /* -------------------------------------------------------------------------
      *                  BEGIN - SELECT (private)
      * ---------------------------------------------------------------------- */
+
+
+    private static function createFieldList(QueryBuilder $qb) {
+        $fieldDb = [];
+        foreach ($qb->getFields() as $field) {
+            if (Field::BINARY_FORMAT === $field->getFieldType()) {
+                $fieldDb[] = " CONVERT (`" . $field->getDb() . "`, CHAR) as "
+                        . "`" . $field->getDb() . "`";
+            } else {
+                $fieldDb[] = " `" . $field->getDb() . "` ";
+            }
+        }
+
+        return implode(",", $fieldDb);
+    }
+
 
     /**
      * Create the complete SELECT query
@@ -143,7 +160,7 @@ abstract class QueryStatementFactory {
         $statement .= "`" . $qb->getTableName() . "`";
 
         //-- Fields
-        $statement .= self::createFieldList($qb);
+        $statement .= "(" . self::createFieldList($qb) . ")";
 
         //-- Values 
         $statement .= " VALUES ";

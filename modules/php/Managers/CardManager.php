@@ -1,4 +1,5 @@
 <?php
+
 namespace Linko\Managers;
 
 use Linko\Managers\Deck\Deck;
@@ -60,7 +61,11 @@ class CardManager extends Manager {
         for ($jok = 1; $jok <= self::NUMBER_OF_JOKERS; ++$jok) {
             $deck[] = $this->createCard(self::VALUE_OF_JOKERS);
         }
-
+        
+        for($i=0; $i<sizeof($deck); $i++){
+            $deck[$i]->setId($i);
+        }
+        
         shuffle($deck);
         $count = sizeof($deck);
         for ($order = 0; $order < $count; ++$order) {

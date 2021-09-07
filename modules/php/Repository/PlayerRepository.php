@@ -28,4 +28,18 @@ class PlayerRepository extends SuperRepository {
         return self::TABLE_NAME;
     }
 
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Override 
+     * ---------------------------------------------------------------------- */
+
+    public function getAll() {
+        $qb = $this->getQueryBuilder()
+                ->select()
+                ->setFields($this->getUiFields())
+                ->setKeyIndex($this->getPrimaryField())
+        ;
+
+        return $this->getDbRequester()->execute($qb);
+    }
+
 }
