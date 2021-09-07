@@ -5,7 +5,7 @@ namespace Linko\Models;
 use Linko\Models\Core\Model;
 
 /**
- * Description of Player
+ * Model of a playable Card
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
@@ -16,6 +16,10 @@ class Card implements Model {
     private $typeArg;
     private $location;
     private $locationArg;
+    
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Getters & Setters 
+     * ---------------------------------------------------------------------- */
 
     public function getId() {
         return $this->id;

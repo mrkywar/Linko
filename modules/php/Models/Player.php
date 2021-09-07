@@ -23,6 +23,10 @@ class Player implements Model {
     private $zombie;
     private $eliminated;
 
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Getters & Setters 
+     * ---------------------------------------------------------------------- */
+
     public function getId() {
         return $this->id;
     }

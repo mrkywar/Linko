@@ -3,7 +3,7 @@
 namespace Linko\Managers\Core;
 
 /**
- * Description of ManagerException To support Manager Exceptions
+ * Support Manager Exceptions
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */

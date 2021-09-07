@@ -2,12 +2,16 @@
 
 namespace Linko\Repository;
 
+use Linko\Repository\Core\SuperRepository;
+
 /**
- * Description of PlayerRepository
+ * PlayerRepository allows you to  manage the Player Model / Data link
+ * Call order :
+ * [DBRequester] <--> [QueryBuilder] <--> [Repository] <--> [Manager]
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class PlayerRepository extends Core\SuperRepository {
+class PlayerRepository extends SuperRepository {
 
     private CONST TABLE_NAME = "player";
     private CONST FIELDS_PREFIX = "player_";

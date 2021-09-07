@@ -8,8 +8,9 @@ use Linko\Tools\Core\DBException;
 use Linko\Tools\Core\QueryStatementFactory;
 
 /**
- * Description of DBRequester
+ * DataBase Requester allow send requests to database
  *
+ * [DBRequester] <--> [QueryBuilder] <--> [Repository] <--> [Manager]
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 class DBRequester extends \APP_DbObject {
@@ -20,6 +21,12 @@ class DBRequester extends \APP_DbObject {
      */
     private $isDebug;
 
+    /**
+     * Execute the given QueryBuilder
+     * @param QueryBuilder $qb
+     * @return type
+     * @throws DBException
+     */
     public function execute(QueryBuilder $qb) {
         $fieldIndex = $qb->getKeyIndex();
         $queryString = QueryStatementFactory::create($qb);

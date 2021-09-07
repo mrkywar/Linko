@@ -7,8 +7,11 @@ use Linko\Models\Core\Model;
 use Linko\Models\Core\QueryString;
 use Linko\Tools\Core\FieldValueTransposer as Transposer;
 
+
 /**
- * Description of QueryBuilder
+ * QueryBuilder allow create query for data request
+ * 
+ * [DBRequester] <--> [QueryBuilder] <--> [Repository] <--> [Manager]
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */

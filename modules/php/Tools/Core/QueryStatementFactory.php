@@ -7,12 +7,17 @@ use Linko\Models\Core\QueryString;
 use Linko\Tools\QueryBuilder;
 
 /**
- * Description of QueryStatementFacrory
+ * QueryStatementFacrory to create Query
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 abstract class QueryStatementFactory {
 
+    /**
+     * Create the query string to execute from a given QueryBuilder
+     * @param QueryBuilder $qb : Query to build
+     * @return string : Query ready to execute
+     */
     public static function create(QueryBuilder &$qb) {
         $queryString = "";
         switch ($qb->getQueryType()) {
@@ -36,8 +41,9 @@ abstract class QueryStatementFactory {
     }
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - SELECT
+     *                  BEGIN - SELECT (private)
      * ---------------------------------------------------------------------- */
+
 
     private static function createFieldList(QueryBuilder $qb) {
         $fieldDb = [];
@@ -53,6 +59,12 @@ abstract class QueryStatementFactory {
         return implode(",", $fieldDb);
     }
 
+
+    /**
+     * Create the complete SELECT query
+     * @param QueryBuilder $qb
+     * @param type $statement
+     */
     private static function createSelectQuery(QueryBuilder $qb, &$statement) {
         $statement .= QueryString::TYPE_SELECT;
 
@@ -79,10 +91,29 @@ abstract class QueryStatementFactory {
         }
     }
 
+    /**
+     * Create field list (select <FieldList> From ...)
+     * @param QueryBuilder $qb
+     * @return type
+     */
+    private static function createFieldList(QueryBuilder $qb) {
+        $fieldDb = [];
+        foreach ($qb->getFields() as $field) {
+            $fieldDb[] = " `" . $field->getDb() . "` ";
+        }
+
+        return " (" . implode(",", $fieldDb) . ") ";
+    }
+
     /* -------------------------------------------------------------------------
-     *                  BEGIN - UPDATE
+     *                  BEGIN - UPDATE (private)
      * ---------------------------------------------------------------------- */
 
+    /**
+     * Create the complete UPDATE query
+     * @param QueryBuilder $qb
+     * @param type $statement
+     */
     private static function createUpdateQuery(QueryBuilder $qb, &$statement) {
         $statement .= QueryString::TYPE_UPDATE;
         $statement .= " `" . $qb->getTableName() . "` ";
@@ -96,9 +127,14 @@ abstract class QueryStatementFactory {
     }
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - SELECT OR UPDATE
+     *                  BEGIN - SELECT OR UPDATE (private)
      * ---------------------------------------------------------------------- */
 
+    /**
+     * Create the query clauses (WHERE ... AND ...)
+     * @param QueryBuilder $qb
+     * @return type
+     */
     private static function generateClauses(QueryBuilder $qb) {
         $statement = "";
         $iteration = 0;
@@ -111,9 +147,14 @@ abstract class QueryStatementFactory {
     }
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - INSERT
+     *                  BEGIN - INSERT  (private)
      * ---------------------------------------------------------------------- */
 
+    /**
+     * Create the complete INSERT query
+     * @param QueryBuilder $qb
+     * @param type $statement
+     */
     private static function createInsertQuery(QueryBuilder $qb, &$statement) {
         $statement .= QueryString::TYPE_INSERT . " INTO ";
         $statement .= "`" . $qb->getTableName() . "`";
@@ -127,24 +168,3 @@ abstract class QueryStatementFactory {
     }
 
 }
-
-//private function prepareStatement() {
-//        switch ($this->getQueryType()) {
-//            case self::TYPE_SELECT:
-//                $this->preapareSelect()
-//                        ->prepareConditions()
-//                        ->prepareOrderBy()
-//                        ->prepareLimit();
-//                break;
-//            case self::TYPE_INSERT:
-//                $this->prepareInsert()
-//                        ->prepareValues();
-//                break;
-//            case self::TYPE_UPDATE:
-//                $this->perpareUpdate()
-//                        ->prepareSetter()
-//                        ->prepareConditions();
-//                break;
-//        }
-//        return $this;
-//    }

@@ -6,7 +6,7 @@ use Linko\Models\Core\Field;
 use Linko\Models\Core\Model;
 
 /**
- * Description of SuperSerializer
+ * SuperSerializer allows you to globally serialize or unserialize
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
@@ -16,7 +16,7 @@ abstract class SuperSerializer implements Serializer {
      * ---------------------------------------------------------------------- */
 
     /**
-     * Object To Array 
+     * Transform Object To Array 
      * @param Model $object
      * @return array $rawDatas
      */
@@ -33,7 +33,7 @@ abstract class SuperSerializer implements Serializer {
     }
 
     private function serializeValue(Model $object, Field $field) {
-        $getter = "get" . ucfirst($field->getProperty());
+        $getter = "get" . $field->getProperty();
         return $object->$getter();
     }
 
@@ -41,8 +41,17 @@ abstract class SuperSerializer implements Serializer {
      *                  BEGIN -  Unserialize Methods
      * ---------------------------------------------------------------------- */
 
+    /**
+     * give the class of associated model
+     * @return type
+     */
     abstract public function getModelClass();
 
+    /**
+     * Transform Array to Object (only one raw in input)
+     * @param Model $object
+     * @return array $rawDatas
+     */
     public function unserializeOnce($rawDatas, array $fields) {
         $modelClass = $this->getModelClass();
         $object = new $modelClass();
@@ -54,6 +63,11 @@ abstract class SuperSerializer implements Serializer {
         return $object;
     }
 
+    /**
+     * Transform Array to Object (multi raw in input)
+     * @param Model $object
+     * @return array $rawDatas
+     */
     public function unserialize($rawDatas, array $fields) {
         $objects = [];
         foreach ($rawDatas as $raw) {
