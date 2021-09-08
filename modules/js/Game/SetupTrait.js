@@ -1,16 +1,23 @@
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 
 define([
     'dojo',
     'dojo/_base/declare'
 ],
-        (dojo, declare) => {
-    return declare('linko.ToolsTrait', null, {
+    (dojo, declare) => {
+        
+    return declare('linko.SetupTrait', null, {
         /* -------------------------------------------------------------
          *                  BEGIN - DEBUG TOOL
          * ---------------------------------------------------------- */
         constructor: function () {
-            this.isDebugEnabled = ('studio.boardgamearena.com' === window.location.host || window.location.hash.indexOf('debug') > -1);
+            console.log('ok');
+//            this.isDebugEnabled = ('studio.boardgamearena.com' === window.location.host || window.location.hash.indexOf('debug') > -1);
         },
 
 //        isDebugEnabled: ('studio.boardgamearena.com' === window.location.host || window.location.hash.indexOf('debug') > -1),
@@ -19,10 +26,8 @@ define([
         /* -------------------------------------------------------------
          *                  BEGIN - DEBUG TOOL
          * ---------------------------------------------------------- */
-        debug: function () {
-            if (this.isDebugEnabled) {
-                console.log.apply(null, arguments);
-            }
+        setupT: function () {
+            console.log('ok');
         }
     });
 });
