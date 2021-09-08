@@ -2,6 +2,7 @@
 
 namespace Linko\Repository;
 
+use Linko\Adapters\CollectionAdapter;
 use Linko\Managers\Deck\Deck;
 use Linko\Models\Core\QueryString;
 use Linko\Models\Player;
@@ -108,6 +109,18 @@ class CardRepository extends SuperRepository {
         
         foreach ($players as $player){
             $results[$player->getId()] = count($this->getPlayerHand($player));
+        }     
+        
+        return $results;
+    }
+    
+    public function getTablesInfos(array $players){
+        $results = [];
+
+        foreach ($players as $player){
+            $location = Deck::TABLE_NAME."_".$player->getId();
+            $cards = $this->getCardsInLocation($location);
+            $results[$player->getId()] = CollectionAdapter::adapt($cards);
         }     
         
         return $results;
