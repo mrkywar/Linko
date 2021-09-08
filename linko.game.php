@@ -136,7 +136,7 @@ class Linko extends Table {
 
         $playerRepo = $this->getPlayerManager()->getRepository();
         $cardRepo = $this->getCardManager()->getRepository();
-        
+
         $result['players'] = $playerRepo->getAll();
 
         $currentPlayer = $playerRepo
@@ -144,12 +144,12 @@ class Linko extends Table {
                 ->getById(Linko::getInstance()->getCurrentPlayerId());
 
         $result['hand'] = $cardRepo->getPlayerHand($currentPlayer);
-        
-        //--
-        $playerRepo->setDoUnserialization(true);
-        
-        $result['handInfos'] = $cardRepo->getHandsInfos($playerRepo->getAll());
 
+        $playerRepo->setDoUnserialization(true);
+        $players = $playerRepo->getAll();
+
+        $result['handInfos'] = $cardRepo->getHandsInfos($players);
+        $result['tableInfos'] = $cardRepo->getTablesInfos($players);
         return $result;
     }
 
