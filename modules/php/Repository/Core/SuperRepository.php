@@ -224,9 +224,9 @@ abstract class SuperRepository implements Repository {
             case 1:
                 if ($this->doUnserialization) {
                     return $this->getSerializer()
-                                    ->unserializeOnce($queryResults[0], $this->getFields());
+                                    ->unserialize($queryResults, $this->getFields());
                 } else {
-                    return UIAdapter::adaptOnce($this, $queryResults[0]);
+                    return UIAdapter::adapt($this, $queryResults);
                 }
             default :
                 if ($this->doUnserialization) {
