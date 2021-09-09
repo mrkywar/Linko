@@ -45,18 +45,13 @@ define([
                     this.debug("Starting game setup");
                     this.debug("Gamedata : ", gamedatas);
 
-//                    // Setting up player boards
-//                    for (var player_id in gamedatas.players)
-//                    {
-//                        var player = gamedatas.players[player_id];
-//
-//                        // TODO: Setting up players boards if needed
-//                    }
-//
-//                    // TODO: Set up your game interface here, according to "gamedatas"
-//
-//
-//                    // Setup game notifications to handle (see "setupNotifications" method below)
+                    //-- create players boards
+                    for (var playerId in gamedatas.players) {
+                        var player = gamedatas.players[playerId];
+                        dojo.place(this.format_block('jstpl_player_board', player), 'board');
+                    }
+
+                    // Setup game notifications to handle (see "setupNotifications" method below)
                     this.setupNotifications();
 
                     this.debug("Ending game setup");

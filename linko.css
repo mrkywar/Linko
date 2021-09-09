@@ -74,7 +74,7 @@
 .container{
     width: 100%;
 }
-#carddeck,#playertables{
+#carddeck,#board{
     float: left;
 }
 #carddeck{
@@ -82,7 +82,7 @@
     margin-right: 2%;
     min-height: 340px;
 }
-#playertables{
+#board{
     width: 85%;
     min-height: 340px;
 }
