@@ -14,6 +14,7 @@ class Deck {
     CONST DECK_NAME = "deck";
     CONST DRAW_NAME = "draw";
     CONST HAND_NAME = "hand";
+    CONST DISCARD_NAME = "discard";
     CONST TABLE_NAME = "player_table";
 
     /**

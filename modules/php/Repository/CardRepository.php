@@ -103,7 +103,11 @@ class CardRepository extends SuperRepository {
         return $this->getCardsInLocation(Deck::HAND_NAME, $player->getId(), null);
     }
     
-    
+    /**
+     * Retrive the number of card in hand for all players
+     * @param array $players 
+     * @return array [playerId] => numberOfCards
+     */
     public function getHandsInfos(array $players){
         $results = [];
         
@@ -114,6 +118,11 @@ class CardRepository extends SuperRepository {
         return $results;
     }
     
+    /**
+     * Retrive the public cards for all players
+     * @param array $players
+     * @return array [playerId] => array<Card>
+     */
     public function getTablesInfos(array $players){
         $results = [];
 
@@ -126,6 +135,21 @@ class CardRepository extends SuperRepository {
         return $results;
     }
     
+    /**
+     * Retrive all Card in the Deck
+     * @return array<Card> : Cards in Deck
+     */
+    public function getCardsInDeck(){
+        return $this->getCardsInLocation(Deck::DECK_NAME);
+    }
     
+    /**
+     * Retrive all Card in the Draw
+     * @return array<Card> : Cards in Deck
+     */
+    
+    public function getVisibleDraw(){
+        return $this->getCardsInLocation(Deck::DRAW_NAME);
+    }
 
 }
