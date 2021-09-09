@@ -4,6 +4,7 @@ namespace Linko\Repository\Core;
 
 use Linko\Models\Core\Field;
 use Linko\Serializers\Core\Serializer;
+use Linko\Tools\Core\UIAdapter;
 use Linko\Tools\DBRequester;
 use Linko\Tools\QueryBuilder;
 
@@ -86,7 +87,7 @@ abstract class SuperRepository implements Repository {
         $qb->setTableName($this->getTableName());
         return $qb;
     }
-    
+
     /**
      * get the unserialization requirement
      * @return bool
@@ -104,7 +105,6 @@ abstract class SuperRepository implements Repository {
         return $this;
     }
 
-    
     /* -------------------------------------------------------------------------
      *                  BEGIN - Fields Management
      * ---------------------------------------------------------------------- */
@@ -162,7 +162,7 @@ abstract class SuperRepository implements Repository {
      * get all UIFields (usfull for display)
      * @return array all DBFields (array<Field>)
      */
-    public function getUiFields() {
+    public function getUIFields(): array {
         $res = [];
         $fields = $this->getFields();
         foreach ($fields as $field) {
@@ -226,14 +226,14 @@ abstract class SuperRepository implements Repository {
                     return $this->getSerializer()
                                     ->unserializeOnce($queryResults[0], $this->getFields());
                 } else {
-                    return $queryResults[0];
+                    return UIAdapter::adaptOnce($this, $queryResults[0]);
                 }
             default :
                 if ($this->doUnserialization) {
                     return $this->getSerializer()
                                     ->unserialize($queryResults, $this->getFields());
                 } else {
-                    return $queryResults;
+                    return UIAdapter::adapt($this, $queryResults);
                 }
         }
     }
