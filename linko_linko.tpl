@@ -5,8 +5,20 @@
     <div class="container">
         <div id="carddeck" >
             <div class="whiteblock">
-                DECK
+                DRAW
                 <div id="aviableDraw">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="whiteblock">
+                DECK
+                <div id="deck">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="whiteblock">
+                DISCARD
+                <div id="discard">
                 </div>
                 <div class="clear"></div>
             </div>
@@ -50,6 +62,12 @@
     var jstpl_deck = `
         <div class="cardontable card_0">
             <div class="deck-status">\${deck}</div>
+        </div>
+    `;
+    
+    var jstpl_discard = `
+        <div class="cardontable discard card_\${last}">
+            <div class="deck-status">\${discard}</div>
         </div>
     `;
     

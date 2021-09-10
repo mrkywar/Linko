@@ -51,11 +51,33 @@ define([
                         dojo.place(this.format_block('jstpl_player_board', player), 'board');
                     }
 
-                    //-- setup drawn deck & discard
+                    //-- setup draw
                     for (var cardId in gamedatas.draw) {
                         var card = gamedatas.draw[cardId];
                         dojo.place(this.format_block('jstpl_card', card), 'aviableDraw');
                     }
+                    
+                    //-- setup deck
+                    var deck = {
+                        deck : gamedatas.deck
+                    };
+                    dojo.place(this.format_block('jstpl_deck', deck), 'deck');
+                    
+                    //-- setup discard
+                    var discard = {
+                        last : (null === gamedatas.discard)? 'empty': gamedatas.discard[gamedatas.discard.length-1]["card_type"],
+                        discard : (null === gamedatas.discard)? 0 : gamedatas.discard.length
+                    };
+                    dojo.place(this.format_block('jstpl_discard', discard), 'discard');
+                    
+//                    this.debug(gamedatas.discard.length());
+//                    
+//                    
+//                    var discard = {
+//                        last : ()
+//                    };
+                    
+                    
 
                     // Setup game notifications to handle (see "setupNotifications" method below)
                     this.setupNotifications();
