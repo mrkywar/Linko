@@ -21,16 +21,16 @@ abstract class CardFieldsFactory extends SuperFieldFactory {
         //-- newField($fieldName,$fieldType,$DBprefix = "", $isUi = false,$isPrimary = false)
         $fields[] = self::newField("id", Field::INTEGER_FORMAT, $repo->getFieldsPrefix(), true, true);
         $fields[] = self::newField("type", Field::STRING_FORMAT, $repo->getFieldsPrefix(), true);
-        $fields[] = self::newField("location", Field::STRING_FORMAT, $repo->getFieldsPrefix(),true);
-        
-        $typeArg = self::newField("type_arg", Field::STRING_FORMAT, $repo->getFieldsPrefix(),true);
+        $fields[] = self::newField("location", Field::STRING_FORMAT, $repo->getFieldsPrefix());
+
+        $typeArg = self::newField("type_arg", Field::STRING_FORMAT, $repo->getFieldsPrefix(), true);
         $typeArg->setProperty("typeArg");
         $fields[] = $typeArg;
-        
-        $locationArg = self::newField("location_arg", Field::STRING_FORMAT, $repo->getFieldsPrefix(),true);
+
+        $locationArg = self::newField("location_arg", Field::STRING_FORMAT, $repo->getFieldsPrefix());
         $locationArg->setProperty("locationArg");
         $fields[] = $locationArg;
-         
+
         return $fields;
     }
 
