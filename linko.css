@@ -104,11 +104,57 @@
 /*** cards on table ***/
 
 .cardontable {
-    position: absolute;
-    width: 87px;
-    height: 134px;
-    background-image: url('img/cards.png'); 
+    display: block;
+    width: 60px;
+    height: 92px;
+    background-image: url('img/linko_cards.png');
+    float: left;
+    margin-bottom: 5px; 
+    margin-right: 5px;
 }
+.card_1{
+    background-position-y: -92px;
+}
+.card_2{
+    background-position-y: -184px;
+}
+.card_3{
+    background-position-y: -275px;
+}
+.card_4{
+    background-position-y: -367px;
+}
+.card_5{
+    background-position-y: -459px;
+}
+.card_6{
+    background-position-y: -550px;
+}
+.card_7{
+    background-position-y: -642px;
+}
+.card_8{
+    background-position-y: -734px;
+}
+.card_9{
+    background-position-y: -825px;
+}
+.card_10{
+    background-position-y: -917px;
+}
+.card_11{
+    background-position-y: -1009px;
+}
+.card_12{
+    background-position-y: -1101px;
+}
+.card_13{
+    background-position-y: -1192px;
+}
+.card_14{
+    background-position-y: -1284px;
+}
+
 
 .debug{
     min-height: 30px;

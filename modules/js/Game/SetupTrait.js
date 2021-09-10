@@ -51,6 +51,12 @@ define([
                         dojo.place(this.format_block('jstpl_player_board', player), 'board');
                     }
 
+                    //-- setup drawn deck & discard
+                    for (var cardId in gamedatas.draw) {
+                        var card = gamedatas.draw[cardId];
+                        dojo.place(this.format_block('jstpl_card', card), 'aviableDraw');
+                    }
+
                     // Setup game notifications to handle (see "setupNotifications" method below)
                     this.setupNotifications();
 

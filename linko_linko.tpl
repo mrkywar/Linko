@@ -8,6 +8,7 @@
                 DECK
                 <div id="aviableDraw">
                 </div>
+                <div class="clear"></div>
             </div>
         </div>
         <div id="board">
@@ -39,6 +40,19 @@
                 </div>
             </div>
     `;
+    
+    
+    var jstpl_card = `
+        <div class="cardontable card_\${card_type}" data-id="\${card_id}">
+        </div>
+    `;
+    
+    var jstpl_deck = `
+        <div class="cardontable card_0">
+            <div class="deck-status">\${deck}</div>
+        </div>
+    `;
+    
 
     //var jstpl_card = '<div class="ntx-card collection-${number}" id="collection-${player}-${number}" style="background-position:-${x}% -${y}%;z-index:${z}"></div>';
 </script>  
