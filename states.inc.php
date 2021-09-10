@@ -49,6 +49,7 @@
 
 //    !! It is not a good idea to modify this file when a game is running !!
 
+
  
 $machinestates = array(
 
