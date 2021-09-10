@@ -49,32 +49,10 @@
 /********* You can start writing your CSS below this line: **********/
 
 
-/*
-    Example of CSS sprites (a black token and a white token, 20x20px each, embedded in the same "tokens.png" 40x20px image):
-
-    .white_token {
-        background-image: url('img/tokens.png');
-        background-position: 0px 0px;
-    }
-    .black_token {
-        background-image: url('img/tokens.png');
-        background-position: -20px 0px;
-    }
-    .token {
-        width: 20px;
-        height: 20px;
-        background-repeat: none;
-    }
-*/
-
-
-
-
-
 .container{
     width: 100%;
 }
-#carddeck,#playertables{
+#carddeck,#board{
     float: left;
 }
 #carddeck{
@@ -82,7 +60,7 @@
     margin-right: 2%;
     min-height: 340px;
 }
-#playertables{
+#board{
     width: 85%;
     min-height: 340px;
 }
@@ -92,24 +70,81 @@
 .clear{
     clear: both;
 }
-.playertablecard,drawablecard{
-    display: inline-block;
-    position: relative;
-    margin-top: 5px;
-    width: 87px;
-    height: 134px;
-    /*background-image: url('img/cards.png'); /* temp hack to see it*/
-}
 
-/*** cards on table ***/
+/*-----------------------------------------------------------------------------
+            BEGIN - cards on table 
+------------------------------------------------------------------------------*/
 
 .cardontable {
-    position: absolute;
-    width: 87px;
-    height: 134px;
-    background-image: url('img/cards.png'); 
+    display: block;
+    width: 60px;
+    height: 92px;
+    background-image: url('img/linko_cards.png');
+    float: left;
+    margin-bottom: 5px; 
+    margin-right: 5px;
+}
+.card_1{
+    background-position-y: -92px;
+}
+.card_2{
+    background-position-y: -184px;
+}
+.card_3{
+    background-position-y: -275px;
+}
+.card_4{
+    background-position-y: -367px;
+}
+.card_5{
+    background-position-y: -459px;
+}
+.card_6{
+    background-position-y: -550px;
+}
+.card_7{
+    background-position-y: -642px;
+}
+.card_8{
+    background-position-y: -734px;
+}
+.card_9{
+    background-position-y: -825px;
+}
+.card_10{
+    background-position-y: -917px;
+}
+.card_11{
+    background-position-y: -1009px;
+}
+.card_12{
+    background-position-y: -1101px;
+}
+.card_13{
+    background-position-y: -1192px;
+}
+.card_14{
+    background-position-y: -1284px;
+}
+.card_empty{
+    /*background-position-y: -1375px;*/
+    background: none;
+    border: solid black 1px;
 }
 
+.count-status{
+    margin: auto;
+    text-align: center;
+    margin-top: 50%;
+    font-size: 23px;
+    font-weight: bold;
+    color: #ffc85e;
+    text-shadow: 1px 1px 1px black, -1px -1px 1px black, -1px 1px 1px black, 1px -1px 1px black;
+}
+
+/*-----------------------------------------------------------------------------
+            BEGIN - Debug
+------------------------------------------------------------------------------*/
 .debug{
     min-height: 30px;
     min-width: 30px;

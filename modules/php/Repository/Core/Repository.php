@@ -60,6 +60,8 @@ interface Repository {
     public function getFieldsPrefix();
 
     public function getDbFields(): array;
+    
+    public function getUIFields(): array;
 
     public function getPrimaryField();
 

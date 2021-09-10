@@ -31,7 +31,6 @@ class DBRequester extends \APP_DbObject {
         $fieldIndex = $qb->getKeyIndex();
         $queryString = QueryStatementFactory::create($qb);
         if ($this->isDebug) {
-//            echo "<pre>";
             var_dump($queryString);
             die;
         }
@@ -60,10 +59,6 @@ class DBRequester extends \APP_DbObject {
 
     private function initKeys($results, string $indexField) {
         $indexed = [];
-        if($this->isDebug){
-            echo " RECIVED ?";
-            var_dump($indexField);die;
-        }
 
         for ($i = 0; $i < sizeof($results); $i++) {
             $indexed[$results[$i][$indexField]] = $results[$i];

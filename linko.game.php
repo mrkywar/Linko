@@ -150,6 +150,9 @@ class Linko extends Table {
 
         $result['handInfos'] = $cardRepo->getHandsInfos($players);
         $result['tableInfos'] = $cardRepo->getTablesInfos($players);
+        $result['deck'] = count($cardRepo->getCardsInDeck());
+        $result['draw'] = $cardRepo->getVisibleDraw();
+        $result['discard'] = $cardRepo->getCardsInDiscard();
         return $result;
     }
 

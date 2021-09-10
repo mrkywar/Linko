@@ -36,7 +36,6 @@ class CardRepository extends SuperRepository {
      *            BEGIN - Specific Repository Methods
      * ---------------------------------------------------------------------- */
 
-
     /**
      * Retrive list of card in a given location
      * @param type $location : Location to be drilled
@@ -65,7 +64,7 @@ class CardRepository extends SuperRepository {
     }
 
     /**
-     * Move Card(s) to specific location
+     * Move card(s) to specific location
      * @param array<Card> $cards : Card(s) to move 
      * @param mixed $location : location to move to
      * @param mixed $locationArg : location Arg to move to (optional)
@@ -102,30 +101,61 @@ class CardRepository extends SuperRepository {
     public function getPlayerHand(Player $player) {
         return $this->getCardsInLocation(Deck::HAND_NAME, $player->getId(), null);
     }
-    
-    
-    public function getHandsInfos(array $players){
-        $results = [];
-        
-        foreach ($players as $player){
-            $results[$player->getId()] = count($this->getPlayerHand($player));
-        }     
-        
-        return $results;
-    }
-    
-    public function getTablesInfos(array $players){
+
+    /**
+     * Retrive the number of cards in hand for all players
+     * @param array $players 
+     * @return array [playerId] => numberOfCards
+     */
+    public function getHandsInfos(array $players) {
         $results = [];
 
-        foreach ($players as $player){
-            $location = Deck::TABLE_NAME."_".$player->getId();
-            $cards = $this->getCardsInLocation($location);
-            $results[$player->getId()] = CollectionAdapter::adapt($cards);
-        }     
-        
+        foreach ($players as $player) {
+            $results[$player->getId()] = count($this->getPlayerHand($player));
+        }
+
         return $results;
     }
-    
-    
+
+    /**
+     * Retrive the public cards for all players
+     * @param array $players
+     * @return array [playerId] => array<Card>
+     */
+    public function getTablesInfos(array $players) {
+        $results = [];
+
+        foreach ($players as $player) {
+            $location = Deck::TABLE_NAME . "_" . $player->getId();
+            $cards = $this->getCardsInLocation($location);
+            $results[$player->getId()] = CollectionAdapter::adapt($cards);
+        }
+
+        return $results;
+    }
+
+    /**
+     * Retrive all cards in the Deck
+     * @return array<Card> : Cards in Deck
+     */
+    public function getCardsInDeck() {
+        return $this->getCardsInLocation(Deck::DECK_NAME);
+    }
+
+    /**
+     * Retrive all cards in the Draw
+     * @return array<Card> : Cards in Deck
+     */
+    public function getVisibleDraw() {
+        return $this->getCardsInLocation(Deck::DRAW_NAME);
+    }
+
+    /**
+     * Retrive all Cards in the Discard
+     * @return array<Card> : Cards in Deck
+     */
+    public function getCardsInDiscard() {
+        return $this->getCardsInLocation(Deck::DISCARD_NAME);
+    }
 
 }

@@ -64,11 +64,14 @@ abstract class SuperSerializer implements Serializer {
     }
 
     /**
-     * Transform Array to Object (multi raw in input)
+     * Transform Array to Object 
      * @param Model $object
      * @return array $rawDatas
      */
     public function unserialize($rawDatas, array $fields) {
+        if(1 === sizeof($rawDatas)){
+            return $this->unserializeOnce($rawDatas[0], $fields);
+        }
         $objects = [];
         foreach ($rawDatas as $raw) {
             $objects[] = $this->unserializeOnce($raw, $fields);
