@@ -16,21 +16,20 @@ class PlayerManager extends Manager {
      * @param array $players : List of player array serialized get from table
      * @param array $options : /!\ Not used at the moment
      */
-    public function initNewGame(array $rawPlayers = array(), array $options = array()) {
+    public function initForNewGame(array $rawPlayers = array(), array $options = array()) {
+        
+        
         $gameinfos = Linko::getInstance()->getGameinfos();
         $fields = $this->repository->getFields();
-        $players = [];
+        $players = $this->getSerializer()->unserialize($rawPlayers, $fields);
 
-        $default_colors = $gameinfos['player_colors'];
+        $defaultColors = $gameinfos['player_colors'];
 
-        foreach ($rawPlayers as $player_id => $rawPlayer) {
-            $color = array_shift($default_colors);
-            $player = $this->getSerializer()->unserializeOnce($rawPlayer, $fields);
-            $player->setId($player_id)
-                    ->setColor($color);
-            $players[] = $player;
+        foreach ($players as  &$player) {
+            $color = array_shift($defaultColors);
+            $player->setColor($color);
         }
-
+        
         $this->repository->create($players);
 
         Linko::getInstance()->reattributeColorsBasedOnPreferences($rawPlayers, $gameinfos['player_colors']);

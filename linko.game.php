@@ -103,8 +103,8 @@ class Linko extends Table {
      */
 
     protected function setupNewGame($players, $options = array()) {
-        $this->playerManager->initNewGame($players, $options);
-        $this->cardManager->initNewGame($players, $options);
+        $this->playerManager->initForNewGame($players, $options);
+        $this->cardManager->initForNewGame($players, $options);
 
         /*         * ********** Start the game initialization **** */
 
