@@ -64,7 +64,7 @@ abstract class SuperSerializer implements Serializer {
                 $primary = $field;
             }
         }
-        if (null !== $primary) {
+        if (null !== $primary && !isset($rawDatas[$primary->getDb()])) {
             $rawDatas[$primary->getDb()] = $key;
             $this->unserializeValue($object, $primary, $rawDatas);
         }

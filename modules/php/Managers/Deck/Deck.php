@@ -12,7 +12,7 @@ use Linko\Repository\CardRepository;
 class Deck {
 
     CONST DECK_NAME = "deck";
-    CONST DRAW_NAME = "draw";
+    CONST DRAW_NAME = "poule"; // joke name for pool
     CONST HAND_NAME = "hand";
     CONST DISCARD_NAME = "discard";
     CONST TABLE_NAME = "player_table";
@@ -64,7 +64,7 @@ class Deck {
     public function drawCards(int $numberOfCards, string $destination, string $destinationArg = null) {
         $cards = $this->getRepository()
                 ->getCardsInLocation(self::DECK_NAME, null, $numberOfCards);
-
+        
         //-- Check that the number of cards drawn is the one requested 
         // (there is still enough cards available) if not, triggers an exception
         if (sizeof($cards) !== $numberOfCards) {
@@ -73,6 +73,7 @@ class Deck {
 
         //-- Now move cards to their destination
         $this->getRepository()
+//                ->setIsDebug(true)
                 ->moveCardsToLocation($cards, $destination, $destinationArg);
     }
 

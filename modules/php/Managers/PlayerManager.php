@@ -17,8 +17,6 @@ class PlayerManager extends Manager {
      * @param array $options : /!\ Not used at the moment
      */
     public function initForNewGame(array $rawPlayers = array(), array $options = array()) {
-        
-        
         $gameinfos = Linko::getInstance()->getGameinfos();
         $fields = $this->repository->getFields();
         $players = $this->getSerializer()->unserialize($rawPlayers, $fields);
@@ -34,6 +32,8 @@ class PlayerManager extends Manager {
 
         Linko::getInstance()->reattributeColorsBasedOnPreferences($rawPlayers, $gameinfos['player_colors']);
         Linko::getInstance()->reloadPlayersBasicInfos();
+        
+        return $this->repository->setDoUnserialization(true)->getAll();
     }
 
 }

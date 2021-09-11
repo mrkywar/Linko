@@ -29,21 +29,25 @@ class CardManager extends Manager {
 
     /**
      * new game initilaze
-     * @param array $players : List of player array serialized get from table
+     * @param array<Player> $players : List of player array<Player>
      * @param array $options : /!\ Not used at the moment
      */
     public function initForNewGame(array $players = array(), array $options = array()) {
         $this->initDeck();
 
         //-- Give initals cards
-        foreach (array_keys($players) as $playerId) {
+
+        foreach ($players as $player) {
             $this->deck
-                    ->drawCards(self::INTIALS_CARD, Deck::HAND_NAME, $playerId);
+                    ->drawCards(self::INTIALS_CARD, Deck::HAND_NAME, $player->getId());
+
         }
 
         //-- Init visible Draw
         $this->deck
                 ->drawCards(self::VISIBLE_DRAW, Deck::DRAW_NAME);
+        
+        return $this->deck;
     }
 
     /**
