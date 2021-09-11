@@ -76,17 +76,17 @@ $machinestates = array(
         "type" => "game",
         "action" => "stStartOfTurn",
         'transitions' => [
-            '' => ST_RESOLVE_STACK,
+            '' => ST_RESOLVE_STATE,
         ]
     ],
     /*
      * Where the flow is resolved
      */
-    ST_RESOLVE_STACK => [
-        'name' => 'resolveStack',
+    ST_RESOLVE_STATE => [
+        'name' => 'resolveState',
         'description' => '',
         'type' => 'game',
-        'action' => 'stResolveStack',
+        'action' => 'stResolveState',
         'transitions' => [],
     ],
     ST_PLAY_CARD => [

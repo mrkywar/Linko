@@ -14,7 +14,7 @@ define("ST_START_OF_TURN", 2);
 define("ST_PLAY_CARD",10);
 
 
-//-- STACK RESOLVER
-define("ST_RESOLVE_STACK", 90);
+//-- STATE RESOLVER
+define("ST_RESOLVE_STATE", 90);
 
 
