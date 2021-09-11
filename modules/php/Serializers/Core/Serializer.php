@@ -15,5 +15,4 @@ interface Serializer {
 
     public function unserialize($rawDatas, array $fields);
 
-    public function unserializeOnce($rawDatas, array $fields);
 }
