@@ -9,6 +9,8 @@ use Linko\Models\Card;
  * toolbox to manage Cards
  *
  * @author Mr_Kywar mr_kywar@gmail.com
+ * 
+ * [DBRequester] <--> [QueryBuilder] <--> [Repository] <--> [Manager]
  */
 class CardManager extends Manager {
 
@@ -27,21 +29,25 @@ class CardManager extends Manager {
 
     /**
      * new game initilaze
-     * @param array $players : List of player array serialized get from table
+     * @param array<Player> $players : List of player array<Player>
      * @param array $options : /!\ Not used at the moment
      */
-    public function initNewGame(array $players = array(), array $options = array()) {
+    public function initForNewGame(array $players = array(), array $options = array()) {
         $this->initDeck();
 
         //-- Give initals cards
-        foreach (array_keys($players) as $playerId) {
+
+        foreach ($players as $player) {
             $this->deck
-                    ->drawCards(self::INTIALS_CARD, Deck::HAND_NAME, $playerId);
+                    ->drawCards(self::INTIALS_CARD, Deck::HAND_NAME, $player->getId());
+
         }
 
         //-- Init visible Draw
         $this->deck
                 ->drawCards(self::VISIBLE_DRAW, Deck::DRAW_NAME);
+        
+        return $this->deck;
     }
 
     /**
@@ -55,18 +61,20 @@ class CardManager extends Manager {
         $this->getRepository()->setDoUnserialization(true);
 
         $deck = [];
+        $id = 1;
         for ($number = 1; $number <= self::TYPES_OF_NUMBERS; ++$number) {
             for ($ex = 1; $ex <= self::NUMBER_OF_NUMBERS; ++$ex) {
-                $deck[] = $this->createCard($number);
+                $deck[] = $this->createCard($number,$id);
             }
         }
         for ($jok = 1; $jok <= self::NUMBER_OF_JOKERS; ++$jok) {
-            $deck[] = $this->createCard(self::VALUE_OF_JOKERS);
+            $deck[] = $this->createCard(self::VALUE_OF_JOKERS, $id);
         }
         
-        for($i=0; $i<sizeof($deck); $i++){
-            $deck[$i]->setId($i);
-        }
+//        //set an id for all cards
+//        for($i=0; $i<sizeof($deck); $i++){
+//            $deck[$i]->setId($i);
+//        }
         
         shuffle($deck);
         $count = sizeof($deck);
@@ -88,13 +96,16 @@ class CardManager extends Manager {
      */
     private function createCard(
             int $cardValue,
+            int &$id,
             string $location = Deck::DECK_NAME
     ) {
         $card = new Card();
         $card->setLocation($location)
                 ->setType($cardValue)
                 ->setTypeArg($cardValue)
-                ->setId(null);
+                ->setId($id);
+        
+        $id++;
 
         return $card;
     }

@@ -212,29 +212,19 @@ abstract class SuperRepository implements Repository {
      * of an object array or not (optional) by default true
      * @return type
      */
-    protected function execute(QueryBuilder $qb) {
+    final protected function execute(QueryBuilder $qb) {
         $queryResults = $this->getDbRequester()->execute($qb);
         if (!is_array($queryResults)) {
             return $queryResults;
         }
 
-        switch (sizeof($queryResults)) {
-            case 0:
-                return null;
-            case 1:
-                if ($this->doUnserialization) {
-                    return $this->getSerializer()
-                                    ->unserialize($queryResults, $this->getFields());
-                } else {
-                    return UIAdapter::adapt($this, $queryResults);
-                }
-            default :
-                if ($this->doUnserialization) {
-                    return $this->getSerializer()
-                                    ->unserialize($queryResults, $this->getFields());
-                } else {
-                    return UIAdapter::adapt($this, $queryResults);
-                }
+        if (0 === sizeof($queryResults)) {
+            return null;
+        } elseif ($this->doUnserialization) {
+            return $this->getSerializer()
+                            ->unserialize($queryResults, $this->getFields());
+        } else {
+            return UIAdapter::adapt($this, $queryResults);
         }
     }
 
