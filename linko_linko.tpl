@@ -4,13 +4,12 @@
 <div id="gamepanel">
     <div class="container">
         <div id="carddeck" >
-            <div class="whiteblock">
-                DRAW
+            <div class="">
                 <div id="aviableDraw">
                 </div>
                 <div class="clear"></div>
             </div>
-            <div class="whiteblock">
+            <div class="">
                 <div id="deck">
                 </div>
                 <div class="clear"></div>
