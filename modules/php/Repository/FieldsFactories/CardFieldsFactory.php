@@ -15,7 +15,7 @@ use Linko\Repository\Core\SuperFieldFactory;
  */
 abstract class CardFieldsFactory extends SuperFieldFactory {
 
-    public static function create(Repository $repo): array {
+    public static function create(Repository $repo) {
         $fields = [];
 
         //-- newField($fieldName,$fieldType,$DBprefix = "", $isUi = false,$isPrimary = false)

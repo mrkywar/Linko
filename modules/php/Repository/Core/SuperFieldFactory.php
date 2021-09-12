@@ -38,5 +38,5 @@ abstract class SuperFieldFactory {
         return $field;
     }
 
-    abstract public function create(Repository $repo): array;
+    abstract public function create(Repository $repo);
 }
