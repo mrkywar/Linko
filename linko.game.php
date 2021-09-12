@@ -38,7 +38,8 @@ spl_autoload_register($swdNamespaceAutoload, true, true);
 require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 
 class Linko extends Table {
-
+    use Linko\States\NewTurnTrait;
+    
     private static $instance;
 
     /**

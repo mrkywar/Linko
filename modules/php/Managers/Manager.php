@@ -22,6 +22,12 @@ class Manager {
      * @var Serializer
      */
     private $serializer;
+    
+    
+    /**
+     * @var Manager
+     */
+    private static $instance;
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 
@@ -44,5 +50,16 @@ class Manager {
         $this->serializer = $serializer;
         return $this;
     }
+    
+    public static function getInstance(): Manager {
+        return self::$instance;
+    }
+
+    public static function setInstance(Manager $instance) {
+        self::$instance = $instance;
+        return self;
+    }
+
+
 
 }

@@ -28,14 +28,15 @@ abstract class SuperFieldFactory {
             $isPrimary = false
     ) {
         $field = new Field();
-        
+
         $field->setProperty($fieldName)
-                ->setDb($DBprefix.$fieldName)
+                ->setDb($DBprefix . $fieldName)
                 ->setFieldType($fieldType)
                 ->setIsPrimary($isPrimary)
                 ->setIsUi($isUi);
-        
+
         return $field;
     }
 
+    abstract public function create(Repository $repo): array;
 }

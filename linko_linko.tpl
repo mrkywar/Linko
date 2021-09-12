@@ -29,11 +29,11 @@
 
 <script type="text/javascript">
     var jstpl_player_board = `
-            <div  class="playertable whiteblock playertable">
-                 <div class="playertablename" style="color:#\${player_color}">
+            <div  class="playertable whiteblock playertable player_board_\${player_id}">
+                <div class="playertablename" style="color:#\${player_color}">
                     \${player_name}
-                 </div>
-                 <div class="playertablecard" id="playertable_\${player_id}">
+                </div>
+                <div class="playertablecard" id="playertable_\${player_id}">
                 </div>
             </div>
             `;

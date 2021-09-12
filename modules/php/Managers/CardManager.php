@@ -13,7 +13,6 @@ use Linko\Models\Card;
  * [DBRequester] <--> [QueryBuilder] <--> [Repository] <--> [Manager]
  */
 class CardManager extends Manager {
-
     private CONST TYPES_OF_NUMBERS = 13; // 13 different number in a deck
     private CONST NUMBER_OF_NUMBERS = 8; // 8 cards of each number in a deck
     private CONST VALUE_OF_JOKERS = 14; // 14 is jocker value when play alone
@@ -22,7 +21,11 @@ class CardManager extends Manager {
     private CONST VISIBLE_DRAW = 6; // 6 cards visible in the draw
 
     private $deck;
-
+    
+    public function __construct() {
+        self::setInstance($this);
+    }
+    
     /* -------------------------------------------------------------------------
      *                  BEGIN - New Game Initialization
      * ---------------------------------------------------------------------- */

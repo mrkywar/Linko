@@ -11,6 +11,10 @@ use Linko;
  */
 class PlayerManager extends Manager {
     
+    public function __construct() {
+        self::setInstance($this);
+    }
+    
     /**
      * new game initilaze
      * @param array $players : List of player array serialized get from table
