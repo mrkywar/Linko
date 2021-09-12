@@ -10,11 +10,21 @@ namespace Linko\Models;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 class GlobalVar implements Model {
+
     private $id;
+    private $name;
     private $value;
-    
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Getters & Setters 
+     * ---------------------------------------------------------------------- */
+
     public function getId() {
         return $this->id;
+    }
+
+    public function getName() {
+        return $this->name;
     }
 
     public function getValue() {
@@ -31,5 +41,9 @@ class GlobalVar implements Model {
         return $this;
     }
 
+    public function setName($name) {
+        $this->name = $name;
+        return $this;
+    }
 
 }

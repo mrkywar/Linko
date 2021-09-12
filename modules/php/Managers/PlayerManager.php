@@ -10,11 +10,19 @@ use Linko;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 class PlayerManager extends Manager {
-    
+
     public function __construct() {
         self::setInstance($this);
     }
-    
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Define Abstract Methods
+     * ---------------------------------------------------------------------- */
+
+    public static function getManagerFactory(): ManagerFactory {
+        return PlayerManagerFactory::class;
+    }
+
     /**
      * new game initilaze
      * @param array $players : List of player array serialized get from table
@@ -27,16 +35,16 @@ class PlayerManager extends Manager {
 
         $defaultColors = $gameinfos['player_colors'];
 
-        foreach ($players as  &$player) {
+        foreach ($players as &$player) {
             $color = array_shift($defaultColors);
             $player->setColor($color);
         }
-        
+
         $this->repository->create($players);
 
         Linko::getInstance()->reattributeColorsBasedOnPreferences($rawPlayers, $gameinfos['player_colors']);
         Linko::getInstance()->reloadPlayersBasicInfos();
-        
+
         return $this->repository->setDoUnserialization(true)->getAll();
     }
 

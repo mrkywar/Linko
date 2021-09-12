@@ -1,6 +1,8 @@
 <?php
 namespace Linko\Managers\Factories;
 
+use Linko\Managers\Core\ManagerFactory;
+use Linko\Managers\Manager;
 use Linko\Managers\PlayerManager;
 use Linko\Repository\FieldsFactories\PlayerFieldsFactory;
 use Linko\Repository\PlayerRepository;
@@ -11,9 +13,9 @@ use Linko\Serializers\PlayerSerializer;
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-abstract class PlayerManagerFactory {
+abstract class PlayerManagerFactory implements ManagerFactory{
 
-    public static function create() {
+    public static function create(): Manager {
         //-- REPOSITORY
         $repository = new PlayerRepository();
         $repository->setFields(PlayerFieldsFactory::create($repository));
