@@ -3,31 +3,31 @@
 namespace Linko\Managers\Factories;
 
 use Linko\Managers\Core\ManagerFactory;
+use Linko\Managers\LogManager;
 use Linko\Managers\Core\Manager;
-use Linko\Managers\PlayerManager;
-use Linko\Repository\FieldsFactories\PlayerFieldsFactory;
-use Linko\Repository\PlayerRepository;
-use Linko\Serializers\PlayerSerializer;
+use Linko\Repository\FieldsFactories\LogFieldsFactory;
+use Linko\Repository\LogRepository;
+use Linko\Serializers\LogSerializer;
 
 /**
- * Factory to create PlayerManager objects
+ * Factory to create LogManager objects
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-abstract class PlayerManagerFactory implements ManagerFactory {
+abstract class LogManagerFactory implements ManagerFactory {
 
     public static function create(Manager $manager = null): Manager {
         //-- REPOSITORY
-        $repository = new PlayerRepository();
-        $repository->setFields(PlayerFieldsFactory::create($repository));
+        $repository = new LogRepository();
+        $repository->setFields(LogFieldsFactory::create($repository));
 
         //-- SERIALIZER
-        $serializer = new PlayerSerializer();
+        $serializer = new LogSerializer();
         $repository->setSerializer($serializer);
 
         //-- MANAGER
         if (null === $manager) {
-            $manager = new PlayerManager();
+            $manager = new LogManager();
         }
         $manager->setRepository($repository)
                 ->setSerializer($serializer);

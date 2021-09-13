@@ -24,11 +24,22 @@ abstract class FieldValueTransposer {
                 return (true === $value) ? 1 : 0;
             case Field::INTEGER_FORMAT:
                 return "'" . (int) $value . "'";
+            case Field::DATETIME_FORMAT:
+                return "'". self::transposeDateTime($value)."'";
             default:
                 return $value;
         }
     }
     
     
+    private static function transposeDateTime(\DateTime $datetime) {
+        return $datetime->format("Y-m-d H:i:s");
+    }
+    
+    
     
 }
+//INSERT INTO `log`( `log_id` , `log_date` , `log_category` , `log_content` ) VALUES (null,'2021'
+//        . '2021'
+//        . '2021'
+//        . '2021-0909-1313 2323:4242:1717','debug','END LOGGER !'

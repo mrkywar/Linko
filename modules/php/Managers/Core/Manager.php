@@ -1,6 +1,6 @@
 <?php
 
-namespace Linko\Managers;
+namespace Linko\Managers\Core;
 
 use Linko\Repository\Core\Repository;
 use Linko\Serializers\Core\Serializer;
@@ -11,7 +11,7 @@ use Linko\Serializers\Core\Serializer;
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class Manager {
+abstract class Manager {
 
     /**
      * @var Repository
@@ -22,6 +22,27 @@ class Manager {
      * @var Serializer
      */
     private $serializer;
+
+    /**
+     * @var array<Manager> contain all used managers instances
+     */
+    private static $instances = [];
+
+    /* -------------------------------------------------------------------------
+     *                 BEGIN - Instance Management
+     * ---------------------------------------------------------------------- */
+
+    abstract public function buildInstance(): Manager;
+
+    final static public function getInstance() {
+        $instanceClass = get_called_class(); // get PlayerManager / CardManager /... class
+        if (!isset(self::$instances[$instanceClass])) {
+            $factory = new $instanceClass();
+            
+            self::$instances[$instanceClass] = $factory->buildInstance();
+        }
+        return self::$instances[$instanceClass];
+    }
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 

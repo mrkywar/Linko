@@ -3,31 +3,31 @@
 namespace Linko\Managers\Factories;
 
 use Linko\Managers\Core\ManagerFactory;
+use Linko\Managers\GlobalVarManager;
 use Linko\Managers\Core\Manager;
-use Linko\Managers\PlayerManager;
-use Linko\Repository\FieldsFactories\PlayerFieldsFactory;
-use Linko\Repository\PlayerRepository;
-use Linko\Serializers\PlayerSerializer;
+use Linko\Repository\FieldsFactories\GlobalVarFieldFactory;
+use Linko\Repository\GlobalVarRepository;
+use Linko\Serializers\GlobalVarSerializer;
 
 /**
- * Factory to create PlayerManager objects
+ * Factory to create GlobalVarManager objects
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-abstract class PlayerManagerFactory implements ManagerFactory {
+abstract class GlobalVarManagerFactory implements ManagerFactory {
 
     public static function create(Manager $manager = null): Manager {
         //-- REPOSITORY
-        $repository = new PlayerRepository();
-        $repository->setFields(PlayerFieldsFactory::create($repository));
+        $repository = new GlobalVarRepository();
+        $repository->setFields(GlobalVarFieldFactory::create($repository));
 
         //-- SERIALIZER
-        $serializer = new PlayerSerializer();
+        $serializer = new GlobalVarSerializer();
         $repository->setSerializer($serializer);
 
         //-- MANAGER
         if (null === $manager) {
-            $manager = new PlayerManager();
+            $manager = new GlobalVarManager();
         }
         $manager->setRepository($repository)
                 ->setSerializer($serializer);

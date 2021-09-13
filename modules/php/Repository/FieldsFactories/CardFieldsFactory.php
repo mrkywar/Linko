@@ -7,7 +7,7 @@ use Linko\Repository\Core\Repository;
 use Linko\Repository\Core\SuperFieldFactory;
 
 /**
- * Description of PlayerFieldsFactory
+ * Description of CardFieldsFactory
  * /!\ Alway set the primary field first !!
  * Factory to create Card Fields List for link Model <--> DB
  *
@@ -15,7 +15,7 @@ use Linko\Repository\Core\SuperFieldFactory;
  */
 abstract class CardFieldsFactory extends SuperFieldFactory {
 
-    public static function create(Repository $repo) {
+    public static function create(Repository $repo): array {
         $fields = [];
 
         //-- newField($fieldName,$fieldType,$DBprefix = "", $isUi = false,$isPrimary = false)

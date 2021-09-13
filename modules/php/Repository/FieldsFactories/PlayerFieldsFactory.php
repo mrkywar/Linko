@@ -15,7 +15,7 @@ use Linko\Repository\Core\SuperFieldFactory;
  */
 abstract class PlayerFieldsFactory extends SuperFieldFactory {
 
-    public static function create(Repository $repo) {
+    public static function create(Repository $repo): array {
         $fields = [];
 
         //-- newField($fieldName,$fieldType,$DBprefix = "", $isUi = false,$isPrimary = false)
@@ -27,16 +27,13 @@ abstract class PlayerFieldsFactory extends SuperFieldFactory {
 //        $fields[] = self::newField("beginner", Field::BINARY_FORMAT, $repo->getFieldsPrefix(), true);
         $fields[] = self::newField("score", Field::INTEGER_FORMAT, $repo->getFieldsPrefix(), true);
         $fields[] = self::newField("zombie", Field::BOOLEAN_FORMAT, $repo->getFieldsPrefix(), true);
-        
+
         $isAi = self::newField("ai", Field::BOOLEAN_FORMAT, $repo->getFieldsPrefix(), true);
         $isAi->setProperty("isAi");
-        
+
         $fields[] = $isAi;
 
         return $fields;
-        
-        
-    
     }
 
 }

@@ -1,9 +1,9 @@
 <?php
 
 use Linko\Managers\CardManager;
-use Linko\Managers\Factories\CardManagerFactory;
-use Linko\Managers\Factories\PlayerManagerFactory;
+use Linko\Managers\LogManager;
 use Linko\Managers\PlayerManager;
+use Linko\States\NewTurnTrait;
 
 /**
  * ------
@@ -39,17 +39,9 @@ require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 
 class Linko extends Table {
 
+    use NewTurnTrait;
+
     private static $instance;
-
-    /**
-     * @var PlayerManager
-     */
-    private $playerManager;
-
-    /**
-     * @var CardManager
-     */
-    private $cardManager;
 
     function __construct() {
         parent::__construct();
@@ -62,9 +54,6 @@ class Linko extends Table {
                 //    "my_second_game_variant" => 101,
                 //      ...
         ));
-
-        $this->playerManager = PlayerManagerFactory::create();
-        $this->cardManager = CardManagerFactory::create();
 
         self::$instance = $this;
     }
@@ -83,11 +72,23 @@ class Linko extends Table {
     }
 
     public function getPlayerManager(): PlayerManager {
-        return $this->playerManager;
+        return PlayerManager::getInstance();
     }
 
     public function getCardManager(): CardManager {
-        return $this->cardManager;
+        return CardManager::getInstance();
+    }
+
+    public function getLogger(): LogManager {
+        return LogManager::getInstance();
+    }
+
+    public function getCurrentPlayer() {
+        return self::getCurrentPlayerId();
+//        var_dump("??");die;
+//        return $this->playerManager
+//                ->getRepository()
+//                ->getById(self::getCurrentPlayerId());
     }
 
     /* -------------------------------------------------------------------------
@@ -103,8 +104,12 @@ class Linko extends Table {
      */
 
     protected function setupNewGame($rawPlayers, $options = array()) {
-        $players = $this->playerManager->initForNewGame($rawPlayers, $options);
-        $this->cardManager->initForNewGame($players, $options);
+        $players = $this->getPlayerManager()
+                ->initForNewGame($rawPlayers, $options);
+        $this->getCardManager()
+                ->initForNewGame($players, $options);
+
+        $this->getLogger()->log("END LOGGER !");
 
         /*         * ********** Start the game initialization **** */
 
