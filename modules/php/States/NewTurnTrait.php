@@ -15,13 +15,17 @@ trait NewTurnTrait {
      * 
      */
     public function stStartOfTurn() {
-        $playerManager = Linko::getInstance()->getPlayerManager();
+//        $playerManager = Linko::getInstance()->getPlayerManager();
 //        var_dump($playerManager);
 //        die;
     }
 
     public function stResolveState() {
-        
+//        $globalManger = \Linko\Managers\Factories\GlobalVarManagerFactory::create();
+//        $globalManger->
+//        $activePlayer = Linko::getInstance()->getCurrentPlayer();
+//        var_dump($activePlayer);
+//        die;
     }
 
 }

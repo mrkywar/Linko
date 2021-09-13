@@ -73,13 +73,41 @@ $machinestates = [
             '' => ST_START_OF_TURN,
         ],
     ],
+    /*
+     * Start of a turn : trigger new player turn
+     */
     ST_START_OF_TURN => [
-        "name" => "playerTurn",
-        "description" => clienttranslate('${actplayer} must play a card or pass'),
-        "descriptionmyturn" => clienttranslate('${you} must play a card or pass'),
+        'name' => 'startOfTurn',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stStartOfTurn',
+        'transitions' => [
+            '' => ST_RESOLVE_STATE,
+        ],
+    ],
+    ST_RESOLVE_STATE => [
+        'name' => 'resolveStack',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stResolveState',
+        'transitions' => [],
+    ],
+//    ST_START_OF_TURN => [
+//        "name" => "playerTurn",
+//        "description" => clienttranslate('${actplayer} must play a card or pass'),
+//        "descriptionmyturn" => clienttranslate('${you} must play a card or pass'),
+//        "type" => "activeplayer",
+//        "possibleactions" => ["playCard", "pass"],
+//        "transitions" => ["playCard" => ST_START_OF_TURN, "pass" => ST_START_OF_TURN]
+//    ],
+    ST_PLAY_CARD => [
+        "name" => "playCard",
+        "description" => clienttranslate('${actplayer} can play a card'),
+        "descriptionmyturn" => clienttranslate('${you} can play a card'),
         "type" => "activeplayer",
-        "possibleactions" => ["playCard", "pass"],
-        "transitions" => ["playCard" => ST_START_OF_TURN, "pass" => ST_START_OF_TURN]
+        "args" => "argPlayCards",
+        "action" => "stPlayCard",
+        "possibleactions" => ["actPlayCard"]
     ],
     /*
      * BGA framework final state. Do not modify.
