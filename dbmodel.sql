@@ -32,19 +32,23 @@ CREATE TABLE IF NOT EXISTS `card` (
   `card_location` varchar(50) NOT NULL,
   `card_location_arg` int(11) NOT NULL,
   PRIMARY KEY (`card_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
 CREATE TABLE IF NOT EXISTS `global_var` (
     `global_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
     `global_name` varchar(255) UNIQUE,
-    `global_value` int(11)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
-
+    `global_value` int(11),
+    PRIMARY KEY(`global_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+-- 
+-- 
 CREATE TABLE IF NOT EXISTS `log` (
-    `log_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-    `log_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `log_category` varchar(50),
-    `log_content` text
+    `log_id` int(10) unsigned UNSIGNED NOT NULL AUTO_INCREMENT,
+    `log_date` varchar(50) NOT NULL,
+    `log_category` varchar(50) NOT NULL,
+    `log_content` text NOT NULL,
+    PRIMARY KEY(`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+

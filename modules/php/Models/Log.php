@@ -2,6 +2,7 @@
 
 namespace Linko\Models;
 
+use DateTime;
 use Linko\Models\Core\Model;
 
 /**
@@ -19,6 +20,7 @@ class Log implements Model {
 
     public function __construct() {
         $this->category = self::DEBUG_CATEGORY; // default
+        $this->date = new DateTime();
     }
 
     public function getId() {

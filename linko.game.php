@@ -1,9 +1,7 @@
 <?php
 
 use Linko\Managers\CardManager;
-use Linko\Managers\Factories\CardManagerFactory;
-use Linko\Managers\Factories\GlobalVarManagerFactory;
-use Linko\Managers\Factories\PlayerManagerFactory;
+use Linko\Managers\LogManager;
 use Linko\Managers\PlayerManager;
 use Linko\States\NewTurnTrait;
 
@@ -81,6 +79,10 @@ class Linko extends Table {
         return CardManager::getInstance();
     }
 
+    public function getLogger(): LogManager {
+        return LogManager::getInstance();
+    }
+
     public function getCurrentPlayer() {
         return self::getCurrentPlayerId();
 //        var_dump("??");die;
@@ -106,6 +108,8 @@ class Linko extends Table {
                 ->initForNewGame($rawPlayers, $options);
         $this->getCardManager()
                 ->initForNewGame($players, $options);
+
+        $this->getLogger()->log("END LOGGER !");
 
         /*         * ********** Start the game initialization **** */
 

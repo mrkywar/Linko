@@ -2,6 +2,7 @@
 
 namespace Linko\Managers;
 
+use Linko\Managers\Core\Manager;
 use Linko\Managers\Factories\LogManagerFactory;
 use Linko\Models\Log;
 
@@ -22,7 +23,7 @@ class LogManager extends Manager {
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
 
-    public function getInstance(): Manager {
+    public function buildInstance(): Manager {
         return LogManagerFactory::create($this); // factory construct !
     }
 
@@ -38,8 +39,8 @@ class LogManager extends Manager {
         $log->setContent($logContent);
 
         $logId = $this->getRepository()->create($log);
-
-        var_dump($logId);
+        
+        return ($this->getRepository()->getById($logId));
     }
 
 }

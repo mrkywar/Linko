@@ -25,11 +25,11 @@ class GlobalVarManager extends Manager{
      *                  BEGIN - init
      * ---------------------------------------------------------------------- */
 
-    public function init() {
-
-        $activePlayer = Linko::getInstance()->getCurrentPlayer();
-        var_dump($activePlayer);
-        die;
-    }
+//    public function init() {
+//
+//        $activePlayer = Linko::getInstance()->getCurrentPlayer();
+//        var_dump($activePlayer);
+//        die;
+//    }
 
 }
