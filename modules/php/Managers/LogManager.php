@@ -2,8 +2,8 @@
 
 namespace Linko\Managers;
 
-use Linko;
 use Linko\Managers\Factories\LogManagerFactory;
+use Linko\Models\Log;
 
 /**
  * Description of LogManager
@@ -28,11 +28,17 @@ class LogManager extends Manager {
      *                  BEGIN - init
      * ---------------------------------------------------------------------- */
 
-//    public function init() {
-//
-//        $activePlayer = Linko::getInstance()->getCurrentPlayer();
-//        var_dump($activePlayer);
-//        die;
-//    }
-
+    public function log($logContent, $logCategory=null){
+        $log = new Log();
+        if(null !== $logCategory){
+            $log->setCategory($logCategory);
+        }
+        $log->setContent($logContent);
+        
+        $logId = $this->getRepository()->create($log);
+        
+        var_dump($logId);
+        
+        
+    }
 }
