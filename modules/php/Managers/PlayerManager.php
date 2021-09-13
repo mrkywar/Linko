@@ -3,6 +3,7 @@
 namespace Linko\Managers;
 
 use Linko;
+use Linko\Managers\Core\Manager;
 use Linko\Managers\Factories\PlayerManagerFactory;
 
 /**
@@ -22,11 +23,8 @@ class PlayerManager extends Manager {
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
 
-    public static function getInstance(): Manager {
-        if (null === self::$instance) { //constructer haven't be call yet
-            self::$instance = PlayerManagerFactory::create(); // factory construct !
-        }
-        return self::$instance;
+    public function buildInstance(): Manager {
+        return PlayerManagerFactory::create(); // factory construct !
     }
 
     /* -------------------------------------------------------------------------

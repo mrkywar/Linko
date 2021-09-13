@@ -3,8 +3,8 @@
 namespace Linko\Managers\Factories;
 
 use Linko\Managers\CardManager;
+use Linko\Managers\Core\Manager;
 use Linko\Managers\Core\ManagerFactory;
-use Linko\Managers\Manager;
 use Linko\Repository\CardRepository;
 use Linko\Repository\FieldsFactories\CardFieldsFactory;
 use Linko\Serializers\CardSerializer;

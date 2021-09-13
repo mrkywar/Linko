@@ -2,7 +2,7 @@
 namespace Linko\Managers\Factories;
 
 use Linko\Managers\Core\ManagerFactory;
-use Linko\Managers\Manager;
+use Linko\Managers\Core\Manager;
 use Linko\Managers\PlayerManager;
 use Linko\Repository\FieldsFactories\PlayerFieldsFactory;
 use Linko\Repository\PlayerRepository;

@@ -2,6 +2,7 @@
 
 namespace Linko\Managers;
 
+use Linko\Managers\Core\Manager;
 use Linko\Managers\Deck\Deck;
 use Linko\Managers\Factories\CardManagerFactory;
 use Linko\Models\Card;
@@ -23,21 +24,13 @@ class CardManager extends Manager {
     private CONST VISIBLE_DRAW = 6; // 6 cards visible in the draw
 
     private $deck;
-    private static $instance;
-
-    public function __construct() {
-        self::$instance = $this;
-    }
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
 
-    public static function getInstance(): Manager {
-        if (null === self::$instance) { //constructer haven't be call yet
-            self::$instance = CardManagerFactory::create(); // factory construct !
-        }
-        return self::$instance;
+    public function buildInstance(): Manager {
+        return CardManagerFactory::create(); // factory construct !
     }
 
     /* -------------------------------------------------------------------------

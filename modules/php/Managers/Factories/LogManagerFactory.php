@@ -3,7 +3,7 @@ namespace Linko\Managers\Factories;
 
 use Linko\Managers\Core\ManagerFactory;
 use Linko\Managers\LogManager;
-use Linko\Managers\Manager;
+use Linko\Managers\Core\Manager;
 use Linko\Repository\FieldsFactories\LogFieldsFactory;
 use Linko\Repository\LogRepository;
 use Linko\Serializers\LogSerializer;

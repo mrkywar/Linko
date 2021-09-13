@@ -22,11 +22,8 @@ class LogManager extends Manager {
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
 
-    public static function getInstance(): Manager {
-        if (null === self::$instance) { //constructer haven't be call yet
-            self::$instance = LogManagerFactory::create(); // factory construct !
-        }
-        return self::$instance;
+    public function getInstance(): Manager {
+        return LogManagerFactory::create(); // factory construct !
     }
 
     /* -------------------------------------------------------------------------

@@ -3,6 +3,7 @@
 namespace Linko\Managers;
 
 use Linko;
+use Linko\Managers\Core\Manager;
 use Linko\Managers\Factories\GlobalVarManagerFactory;
 
 /**
@@ -10,23 +11,14 @@ use Linko\Managers\Factories\GlobalVarManagerFactory;
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class GlobalVarManager extends Manager {
-
-    private static $instance;
-
-    public function __construct() {
-        self::$instance = $this;
-    }
+class GlobalVarManager extends Manager{
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
 
-    public static function getInstance(): Manager {
-        if (null === self::$instance) { //constructer haven't be call yet
-            self::$instance = GlobalVarManagerFactory::create(); // factory construct !
-        }
-        return self::$instance;
+    public function buildInstance(): Manager {
+        return GlobalVarManagerFactory::create(); // factory construct !
     }
 
     /* -------------------------------------------------------------------------
