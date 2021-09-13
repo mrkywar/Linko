@@ -14,6 +14,7 @@ use Linko\Models\Card;
  * [DBRequester] <--> [QueryBuilder] <--> [Repository] <--> [Manager]
  */
 class CardManager extends Manager {
+
     private CONST TYPES_OF_NUMBERS = 13; // 13 different number in a deck
     private CONST NUMBER_OF_NUMBERS = 8; // 8 cards of each number in a deck
     private CONST VALUE_OF_JOKERS = 14; // 14 is jocker value when play alone
@@ -22,21 +23,23 @@ class CardManager extends Manager {
     private CONST VISIBLE_DRAW = 6; // 6 cards visible in the draw
 
     private $deck;
-    
+    private static $instance;
+
     public function __construct() {
-        self::setInstance($this);
+        self::$instance = $this;
     }
-    
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
 
-    protected static function buildManager(): Manager {
-        return CardManagerFactory::create();
+    public static function getInstance(): Manager {
+        if (null === self::$instance) { //constructer haven't be call yet
+            self::$instance = CardManagerFactory::create(); // factory construct !
+        }
+        return self::$instance;
     }
 
-
-    
     /* -------------------------------------------------------------------------
      *                  BEGIN - New Game Initialization
      * ---------------------------------------------------------------------- */
@@ -54,13 +57,12 @@ class CardManager extends Manager {
         foreach ($players as $player) {
             $this->deck
                     ->drawCards(self::INTIALS_CARD, Deck::HAND_NAME, $player->getId());
-
         }
 
         //-- Init visible Draw
         $this->deck
                 ->drawCards(self::VISIBLE_DRAW, Deck::DRAW_NAME);
-        
+
         return $this->deck;
     }
 
@@ -71,21 +73,21 @@ class CardManager extends Manager {
     private function initDeck() {
         $this->deck = new Deck();
         $this->deck->setRepository($this->repository);
-        
+
         $this->getRepository()->setDoUnserialization(true);
 
         $deck = [];
         $id = 1; //--id are autoincremented inside createCard methods
         for ($number = 1; $number <= self::TYPES_OF_NUMBERS; ++$number) {
             for ($ex = 1; $ex <= self::NUMBER_OF_NUMBERS; ++$ex) {
-                $deck[] = $this->createCard($number,$id);
+                $deck[] = $this->createCard($number, $id);
             }
         }
         for ($jok = 1; $jok <= self::NUMBER_OF_JOKERS; ++$jok) {
             $deck[] = $this->createCard(self::VALUE_OF_JOKERS, $id);
         }
 
-        
+
         shuffle($deck);
         $count = sizeof($deck);
         for ($order = 0; $order < $count; ++$order) {
@@ -114,7 +116,7 @@ class CardManager extends Manager {
                 ->setType($cardValue)
                 ->setTypeArg($cardValue)
                 ->setId($id);
-        
+
         $id++;
 
         return $card;

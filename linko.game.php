@@ -45,22 +45,6 @@ class Linko extends Table {
 
     private static $instance;
 
-    /**
-     * @var PlayerManager
-     */
-    private $playerManager;
-
-    /**
-     * @var CardManager
-     */
-    private $cardManager;
-
-    /**
-     * 
-     * @var GlobalVarManager;
-     */
-    private $globalManager;
-
     function __construct() {
         parent::__construct();
 
@@ -72,10 +56,6 @@ class Linko extends Table {
                 //    "my_second_game_variant" => 101,
                 //      ...
         ));
-
-        $this->playerManager = PlayerManagerFactory::create();
-        $this->cardManager = CardManagerFactory::create();
-        $this->globalManager = GlobalVarManagerFactory::create();
 
         self::$instance = $this;
     }
@@ -94,11 +74,11 @@ class Linko extends Table {
     }
 
     public function getPlayerManager(): PlayerManager {
-        return $this->playerManager;
+        return PlayerManager::getInstance();
     }
 
     public function getCardManager(): CardManager {
-        return $this->cardManager;
+        return CardManager::getInstance();
     }
 
     public function getCurrentPlayer() {
@@ -108,7 +88,6 @@ class Linko extends Table {
 //                ->getRepository()
 //                ->getById(self::getCurrentPlayerId());
     }
-
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Required Game Methods 
@@ -123,9 +102,10 @@ class Linko extends Table {
      */
 
     protected function setupNewGame($rawPlayers, $options = array()) {
-        $players = $this->playerManager->initForNewGame($rawPlayers, $options);
-        $this->cardManager->initForNewGame($players, $options);
-        
+        $players = $this->getPlayerManager()
+                ->initForNewGame($rawPlayers, $options);
+        $this->getCardManager()
+                ->initForNewGame($players, $options);
 
         /*         * ********** Start the game initialization **** */
 

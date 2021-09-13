@@ -22,20 +22,13 @@ abstract class Manager {
      * @var Serializer
      */
     private $serializer;
-    
-    
-    /**
-     * @var Manager
-     */
-    private static $instance;
-    
+
+
     /* -------------------------------------------------------------------------
-     *                 BEGIN - Abstract Methods 
+     *                 BEGIN - Instance Management
      * ---------------------------------------------------------------------- */
-    
-    abstract protected static function buildManager(): Manager;
-    
-//    abstract protected function init(ManagerFactory)
+
+    abstract public static function getInstance(): Manager;
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 
@@ -58,18 +51,5 @@ abstract class Manager {
         $this->serializer = $serializer;
         return $this;
     }
-    
-    public static function getInstance(): Manager {
-        if(null === self::$instance){
-            self::$instance = self::buildManager();
-        }
-        return self::$instance;
-    }
-
-    public static function setInstance(Manager $instance) {
-        self::$instance = $instance;
-    }
-
-
 
 }

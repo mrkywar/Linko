@@ -12,19 +12,24 @@ use Linko\Managers\Factories\GlobalVarManagerFactory;
  */
 class GlobalVarManager extends Manager {
 
+    private static $instance;
+
     public function __construct() {
-        self::setInstance($this);
+        self::$instance = $this;
     }
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
 
-    protected static function buildManager(): Manager {
-        return GlobalVarManagerFactory::create();
+    public static function getInstance(): Manager {
+        if (null === self::$instance) { //constructer haven't be call yet
+            self::$instance = GlobalVarManagerFactory::create(); // factory construct !
+        }
+        return self::$instance;
     }
 
-        /* -------------------------------------------------------------------------
+    /* -------------------------------------------------------------------------
      *                  BEGIN - init
      * ---------------------------------------------------------------------- */
 

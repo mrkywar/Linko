@@ -12,33 +12,37 @@ use Linko\Models\Log;
  */
 class LogManager extends Manager {
 
+    private static $instance;
+
     public function __construct() {
-        self::setInstance($this);
+        self::$instance = $this;
     }
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
 
-    protected static function buildManager(): Manager {
-        return LogManagerFactory::create();
+    public static function getInstance(): Manager {
+        if (null === self::$instance) { //constructer haven't be call yet
+            self::$instance = LogManagerFactory::create(); // factory construct !
+        }
+        return self::$instance;
     }
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - init
      * ---------------------------------------------------------------------- */
 
-    public function log($logContent, $logCategory=null){
+    public function log($logContent, $logCategory = null) {
         $log = new Log();
-        if(null !== $logCategory){
+        if (null !== $logCategory) {
             $log->setCategory($logCategory);
         }
         $log->setContent($logContent);
-        
+
         $logId = $this->getRepository()->create($log);
-        
+
         var_dump($logId);
-        
-        
     }
+
 }
