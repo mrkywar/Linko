@@ -9,7 +9,7 @@ use Linko\Repository\GlobaVarlRepository;
 use Linko\Serializers\GlobalVarSerializer;
 
 /**
- * Factory to create CardManager objects
+ * Factory to create GlobalVarManager objects
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
@@ -17,7 +17,7 @@ abstract class GlobalVarManagerFactory implements ManagerFactory{
 
     public static function create(): Manager {
         //-- REPOSITORY
-        $repository = new GlobaVarlRepository();
+        $repository = new GlobalVarRepository();
         $repository->setFields(GlobalVarFieldFactory::create($repository));
 
         //-- SERIALIZER

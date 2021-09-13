@@ -7,7 +7,7 @@ use Linko\Repository\Core\Repository;
 use Linko\Repository\Core\SuperFieldFactory;
 
 /**
- * Description of PlayerFieldsFactory
+ * Description of CardFieldsFactory
  * /!\ Alway set the primary field first !!
  * Factory to create Card Fields List for link Model <--> DB
  *

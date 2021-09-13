@@ -40,3 +40,11 @@ CREATE TABLE IF NOT EXISTS `global_var` (
     `global_name` varchar(255) UNIQUE,
     `global_value` int(11)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+
+CREATE TABLE IF NOT EXISTS `log` (
+    `log_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+    `log_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `log_category` varchar(50),
+    `log_content` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

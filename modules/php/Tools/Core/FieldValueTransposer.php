@@ -24,6 +24,9 @@ abstract class FieldValueTransposer {
                 return (true === $value) ? 1 : 0;
             case Field::INTEGER_FORMAT:
                 return "'" . (int) $value . "'";
+            case Field::DATETIME_FORMAT:
+                var_dump($value);die;
+                return "'".$value." '";
             default:
                 return $value;
         }

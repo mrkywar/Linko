@@ -2,22 +2,22 @@
 
 namespace Linko\Serializers;
 
-use Linko\Models\GlobalVar;
+use Linko\Models\Log;
 use Linko\Serializers\Core\SuperSerializer;
 
 /**
- * GlobalVarSerializer
+ * LogSerializer
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class GlobalVarSerializer extends SuperSerializer {
+class LogSerializer extends SuperSerializer {
 
     /**
      * give the class of associated model
      * @return type
      */
     public function getModelClass() {
-        return GlobalVar::class;
+        return Log::class;
     }
 
 }

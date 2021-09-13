@@ -13,7 +13,7 @@ use Linko\Repository\Core\SuperRepository;
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class GlobaVarlRepository extends SuperRepository{
+class GlobalVarRepository extends SuperRepository{
     private CONST TABLE_NAME = "global_var";
     private CONST FIELDS_PREFIX = "global_";
     
