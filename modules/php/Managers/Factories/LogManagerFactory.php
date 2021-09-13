@@ -1,4 +1,5 @@
 <?php
+
 namespace Linko\Managers\Factories;
 
 use Linko\Managers\Core\ManagerFactory;
@@ -13,9 +14,9 @@ use Linko\Serializers\LogSerializer;
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-abstract class LogManagerFactory implements ManagerFactory{
+abstract class LogManagerFactory implements ManagerFactory {
 
-    public static function create(): Manager {
+    public static function create(Manager $manager = null): Manager {
         //-- REPOSITORY
         $repository = new LogRepository();
         $repository->setFields(LogFieldsFactory::create($repository));
@@ -25,7 +26,9 @@ abstract class LogManagerFactory implements ManagerFactory{
         $repository->setSerializer($serializer);
 
         //-- MANAGER
-        $manager = new LogManager();
+        if (null === $manager) {
+            $manager = new LogManager();
+        }
         $manager->setRepository($repository)
                 ->setSerializer($serializer);
 

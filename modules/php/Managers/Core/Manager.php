@@ -37,9 +37,9 @@ abstract class Manager {
     final static public function getInstance() {
         $instanceClass = get_called_class(); // get PlayerManager / CardManager /... class
         if (!isset(self::$instances[$instanceClass])) {
-            $object = new $instanceClass();
+            $factory = new $instanceClass();
             
-            self::$instances[$instanceClass] = $object->buildInstance();
+            self::$instances[$instanceClass] = $factory->buildInstance();
         }
         return self::$instances[$instanceClass];
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Linko\Managers\Factories;
 
 use Linko\Managers\Core\ManagerFactory;
@@ -13,9 +14,9 @@ use Linko\Serializers\GlobalVarSerializer;
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-abstract class GlobalVarManagerFactory implements ManagerFactory{
+abstract class GlobalVarManagerFactory implements ManagerFactory {
 
-    public static function create(): Manager {
+    public static function create(Manager $manager = null): Manager {
         //-- REPOSITORY
         $repository = new GlobalVarRepository();
         $repository->setFields(GlobalVarFieldFactory::create($repository));
@@ -25,7 +26,9 @@ abstract class GlobalVarManagerFactory implements ManagerFactory{
         $repository->setSerializer($serializer);
 
         //-- MANAGER
-        $manager = new GlobalVarManager();
+        if (null === $manager) {
+            $manager = new GlobalVarManager();
+        }
         $manager->setRepository($repository)
                 ->setSerializer($serializer);
 

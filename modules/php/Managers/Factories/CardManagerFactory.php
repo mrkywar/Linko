@@ -16,7 +16,7 @@ use Linko\Serializers\CardSerializer;
  */
 abstract class CardManagerFactory implements ManagerFactory {
 
-    public static function create(): Manager {
+    public static function create(Manager $manager = null): Manager {
         //-- REPOSITORY
         $repository = new CardRepository();
         $repository->setFields(CardFieldsFactory::create($repository));
@@ -26,7 +26,9 @@ abstract class CardManagerFactory implements ManagerFactory {
         $repository->setSerializer($serializer);
 
         //-- MANAGER
-        $manager = new CardManager();
+        if(null === $manager){
+            $manager = new CardManager();
+        } 
         $manager->setRepository($repository)
                 ->setSerializer($serializer);
 

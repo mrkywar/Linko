@@ -18,7 +18,7 @@ class GlobalVarManager extends Manager{
      * ---------------------------------------------------------------------- */
 
     public function buildInstance(): Manager {
-        return GlobalVarManagerFactory::create(); // factory construct !
+        return GlobalVarManagerFactory::create($this); // factory construct !
     }
 
     /* -------------------------------------------------------------------------

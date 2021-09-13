@@ -24,7 +24,7 @@ class PlayerManager extends Manager {
      * ---------------------------------------------------------------------- */
 
     public function buildInstance(): Manager {
-        return PlayerManagerFactory::create(); // factory construct !
+        return PlayerManagerFactory::create($this); // factory construct !
     }
 
     /* -------------------------------------------------------------------------

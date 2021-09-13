@@ -30,7 +30,7 @@ class CardManager extends Manager {
      * ---------------------------------------------------------------------- */
 
     public function buildInstance(): Manager {
-        return CardManagerFactory::create(); // factory construct !
+        return CardManagerFactory::create($this); // factory construct !
     }
 
     /* -------------------------------------------------------------------------

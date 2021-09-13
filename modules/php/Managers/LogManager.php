@@ -23,7 +23,7 @@ class LogManager extends Manager {
      * ---------------------------------------------------------------------- */
 
     public function getInstance(): Manager {
-        return LogManagerFactory::create(); // factory construct !
+        return LogManagerFactory::create($this); // factory construct !
     }
 
     /* -------------------------------------------------------------------------
