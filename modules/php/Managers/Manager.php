@@ -57,7 +57,6 @@ class Manager {
 
     public static function setInstance(Manager $instance) {
         self::$instance = $instance;
-        return self;
     }
 
 

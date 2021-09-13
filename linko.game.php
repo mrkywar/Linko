@@ -2,8 +2,10 @@
 
 use Linko\Managers\CardManager;
 use Linko\Managers\Factories\CardManagerFactory;
+use Linko\Managers\Factories\GlobalVarManagerFactory;
 use Linko\Managers\Factories\PlayerManagerFactory;
 use Linko\Managers\PlayerManager;
+use Linko\States\NewTurnTrait;
 
 /**
  * ------
@@ -38,8 +40,9 @@ spl_autoload_register($swdNamespaceAutoload, true, true);
 require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 
 class Linko extends Table {
-    use Linko\States\NewTurnTrait;
-    
+
+    use NewTurnTrait;
+
     private static $instance;
 
     /**
@@ -51,6 +54,12 @@ class Linko extends Table {
      * @var CardManager
      */
     private $cardManager;
+
+    /**
+     * 
+     * @var GlobalVarManager;
+     */
+    private $globalManager;
 
     function __construct() {
         parent::__construct();
@@ -66,6 +75,7 @@ class Linko extends Table {
 
         $this->playerManager = PlayerManagerFactory::create();
         $this->cardManager = CardManagerFactory::create();
+        $this->globalManager = GlobalVarManagerFactory::create();
 
         self::$instance = $this;
     }
@@ -91,6 +101,15 @@ class Linko extends Table {
         return $this->cardManager;
     }
 
+    public function getCurrentPlayer() {
+        return self::getCurrentPlayerId();
+//        var_dump("??");die;
+//        return $this->playerManager
+//                ->getRepository()
+//                ->getById(self::getCurrentPlayerId());
+    }
+
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - Required Game Methods 
      * ---------------------------------------------------------------------- */
@@ -106,6 +125,7 @@ class Linko extends Table {
     protected function setupNewGame($rawPlayers, $options = array()) {
         $players = $this->playerManager->initForNewGame($rawPlayers, $options);
         $this->cardManager->initForNewGame($players, $options);
+        
 
         /*         * ********** Start the game initialization **** */
 
