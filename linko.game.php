@@ -1,7 +1,7 @@
 <?php
 
 use Linko\Managers\CardManager;
-use Linko\Managers\LogManager;
+use Linko\Managers\Logger;
 use Linko\Managers\PlayerManager;
 use Linko\States\NewTurnTrait;
 
@@ -80,7 +80,7 @@ class Linko extends Table {
     }
 
     public function getLogger(): LogManager {
-        return LogManager::getInstance();
+        return Logger::getInstance();
     }
 
     public function getCurrentPlayer() {

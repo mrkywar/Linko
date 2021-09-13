@@ -11,7 +11,7 @@ use Linko\Models\Log;
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class LogManager extends Manager {
+class Logger extends Manager {
 
     private static $instance;
 
@@ -42,5 +42,7 @@ class LogManager extends Manager {
         
         return ($this->getRepository()->getById($logId));
     }
+
+    
 
 }
