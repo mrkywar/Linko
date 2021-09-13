@@ -11,7 +11,7 @@ use Linko\Serializers\Core\Serializer;
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class Manager {
+abstract class Manager {
 
     /**
      * @var Repository
@@ -28,6 +28,14 @@ class Manager {
      * @var Manager
      */
     private static $instance;
+    
+    /* -------------------------------------------------------------------------
+     *                 BEGIN - Abstract Methods 
+     * ---------------------------------------------------------------------- */
+    
+    abstract protected static function buildManager(): Manager;
+    
+//    abstract protected function init(ManagerFactory)
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 
@@ -52,6 +60,9 @@ class Manager {
     }
     
     public static function getInstance(): Manager {
+        if(null === self::$instance){
+            self::$instance = self::buildManager();
+        }
         return self::$instance;
     }
 

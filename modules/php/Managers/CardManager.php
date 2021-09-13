@@ -3,6 +3,7 @@
 namespace Linko\Managers;
 
 use Linko\Managers\Deck\Deck;
+use Linko\Managers\Factories\CardManagerFactory;
 use Linko\Models\Card;
 
 /**
@@ -25,6 +26,16 @@ class CardManager extends Manager {
     public function __construct() {
         self::setInstance($this);
     }
+    
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Define Abstract Methods
+     * ---------------------------------------------------------------------- */
+
+    protected static function buildManager(): Manager {
+        return CardManagerFactory::create();
+    }
+
+
     
     /* -------------------------------------------------------------------------
      *                  BEGIN - New Game Initialization
@@ -64,7 +75,7 @@ class CardManager extends Manager {
         $this->getRepository()->setDoUnserialization(true);
 
         $deck = [];
-        $id = 1;
+        $id = 1; //--id are autoincremented inside createCard methods
         for ($number = 1; $number <= self::TYPES_OF_NUMBERS; ++$number) {
             for ($ex = 1; $ex <= self::NUMBER_OF_NUMBERS; ++$ex) {
                 $deck[] = $this->createCard($number,$id);
@@ -73,11 +84,7 @@ class CardManager extends Manager {
         for ($jok = 1; $jok <= self::NUMBER_OF_JOKERS; ++$jok) {
             $deck[] = $this->createCard(self::VALUE_OF_JOKERS, $id);
         }
-        
-//        //set an id for all cards
-//        for($i=0; $i<sizeof($deck); $i++){
-//            $deck[$i]->setId($i);
-//        }
+
         
         shuffle($deck);
         $count = sizeof($deck);

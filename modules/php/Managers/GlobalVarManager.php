@@ -2,6 +2,9 @@
 
 namespace Linko\Managers;
 
+use Linko;
+use Linko\Managers\Factories\GlobalVarManagerFactory;
+
 /**
  * Description of GlobalVarManager
  *
@@ -12,14 +15,24 @@ class GlobalVarManager extends Manager {
     public function __construct() {
         self::setInstance($this);
     }
-    
-    
-    public function initForNewGame(array $rawPlayers = array(), array $options = array()) {
-        
-        $activePlayer = \Linko::getInstance()->getCurrentPlayer();
-        var_dump($activePlayer);die;
-        
-        
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Define Abstract Methods
+     * ---------------------------------------------------------------------- */
+
+    protected static function buildManager(): Manager {
+        return GlobalVarManagerFactory::create();
+    }
+
+        /* -------------------------------------------------------------------------
+     *                  BEGIN - init
+     * ---------------------------------------------------------------------- */
+
+    public function init() {
+
+        $activePlayer = Linko::getInstance()->getCurrentPlayer();
+        var_dump($activePlayer);
+        die;
     }
 
 }

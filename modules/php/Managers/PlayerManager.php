@@ -3,6 +3,7 @@
 namespace Linko\Managers;
 
 use Linko;
+use Linko\Managers\Factories\PlayerManagerFactory;
 
 /**
  * toolbox to manage players
@@ -19,9 +20,13 @@ class PlayerManager extends Manager {
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
 
-    public static function getManagerFactory(): ManagerFactory {
-        return PlayerManagerFactory::class;
+    protected static function buildManager(): Manager {
+        return PlayerManagerFactory::create();
     }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - init
+     * ---------------------------------------------------------------------- */
 
     /**
      * new game initilaze
