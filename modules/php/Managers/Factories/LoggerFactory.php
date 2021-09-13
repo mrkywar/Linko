@@ -14,7 +14,7 @@ use Linko\Serializers\LogSerializer;
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-abstract class LogManagerFactory implements ManagerFactory {
+abstract class LoggerFactory implements ManagerFactory {
 
     public static function create(Manager $manager = null): Manager {
         //-- REPOSITORY

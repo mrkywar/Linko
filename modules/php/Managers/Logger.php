@@ -3,7 +3,7 @@
 namespace Linko\Managers;
 
 use Linko\Managers\Core\Manager;
-use Linko\Managers\Factories\LogManagerFactory;
+use Linko\Managers\Factories\LoggerFactory;
 use Linko\Models\Log;
 
 /**
@@ -24,7 +24,7 @@ class Logger extends Manager {
      * ---------------------------------------------------------------------- */
 
     public function buildInstance(): Manager {
-        return LogManagerFactory::create($this); // factory construct !
+        return LoggerFactory::create($this); // factory construct !
     }
 
     /* -------------------------------------------------------------------------
