@@ -16,8 +16,9 @@ trait NewTurnTrait {
      * 
      */
     public function stStartOfTurn() {
-        $logger = Logger::getInstance();
-//        $logger->log("Request Current Player");
+        $pid = $this->activeNextPlayer();
+        Logger::log("Current Active Player :" . $pid, "NTT");
+//        Logger::log($logContent)
 //        $logger->log("Find :" . Linko::getInstance()->getCurrentPlayer());
 //        $playerManager = Linko::getInstance()->getPlayerManager();
 //        var_dump($playerManager);

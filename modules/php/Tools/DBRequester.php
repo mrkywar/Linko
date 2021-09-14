@@ -30,7 +30,7 @@ class DBRequester extends \APP_DbObject {
     public function execute(QueryBuilder $qb) {
         $fieldIndex = $qb->getKeyIndex();
         $queryString = QueryStatementFactory::create($qb);
-        
+
         if ($this->isDebug) {
             Logger::getInstance()->log($queryString, "DBRequest");
         }

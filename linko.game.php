@@ -109,7 +109,7 @@ class Linko extends Table {
         $this->getCardManager()
                 ->initForNewGame($players, $options);
 
-        $this->getLogger()->log("END LOGGER !");
+        Logger::log("END LOGGER !");
 
         /*         * ********** Start the game initialization **** */
 
@@ -121,7 +121,7 @@ class Linko extends Table {
         //self::initStat( 'player', 'player_teststat1', 0 );  // Init a player statistics (for all players)
         // TODO: setup the initial game situation here
         // Activate first player (which is in general a good idea :) )
-        $this->activeNextPlayer();
+//        $this->activeNextPlayer();
 
         /*         * ********** End of the game initialization **** */
     }

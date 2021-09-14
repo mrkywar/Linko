@@ -28,10 +28,10 @@ class Logger extends Manager {
     }
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - init
+     *                  BEGIN - log
      * ---------------------------------------------------------------------- */
 
-    public function log($logContent, $logCategory = null, $debugMode=false) {
+    public function dolog($logContent, $logCategory = null, $debugMode=false) {
         $log = new Log();
         if (null !== $logCategory) {
             $log->setCategory($logCategory);
@@ -41,6 +41,10 @@ class Logger extends Manager {
         $logId = $this->getRepository()->setIsDebug($debugMode)->create($log);
         
         return ($this->getRepository()->getById($logId));
+    }
+    
+    public static function log ($logContent, $logCategory = null, $debugMode=false) {
+        return self::getInstance()->dolog($logContent, $logCategory, $debugMode);
     }
 
     
