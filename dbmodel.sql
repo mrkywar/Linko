@@ -37,7 +37,6 @@ CREATE TABLE IF NOT EXISTS `card` (
 
 CREATE TABLE IF NOT EXISTS `global_var` (
     `global_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-    `global_name` varchar(255) UNIQUE,
     `global_value` int(11),
     PRIMARY KEY(`global_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;

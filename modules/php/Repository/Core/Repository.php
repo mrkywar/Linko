@@ -22,7 +22,7 @@ interface Repository {
     public function getAll();
 
     public function create($items);
-
+    
     public function getById($id);
 
     /* -------------------------------------------------------------------------
