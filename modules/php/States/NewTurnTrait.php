@@ -20,6 +20,8 @@ trait NewTurnTrait {
         $pid = $this->activeNextPlayer();
         Logger::log("Current Active Player :" . $pid, "NTT");
         GlobalVarManager::setVar(GlobalVar::ACTIVE_PLAYER, $pid);
+        
+        
     }
 
     public function stResolveState() {
