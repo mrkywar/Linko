@@ -31,14 +31,14 @@ class Logger extends Manager {
      *                  BEGIN - init
      * ---------------------------------------------------------------------- */
 
-    public function log($logContent, $logCategory = null) {
+    public function log($logContent, $logCategory = null, $debugMode=false) {
         $log = new Log();
         if (null !== $logCategory) {
             $log->setCategory($logCategory);
         }
         $log->setContent($logContent);
 
-        $logId = $this->getRepository()->create($log);
+        $logId = $this->getRepository()->setIsDebug($debugMode)->create($log);
         
         return ($this->getRepository()->getById($logId));
     }

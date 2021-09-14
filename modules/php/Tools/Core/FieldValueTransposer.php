@@ -20,6 +20,8 @@ abstract class FieldValueTransposer {
         switch ($field->getFieldType()) {
             case Field::STRING_FORMAT:
                 return "'" . addslashes($value) . "'";
+            case Field::JSON_FORMAT:
+                return json_encode($value);
             case Field::BOOLEAN_FORMAT:
                 return (true === $value) ? 1 : 0;
             case Field::INTEGER_FORMAT:

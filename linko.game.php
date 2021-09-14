@@ -79,7 +79,7 @@ class Linko extends Table {
         return CardManager::getInstance();
     }
 
-    public function getLogger(): LogManager {
+    public function getLogger(): Logger {
         return Logger::getInstance();
     }
 

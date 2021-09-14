@@ -3,6 +3,7 @@
 namespace Linko\States;
 
 use Linko;
+use Linko\Managers\Logger;
 
 /**
  *
@@ -15,6 +16,9 @@ trait NewTurnTrait {
      * 
      */
     public function stStartOfTurn() {
+        $logger = Logger::getInstance();
+//        $logger->log("Request Current Player");
+//        $logger->log("Find :" . Linko::getInstance()->getCurrentPlayer());
 //        $playerManager = Linko::getInstance()->getPlayerManager();
 //        var_dump($playerManager);
 //        die;

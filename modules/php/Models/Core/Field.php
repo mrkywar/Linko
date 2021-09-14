@@ -15,6 +15,7 @@ class Field {
     const BOOLEAN_FORMAT = "boolean";
     const BINARY_FORMAT = "binary";
     const DATETIME_FORMAT = "datetime";
+    const JSON_FORMAT = "json";
 
     /**
      * @var string
