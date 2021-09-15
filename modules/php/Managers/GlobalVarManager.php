@@ -46,5 +46,11 @@ class GlobalVarManager extends Manager {
     public static function setVar($globalId, $value) {
         self::getInstance()->createOrUpdate($globalId, $value);
     }
+    
+    
+    public static function getVar($globalId) {
+        return self::getInstance()->getRepository()
+                ->getById($globalId);
+    }
 
 }

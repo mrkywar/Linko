@@ -11,6 +11,7 @@ use Linko\Models\Core\Model;
  */
 class GlobalVar implements Model {
     const ACTIVE_PLAYER = 101;
+    const STACK_STATE = 102;
     
     private $id;
     private $value;
