@@ -16,7 +16,7 @@ class GlobalVarManager extends Manager {
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
 
-    public function buildInstance(): Manager {
+    protected function buildInstance(): Manager {
         return GlobalVarManagerFactory::create($this); // factory construct !
     }
 

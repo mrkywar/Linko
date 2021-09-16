@@ -17,7 +17,7 @@ class PlayerManager extends Manager {
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
 
-    public function buildInstance(): Manager {
+    protected function buildInstance(): Manager {
         return PlayerManagerFactory::create($this); // factory construct !
     }
 

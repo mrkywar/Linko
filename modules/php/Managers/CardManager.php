@@ -29,7 +29,7 @@ class CardManager extends Manager {
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
 
-    public function buildInstance(): Manager {
+    protected function buildInstance(): Manager {
         return CardManagerFactory::create($this); // factory construct !
     }
 

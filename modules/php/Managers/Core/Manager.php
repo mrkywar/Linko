@@ -32,7 +32,7 @@ abstract class Manager {
      *                 BEGIN - Instance Management
      * ---------------------------------------------------------------------- */
 
-    abstract public function buildInstance(): Manager;
+    abstract protected function buildInstance(): Manager;
 
     final static public function getInstance() {
         $instanceClass = get_called_class(); // get PlayerManager / CardManager /... class

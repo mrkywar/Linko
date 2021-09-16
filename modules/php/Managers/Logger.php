@@ -23,7 +23,7 @@ class Logger extends Manager {
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
 
-    public function buildInstance(): Manager {
+    protected function buildInstance(): Manager {
         return LoggerFactory::create($this); // factory construct !
     }
 
