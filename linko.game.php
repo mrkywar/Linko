@@ -3,6 +3,7 @@
 use Linko\Managers\CardManager;
 use Linko\Managers\Logger;
 use Linko\Managers\PlayerManager;
+use Linko\Managers\StateManager;
 use Linko\States\StackState;
 use Linko\States\Traits\NewTurnTrait;
 
@@ -80,6 +81,11 @@ class Linko extends Table {
         return CardManager::getInstance();
     }
 
+    public function getStateManager(): StateManager {
+        return StateManager::getInstance();
+    }
+
+
     public function getLogger(): Logger {
         return Logger::getInstance();
     }
@@ -110,8 +116,8 @@ class Linko extends Table {
         $this->getCardManager()
                 ->initForNewGame($players, $options);
         
-        $stack = new StackState();
-
+        $this->getStateManager()
+                ->initForNewGame($players, $options);
         Logger::log("END LOGGER !");
 
         /*         * ********** Start the game initialization **** */
