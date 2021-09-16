@@ -4,6 +4,7 @@ namespace Linko\Managers;
 
 use Linko\Managers\Core\Manager;
 use Linko\Managers\Factories\StateManagerFactory;
+use Linko\Models\State;
 
 /**
  * toolbox to manage players
@@ -11,7 +12,6 @@ use Linko\Managers\Factories\StateManagerFactory;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 class StateManager extends Manager {
-
     /* -------------------------------------------------------------------------
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
@@ -31,11 +31,24 @@ class StateManager extends Manager {
      */
     public function initForNewGame(array $players = array(), array $options = array()) {
         $states = [];
-        
-        
-        
-        
-        
+        $order = 1;
+        foreach ($players as $player) {
+            $state = new State();
+            $state->setOrder($order)
+                    ->setPlayerId($player->getId())
+                    ->setState(ST_PLAYER_PLAY_NUMBER)
+            ;
+            $order++;
+            $states[] = $state;
+        }
+
+        $nextTurn = new State();
+        $nextTurn->setOrder($order)
+                ->setState(ST_END_OF_TURN);
+
+        $states[] = $nextTurn;
+
+        $this->getRepository()->create($states);
     }
 
 }

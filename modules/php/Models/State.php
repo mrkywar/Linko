@@ -2,6 +2,9 @@
 
 namespace Linko\Models;
 
+use DateTime;
+use Linko\Models\Core\Model;
+
 /**
  * Description of State
  *
@@ -14,6 +17,10 @@ class State implements Model {
     private $playedDate;
     private $order;
     private $playerId;
+    
+    public function __construct() {
+        $this->createdDate = new DateTime();
+    }
     
     public function getId() {
         return $this->id;
