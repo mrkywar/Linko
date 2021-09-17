@@ -28,4 +28,53 @@ class StateRepository extends SuperRepository {
         return self::TABLE_NAME;
     }
 
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Specific Repository Methods
+     * ---------------------------------------------------------------------- */
+
+    /**
+     * build the inital query
+     * @return QueryBuilder
+     */
+    private function buildGetAll() {
+        return $this->getQueryBuilder()
+                        ->select()
+                        ->addClause($this->getFieldByProperty("playedDate"), null)
+                        ->addOrderBy($this->getFieldByProperty("order", "ASC"));
+    }
+
+    public function getActualState() {
+        $states = $this->getAll();
+        if (!empty($states)) {
+            return $states[0];
+        }
+        return;
+    }
+
+    public function getNextState() {
+        $states = $this->getAll();
+        if (!empty($states) && !sizeof($states) > 0) {
+            return $states[1];
+        }
+        return;
+    }
+
+    public function getLastState() {
+        $states = $this->getAll();
+        if (!empty($states) && !sizeof($states) > 0) {
+            return $states[sizeof($states) - 1];
+        }
+        return;
+    }
+
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Override 
+     * ---------------------------------------------------------------------- */
+
+    public function getAll() {
+        $qb = $this->buildGetAll();
+
+        return $this->execute($qb);
+    }
+
 }

@@ -2,10 +2,8 @@
 
 namespace Linko\States\Traits;
 
-use Linko\Managers\GlobalVarManager;
 use Linko\Managers\Logger;
-use Linko\Models\GlobalVar;
-use Linko\States\StackState;
+use Linko\Models\State;
 
 /**
  *
@@ -18,10 +16,35 @@ trait NewTurnTrait {
      * 
      */
     public function stStartOfTurn() {
-        $pid = $this->activeNextPlayer();
-        Logger::log("Current Active Player :" . $pid, "NTT");
-        GlobalVarManager::setVar(GlobalVar::ACTIVE_PLAYER, $pid);
-//        $stack = new StackState();
+        $players = $this->getPlayerManager()->getRepository()->getAll();
+        $stateManager = $this->getStateManager();
+        $lastState = $stateManager->getLastState();
+        if (null === $lastState) {
+            $order = 1;
+        } else {
+            $order = $lastState->getOrder() + 1;
+        }
+
+        $newStates = [];
+        foreach ($players as $player) {
+            Logger::log("Pass Player :" . $player->getId());
+
+            $state = new State();
+            $state->setOrder($order)
+                    ->setPlayerId($player->getId())
+                    ->setState(ST_PLAYER_PLAY_NUMBER);
+
+            $order++;
+            $newStates[] = $state;
+        }
+
+        $nextTurn = new State();
+        $nextTurn->setOrder($order)
+                ->setState(ST_END_OF_TURN);
+
+        $newStates[] = $nextTurn;
+
+        $stateManager->getRepository()->create($newStates);
     }
 
     public function stResolveState() {

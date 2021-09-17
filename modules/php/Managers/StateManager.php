@@ -35,25 +35,14 @@ class StateManager extends Manager {
      * @param array $options : /!\ Not used at the moment
      */
     public function initForNewGame(array $players = array(), array $options = array()) {
-        $states = [];
-        $order = 1;
-        foreach ($players as $player) {
-            $state = new State();
-            $state->setOrder($order)
-                    ->setPlayerId($player->getId())
-                    ->setState(ST_PLAYER_PLAY_NUMBER)
-            ;
-            $order++;
-            $states[] = $state;
-        }
-
         $nextTurn = new State();
-        $nextTurn->setOrder($order)
-                ->setState(ST_END_OF_TURN);
-
-        $states[] = $nextTurn;
-
-        $this->getRepository()->setIsDebug(true)->create($states);
+        $nextTurn->setOrder(1)
+                ->setState(ST_START_OF_TURN);
+        
+        $this->getRepository()->create($nextTurn);
+        
     }
+    
+    
 
 }
