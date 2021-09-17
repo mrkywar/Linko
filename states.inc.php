@@ -100,14 +100,14 @@ $machinestates = [
 //        "possibleactions" => ["playCard", "pass"],
 //        "transitions" => ["playCard" => ST_START_OF_TURN, "pass" => ST_START_OF_TURN]
 //    ],
-    ST_PLAY_CARD => [
-        "name" => "playCard",
-        "description" => clienttranslate('${actplayer} can play a card'),
-        "descriptionmyturn" => clienttranslate('${you} can play a card'),
+    ST_PLAYER_PLAY_NUMBER => [
+        "name" => "playNumber",
+        "description" => clienttranslate('${actplayer} can play card(s)'),
+        "descriptionmyturn" => clienttranslate('${you} can play card(s)'),
         "type" => "activeplayer",
         "args" => "argPlayCards",
         "action" => "stPlayCard",
-        "possibleactions" => ["actPlayCard"]
+        "possibleactions" => ["actPlayCards"]
     ],
     /*
      * BGA framework final state. Do not modify.

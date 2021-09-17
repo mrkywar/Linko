@@ -37,18 +37,26 @@ CREATE TABLE IF NOT EXISTS `card` (
 
 CREATE TABLE IF NOT EXISTS `global_var` (
     `global_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-    `global_name` varchar(255) UNIQUE,
     `global_value` int(11),
     PRIMARY KEY(`global_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
--- 
--- 
+
 CREATE TABLE IF NOT EXISTS `log` (
-    `log_id` int(10) unsigned UNSIGNED NOT NULL AUTO_INCREMENT,
+    `log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `log_date` varchar(50) NOT NULL,
     `log_category` varchar(50) NOT NULL,
     `log_content` text NOT NULL,
     PRIMARY KEY(`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+
+CREATE TABLE IF NOT EXISTS `state` (
+    `state_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `state_state` int(10) UNSIGNED NOT NULL,
+    `state_player_id` int(10) UNSIGNED NULL,
+    `state_created_date` varchar(50) NOT NULL,
+    `state_played_date` varchar(50) NULL,
+    `state_order` int(10) UNSIGNED NOT NULL,
+    PRIMARY KEY(`state_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 

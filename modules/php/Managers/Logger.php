@@ -3,7 +3,7 @@
 namespace Linko\Managers;
 
 use Linko\Managers\Core\Manager;
-use Linko\Managers\Factories\LogManagerFactory;
+use Linko\Managers\Factories\LoggerFactory;
 use Linko\Models\Log;
 
 /**
@@ -11,7 +11,7 @@ use Linko\Models\Log;
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class LogManager extends Manager {
+class Logger extends Manager {
 
     private static $instance;
 
@@ -23,24 +23,30 @@ class LogManager extends Manager {
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
 
-    public function buildInstance(): Manager {
-        return LogManagerFactory::create($this); // factory construct !
+    protected function buildInstance(): Manager {
+        return LoggerFactory::create($this); // factory construct !
     }
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - init
+     *                  BEGIN - log
      * ---------------------------------------------------------------------- */
 
-    public function log($logContent, $logCategory = null) {
+    public function dolog($logContent, $logCategory = null, $debugMode=false) {
         $log = new Log();
         if (null !== $logCategory) {
             $log->setCategory($logCategory);
         }
         $log->setContent($logContent);
 
-        $logId = $this->getRepository()->create($log);
+        $logId = $this->getRepository()->setIsDebug($debugMode)->create($log);
         
         return ($this->getRepository()->getById($logId));
     }
+    
+    public static function log ($logContent, $logCategory = null, $debugMode=false) {
+        return self::getInstance()->dolog($logContent, $logCategory, $debugMode);
+    }
+
+    
 
 }

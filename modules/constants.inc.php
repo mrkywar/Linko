@@ -6,12 +6,12 @@
 define("ST_BEGIN_GAME", 1);
 define("ST_END_GAME", 99);
 
-//-- start game
+//-- turn manager
 define("ST_START_OF_TURN", 2);
-
+define("ST_END_OF_TURN", 3);
 
 //-- Player Action
-define("ST_PLAY_CARD",10);
+define("ST_PLAYER_PLAY_NUMBER",10);
 
 
 //-- STATE RESOLVER

@@ -5,16 +5,16 @@ namespace Linko\Repository;
 use Linko\Repository\Core\SuperRepository;
 
 /**
- * PlayerRepository allows you to  manage the State Model / Data link
+ * PlayerRepository allows you to  manage the Log Model / Data link
  * Call order :
  * [DBRequester] <--> [QueryBuilder] <--> [Repository] <--> [Manager]
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class LogRepository extends SuperRepository {
+class StateRepository extends SuperRepository {
 
-    private CONST TABLE_NAME = "log";
-    private CONST FIELDS_PREFIX = "log_";
+    private CONST TABLE_NAME = "state";
+    private CONST FIELDS_PREFIX = "state_";
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Implement SuperRepository

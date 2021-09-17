@@ -13,17 +13,11 @@ use Linko\Managers\Factories\PlayerManagerFactory;
  */
 class PlayerManager extends Manager {
 
-    private static $instance;
-
-    public function __construct() {
-        self::$instance = $this;
-    }
-
     /* -------------------------------------------------------------------------
      *                  BEGIN - Define Abstract Methods
      * ---------------------------------------------------------------------- */
 
-    public function buildInstance(): Manager {
+    protected function buildInstance(): Manager {
         return PlayerManagerFactory::create($this); // factory construct !
     }
 

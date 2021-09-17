@@ -3,18 +3,18 @@
 namespace Linko\Managers\Factories;
 
 use Linko\Managers\Core\ManagerFactory;
-use Linko\Managers\LogManager;
+use Linko\Managers\Logger;
 use Linko\Managers\Core\Manager;
 use Linko\Repository\FieldsFactories\LogFieldsFactory;
 use Linko\Repository\LogRepository;
 use Linko\Serializers\LogSerializer;
 
 /**
- * Factory to create LogManager objects
+ * Factory to create Logger (aka LogManager) objects
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-abstract class LogManagerFactory implements ManagerFactory {
+abstract class LoggerFactory implements ManagerFactory {
 
     public static function create(Manager $manager = null): Manager {
         //-- REPOSITORY
@@ -27,7 +27,7 @@ abstract class LogManagerFactory implements ManagerFactory {
 
         //-- MANAGER
         if (null === $manager) {
-            $manager = new LogManager();
+            $manager = new Logger();
         }
         $manager->setRepository($repository)
                 ->setSerializer($serializer);

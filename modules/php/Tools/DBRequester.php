@@ -2,7 +2,7 @@
 
 namespace Linko\Tools;
 
-use Linko\Models\Core\Field;
+use Linko\Managers\Logger;
 use Linko\Models\Core\QueryString;
 use Linko\Tools\Core\DBException;
 use Linko\Tools\Core\QueryStatementFactory;
@@ -30,9 +30,9 @@ class DBRequester extends \APP_DbObject {
     public function execute(QueryBuilder $qb) {
         $fieldIndex = $qb->getKeyIndex();
         $queryString = QueryStatementFactory::create($qb);
+
         if ($this->isDebug) {
-            var_dump($queryString);
-            die;
+            Logger::getInstance()->log($queryString, "DBRequest");
         }
 
         switch ($qb->getQueryType()) {

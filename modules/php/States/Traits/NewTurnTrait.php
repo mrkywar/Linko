@@ -1,8 +1,11 @@
 <?php
 
-namespace Linko\States;
+namespace Linko\States\Traits;
 
-use Linko;
+use Linko\Managers\GlobalVarManager;
+use Linko\Managers\Logger;
+use Linko\Models\GlobalVar;
+use Linko\States\StackState;
 
 /**
  *
@@ -15,9 +18,10 @@ trait NewTurnTrait {
      * 
      */
     public function stStartOfTurn() {
-//        $playerManager = Linko::getInstance()->getPlayerManager();
-//        var_dump($playerManager);
-//        die;
+        $pid = $this->activeNextPlayer();
+        Logger::log("Current Active Player :" . $pid, "NTT");
+        GlobalVarManager::setVar(GlobalVar::ACTIVE_PLAYER, $pid);
+//        $stack = new StackState();
     }
 
     public function stResolveState() {

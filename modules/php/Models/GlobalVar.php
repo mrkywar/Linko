@@ -1,8 +1,8 @@
 <?php
-
-use Linko\Models\Model;
-
 namespace Linko\Models;
+
+use Linko\Models\Core\Model;
+
 
 /**
  * Description of Global
@@ -10,9 +10,10 @@ namespace Linko\Models;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 class GlobalVar implements Model {
-
+    const ACTIVE_PLAYER = 101;
+    const STACK_STATE = 102;
+    
     private $id;
-    private $name;
     private $value;
 
     /* -------------------------------------------------------------------------
@@ -21,10 +22,6 @@ class GlobalVar implements Model {
 
     public function getId() {
         return $this->id;
-    }
-
-    public function getName() {
-        return $this->name;
     }
 
     public function getValue() {
@@ -41,9 +38,5 @@ class GlobalVar implements Model {
         return $this;
     }
 
-    public function setName($name) {
-        $this->name = $name;
-        return $this;
-    }
 
 }

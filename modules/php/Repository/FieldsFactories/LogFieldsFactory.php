@@ -22,7 +22,7 @@ abstract class LogFieldsFactory extends SuperFieldFactory {
         $fields[] = self::newField("id", Field::INTEGER_FORMAT, $repo->getFieldsPrefix(), false, true);
         $fields[] = self::newField("date", Field::DATETIME_FORMAT, $repo->getFieldsPrefix(), true);
         $fields[] = self::newField("category", Field::STRING_FORMAT, $repo->getFieldsPrefix(),true);
-        $fields[] = self::newField("content", Field::STRING_FORMAT, $repo->getFieldsPrefix(),true);
+        $fields[] = self::newField("content", Field::JSON_FORMAT, $repo->getFieldsPrefix(),true);
 
         return $fields;
     }
