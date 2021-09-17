@@ -1,4 +1,5 @@
 <?php
+
 namespace Linko\Tools\Core;
 
 use Linko\Models\Core\Field;
@@ -9,7 +10,7 @@ use Linko\Models\Core\Field;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 abstract class FieldValueTransposer {
-    
+
     /**
      * Transpose value for query
      * @param Field $field : Field to transpose
@@ -17,6 +18,9 @@ abstract class FieldValueTransposer {
      * @return string
      */
     public static function transpose(Field $field, $value) {
+        if (null === $value) {
+            return "null";
+        }
         switch ($field->getFieldType()) {
             case Field::STRING_FORMAT:
                 return "'" . addslashes($value) . "'";
@@ -27,20 +31,18 @@ abstract class FieldValueTransposer {
             case Field::INTEGER_FORMAT:
                 return "'" . (int) $value . "'";
             case Field::DATETIME_FORMAT:
-                return "'". self::transposeDateTime($value)."'";
+                return "'" . self::transposeDateTime($value) . "'";
             default:
                 return $value;
         }
     }
-    
-    
+
     private static function transposeDateTime(\DateTime $datetime) {
         return $datetime->format("Y-m-d H:i:s");
     }
-    
-    
-    
+
 }
+
 //INSERT INTO `log`( `log_id` , `log_date` , `log_category` , `log_content` ) VALUES (null,'2021'
 //        . '2021'
 //        . '2021'

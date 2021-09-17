@@ -11,10 +11,10 @@ use Linko\Repository\Core\SuperRepository;
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class LogRepository extends SuperRepository {
+class StateRepository extends SuperRepository {
 
-    private CONST TABLE_NAME = "log";
-    private CONST FIELDS_PREFIX = "log_";
+    private CONST TABLE_NAME = "state";
+    private CONST FIELDS_PREFIX = "state_";
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Implement SuperRepository
