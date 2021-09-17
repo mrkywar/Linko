@@ -6,6 +6,11 @@ use Linko\Managers\Core\Manager;
 use Linko\Managers\Factories\StateManagerFactory;
 use Linko\Models\State;
 
+//$filePath = dirname(__FILE__);
+//$find = substr($filePath, 0, strpos($filePath, "modules/"));
+//
+//require_once ($find . '/modules/constants.inc.php');
+
 /**
  * toolbox to manage players
  *
@@ -48,7 +53,7 @@ class StateManager extends Manager {
 
         $states[] = $nextTurn;
 
-        $this->getRepository()->create($states);
+        $this->getRepository()->setIsDebug(true)->create($states);
     }
 
 }
