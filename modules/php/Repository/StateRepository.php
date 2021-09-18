@@ -2,7 +2,9 @@
 
 namespace Linko\Repository;
 
+use Linko\Models\State;
 use Linko\Repository\Core\SuperRepository;
+use Linko\Tools\QueryBuilder;
 
 /**
  * PlayerRepository allows you to  manage the Log Model / Data link
@@ -46,7 +48,7 @@ class StateRepository extends SuperRepository {
 
     public function getActualState() {
         $states = $this->getAll();
-        if ($states instanceof \Linko\Models\State) {
+        if ($states instanceof State) {
             return $states;
         } elseif (!empty($states)) {
             return $states[0];
@@ -56,7 +58,7 @@ class StateRepository extends SuperRepository {
 
     public function getNextState() {
         $states = $this->getAll();
-        if ($states instanceof \Linko\Models\State) {
+        if ($states instanceof State) {
             return; // no next state
         } elseif (!empty($states) && !sizeof($states) > 0) {
             return $states[1];
@@ -66,12 +68,29 @@ class StateRepository extends SuperRepository {
 
     public function getLastState() {
         $states = $this->getAll();
-        if ($states instanceof \Linko\Models\State) {
+        if ($states instanceof State) {
             return $states;
         } elseif (!empty($states) && !sizeof($states) > 0) {
             return $states[sizeof($states) - 1];
         }
         return;
+    }
+    
+    public function closeState(State $state) {
+        $closeField = $this->getFieldByProperty("playedDate");
+        $primary = $this->getPrimaryField();
+        
+        $state->setPlayedDate(new \DateTime());
+        
+        
+         $qb = $this->getQueryBuilder()
+                ->update()
+                ->addSetter($closeField, $state->getPlayedDate())
+                ->addClause($primary, $state->getId());
+        
+        $this->execute($qb);
+        
+        return $state;
     }
 
     /* -------------------------------------------------------------------------
