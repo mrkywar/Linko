@@ -16,12 +16,16 @@ trait NewTurnTrait {
      * 
      */
     public function stStartOfTurn() {
+        Logger::log("Begin Start of Turn");
         $players = $this->getPlayerManager()->getRepository()->getAll();
-        $stateManager = $this->getStateManager();
-        $lastState = $stateManager->getLastState();
+        $stateRepo = $this->getStateManager()->getRepository();
+        $lastState = $stateRepo->getLastState();
+        
         if (null === $lastState) {
+            Logger::log("NO STATE ..??");
             $order = 1;
         } else {
+            Logger::log("STATE Order : ".$lastState->getOrder());
             $order = $lastState->getOrder() + 1;
         }
 
@@ -44,7 +48,7 @@ trait NewTurnTrait {
 
         $newStates[] = $nextTurn;
 
-        $stateManager->getRepository()->create($newStates);
+        $stateRepo->create($newStates);
     }
 
     public function stResolveState() {

@@ -7,7 +7,6 @@ use Linko\Models\Core\Model;
 use Linko\Models\Core\QueryString;
 use Linko\Tools\Core\FieldValueTransposer as Transposer;
 
-
 /**
  * QueryBuilder allow create query for data request
  * 
@@ -31,7 +30,7 @@ class QueryBuilder {
      * @var string
      */
     private $statement;
-    
+
     /**
      * to setup a keyIndex
      * @var Field|null
@@ -107,7 +106,7 @@ class QueryBuilder {
         //-- (re)init insert
         $this->setters = [];
     }
-    
+
     public function reset() {
         $this->init();
     }
@@ -158,8 +157,9 @@ class QueryBuilder {
             foreach ($value as $val) {
                 $rawValues [] = Transposer::transpose($field, $val);
             }
-//            var_dump($rawValues);die;
-            $clause .= " IN ( " . implode(",", $rawValues)." )";
+            $clause .= " IN ( " . implode(",", $rawValues) . " )";
+        } elseif (null === $value) {
+            $clause .= " IS NULL ";
         } else {
             $clause .= " = " . Transposer::transpose($field, $value);
         }
@@ -175,7 +175,7 @@ class QueryBuilder {
     }
 
     public function addOrderBy(Field $field, $dir = QueryString::ORDER_ASC) {
-        $this->orderBy[$field->getDb()] = "`".$field->getDb() . "` " . $dir;
+        $this->orderBy[$field->getDb()] = "`" . $field->getDb() . "` " . $dir;
         return $this;
     }
 
@@ -215,12 +215,12 @@ class QueryBuilder {
 
         return $this;
     }
-    
+
     public function setKeyIndex(?Field $keyIndex) {
         $this->keyIndex = $keyIndex;
         return $this;
     }
-    
+
     /**
      * WARNING USE WITH CAUTION !!
      * @param string $statement
@@ -271,7 +271,7 @@ class QueryBuilder {
     public function getStatement(): string {
         return $this->statement;
     }
-    
+
     public function getKeyIndex() {
         return $this->keyIndex;
     }

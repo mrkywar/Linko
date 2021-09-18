@@ -118,7 +118,7 @@ class Linko extends Table {
         
         $this->getStateManager()
                 ->initForNewGame($players, $options);
-        Logger::log("END LOGGER !");
+        Logger::log("END setup game");
 
         /*         * ********** Start the game initialization **** */
 

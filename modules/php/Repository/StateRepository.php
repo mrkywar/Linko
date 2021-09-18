@@ -37,6 +37,7 @@ class StateRepository extends SuperRepository {
      * @return QueryBuilder
      */
     private function buildGetAll() {
+
         return $this->getQueryBuilder()
                         ->select()
                         ->addClause($this->getFieldByProperty("playedDate"), null)
@@ -45,7 +46,9 @@ class StateRepository extends SuperRepository {
 
     public function getActualState() {
         $states = $this->getAll();
-        if (!empty($states)) {
+        if ($states instanceof \Linko\Models\State) {
+            return $states;
+        } elseif (!empty($states)) {
             return $states[0];
         }
         return;
@@ -53,7 +56,9 @@ class StateRepository extends SuperRepository {
 
     public function getNextState() {
         $states = $this->getAll();
-        if (!empty($states) && !sizeof($states) > 0) {
+        if ($states instanceof \Linko\Models\State) {
+            return; // no next state
+        } elseif (!empty($states) && !sizeof($states) > 0) {
             return $states[1];
         }
         return;
@@ -61,7 +66,9 @@ class StateRepository extends SuperRepository {
 
     public function getLastState() {
         $states = $this->getAll();
-        if (!empty($states) && !sizeof($states) > 0) {
+        if ($states instanceof \Linko\Models\State) {
+            return $states;
+        } elseif (!empty($states) && !sizeof($states) > 0) {
             return $states[sizeof($states) - 1];
         }
         return;
@@ -73,6 +80,8 @@ class StateRepository extends SuperRepository {
 
     public function getAll() {
         $qb = $this->buildGetAll();
+
+        $this->setDoUnserialization(true);
 
         return $this->execute($qb);
     }
