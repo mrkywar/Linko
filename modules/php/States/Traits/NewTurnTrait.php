@@ -24,8 +24,8 @@ trait NewTurnTrait {
         $stateManager = $this->getStateManager();
         $stateManager->initNewTurn($players);
         
-        $stateRepo = $stateManager->getRepository();
-        $actualState = $stateRepo->getActualState();
+        $state = $stateManager->closeActualState();
+        Logger::log("Close First and open ".$state->getId());
         
         
         

@@ -81,6 +81,8 @@ class StateManager extends Manager {
         }else{
             $this->getRepository()->closeState($actualState);
         }
+        
+        return $this->getRepository()->getActualState();
     }
 
 }
