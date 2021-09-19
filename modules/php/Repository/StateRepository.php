@@ -2,6 +2,8 @@
 
 namespace Linko\Repository;
 
+use DateTime;
+use Linko\Managers\Logger;
 use Linko\Models\State;
 use Linko\Repository\Core\SuperRepository;
 use Linko\Tools\QueryBuilder;
@@ -80,7 +82,7 @@ class StateRepository extends SuperRepository {
         $closeField = $this->getFieldByProperty("playedDate");
         $primary = $this->getPrimaryField();
         
-        $state->setPlayedDate(new \DateTime());
+        $state->setPlayedDate(new DateTime());
         
         
          $qb = $this->getQueryBuilder()
@@ -91,6 +93,17 @@ class StateRepository extends SuperRepository {
         $this->execute($qb);
         
         return $state;
+    }
+    
+    public function getNextOrder(){
+        $lastState = $this->getLastState();
+         if (null === $lastState) {
+            Logger::log("NO STATE ..??");
+            return 1;
+        } else {
+            Logger::log("STATE Order : ".$lastState->getOrder());
+            return $lastState->getOrder() + 1;
+        }
     }
 
     /* -------------------------------------------------------------------------

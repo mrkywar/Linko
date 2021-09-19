@@ -3,7 +3,7 @@
 namespace Linko\States\Traits;
 
 use Linko\Managers\Logger;
-use Linko\Models\State;
+use Linko\Models\Factories\StateFactory;
 
 /**
  *
@@ -18,51 +18,18 @@ trait NewTurnTrait {
      * 
      */
     public function stStartOfTurn() {
-        Logger::log("Begin Start of Turn");
-        $players = $this->getPlayerManager()->getRepository()->getAll();
+        Logger::log("Begin Start of A Player Turn");
+        $activePlayer = $this->activeNextPlayer();
+        Logger::log("Active Player : ".$activePlayer);
         
-        $stateManager = $this->getStateManager();
-        $stateManager->initNewTurn($players);
+        $stateRepo = $this->getStateManager()->getRepository();
+        $stateOrder = $stateRepo->getNextOrder();
         
-        $state = $stateManager->closeActualState();
-        Logger::log("Close First and open ".$state->getId());
+        $states =[];
+        $states[] = StateFactory::create(ST_PLAYER_PLAY_NUMBER, $stateOrder, $activePlayer);
+        $states[] = StateFactory::create(ST_END_OF_TURN, $stateOrder);
         
-        
-        
-        
-        
-        
-//        $stateRepo = $this->getStateManager()->getRepository();
-//        $lastState = $stateRepo->getLastState();
-//        
-//        if (null === $lastState) {
-//            Logger::log("NO STATE ..??");
-//            $order = 1;
-//        } else {
-//            Logger::log("STATE Order : ".$lastState->getOrder());
-//            $order = $lastState->getOrder() + 1;
-//        }
-//
-//        $newStates = [];
-//        foreach ($players as $player) {
-//            $state = new State();
-//            $state->setOrder($order)
-//                    ->setPlayerId($player->getId())
-//                    ->setState(ST_PLAYER_PLAY_NUMBER);
-//
-//            $order++;
-//            $newStates[] = $state;
-//        }
-//
-//        $nextTurn = new State();
-//        $nextTurn->setOrder($order)
-//                ->setState(ST_END_OF_TURN);
-//
-//        $newStates[] = $nextTurn;
-//
-//        $stateRepo->create($newStates);
-        
-       
+        $stateRepo->create($states);
     }
 
     public function stResolveState() {
