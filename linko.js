@@ -21,19 +21,19 @@ define([
     "ebg/counter",
 
     g_gamethemeurl + 'modules/js/Core/ToolsTrait.js',
-    
+
     g_gamethemeurl + 'modules/js/Game/SetupTrait.js',
-    
+    g_gamethemeurl + 'modules/js/Game/PlayTrait.js',
 ], function (dojo, declare) {
     return declare(
             "bgagame.linko",
 //            ebg.core.gamegui, 
             [
                 common.ToolsTrait,
-                linko.SetupTrait
+                linko.SetupTrait,
+                linko.PlayTrait
             ],
             {
-
 
                 /* -------------------------------------------------------------
                  *                  BEGIN - CONSTRUCTOR
@@ -42,8 +42,6 @@ define([
                     this.debug('linko constructor');
 
                 },
-
-
 
                 /* =============================================================
                  *              BEGIN - Game & client states
@@ -62,16 +60,21 @@ define([
 
                     switch (stateName)
                     {
-
-                        /* Example:
-                         
-                         case 'myGameState':
-                         
-                         // Show some HTML block at this game state
-                         dojo.style( 'my_html_block_id', 'display', 'block' );
-                         
-                         break;
-                         */
+                        case "playNumber":
+                            if (this.isCurrentPlayerActive()) {
+                                this.initalizePlayNumber();
+                            }
+                            break;
+//                        this.isCurrentPlayerActive()
+                            /* Example:
+                             
+                             case 'myGameState':
+                             
+                             // Show some HTML block at this game state
+                             dojo.style( 'my_html_block_id', 'display', 'block' );
+                             
+                             break;
+                             */
 
 
                         case 'dummmy':
