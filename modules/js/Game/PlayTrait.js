@@ -21,20 +21,37 @@ define([
                 initalizePlayNumber: function () {
                     this.addActionButton('completeSelection_button', _('Play cards'), 'onCompleteSelection', null, false, 'red');
                     this.addActionButton('unselectSelection_button', _('Reset'), 'onSelectionReset', null, false, 'gray');
+
+                    dojo.query("#myhand .cardontable").addClass("selectable");
+                    dojo.connect("#myhand .cardontable", 'onHandClick', (evt) => {
+                        evt.preventDefault();
+                        evt.stopPropagation();
+                        this.onClickCard(this);
+                    });
+ 
                 },
-                
+
                 /* -------------------------------------------------------------
                  *                  BEGIN - Btn Actions
                  * ---------------------------------------------------------- */
-                
-                onSelectionReset:function(){
-                    
+
+                onSelectionReset: function () {
+
+                },
+
+                onCompleteSelection: function () {
+
                 },
                 
-                onCompleteSelection: function(){
-                    
-                }
+                onHandClick: function(){
+                    this.debug("Hand click");
+                },
                 
+                onClickCard(ocard) {
+                    this.debug("card click",ocard);
+                }
+                    
+
 
             });
 

@@ -131,6 +131,10 @@
     background: none;
     border: solid black 1px;
 }
+.selectable{
+    border : 1px solid gray;
+    cursor: pointer;
+}
 
 .count-status{
     margin: auto;
