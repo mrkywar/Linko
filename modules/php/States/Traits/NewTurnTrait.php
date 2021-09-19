@@ -16,39 +16,52 @@ trait NewTurnTrait {
      * 
      */
     public function stStartOfTurn() {
-        Logger::log("Begin Start of A Player Turn","SSOT");
+        Logger::log("Begin Start of A Player Turn", "SSOT");
         $activePlayer = $this->activeNextPlayer();
-        Logger::log("Active Player : ".$activePlayer,"SSOT");
-        
+        Logger::log("Active Player : " . $activePlayer, "SSOT");
+        self::giveExtraTime($activePlayer);
+
         $stateManager = $this->getStateManager();
         $stateRepo = $stateManager->getRepository();
         $stateOrder = $stateRepo->getNextOrder();
-        
-        $states =[];
+
+        $states = [];
         $states[] = StateFactory::create(ST_PLAYER_PLAY_NUMBER, $stateOrder, $activePlayer);
         $states[] = StateFactory::create(ST_END_OF_TURN, $stateOrder);
-        
+
         $stateRepo->create($states);
         $stateManager->closeActualState();
-        
-        Logger::log("Player Turn is created","SSOT");
+
+        Logger::log("Player Turn is created", "SSOT");
         $this->gamestate->nextState();
     }
 
     public function stResolveState() {
-        Logger::log("Begin Resolve State","SRS");
-        $stateRepo = $this->getStateManager()->getRepository();
+        Logger::log("Begin Resolve State", "SRS");
+        $stateManager = $this->getStateManager();
+        $stateRepo = $stateManager->getRepository();
         $actualState = $stateRepo->getActualState();
         if (null === $actualState) {
-            Logger::log("No actual state","SRS");
-        }else{
-            Logger::log("Actual state : ".$actualState->getId(),"SRS");
+            Logger::log("No actual state", "SRS");
+            throw new StateManagerException("End Of State Stack");
+        } else {
+            Logger::log("Actual state : " . $actualState->getId(), "SRS");
         }
-//        $globalManger = \Linko\Managers\Factories\GlobalVarManagerFactory::create();
-//        $globalManger->
-//        $activePlayer = Linko::getInstance()->getCurrentPlayer();
-//        var_dump($activePlayer);
-//        die;
+
+//        $stateManager->closeActualState();
+        switch ($actualState->getState()) {
+            case ST_RESOLVE_STATE:
+                Logger::log("Actual Mechanical State");
+                $stateManager->closeActualState();
+                $this->stResolveState();
+                break;
+            case ST_PLAYER_PLAY_NUMBER:
+                Logger::log("Player should play");
+                break;
+            default :
+                Logger::log("Default case : " . $actualState->getState());
+        }
+//        $this->gamestate->nextState($actualState->getState());
     }
 
 }
