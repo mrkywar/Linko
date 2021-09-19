@@ -106,8 +106,17 @@ $machinestates = [
         "descriptionmyturn" => clienttranslate('${you} can play card(s)'),
         "type" => "activeplayer",
         "args" => "argPlayCards",
-        "action" => "stPlayCard",
+        "action" => "stPlayCards",
         "possibleactions" => ["actPlayCards"]
+    ],
+    ST_PLAYER_DRAW => [
+        "name" => "playNumber",
+        "description" => clienttranslate('${actplayer} should draw ${numberOfCard} card(s)'),
+        "descriptionmyturn" => clienttranslate('${you} should draw ${numberOfCard} card(s)'),
+        "type" => "activeplayer",
+        "args" => "argDrawCards",
+        "action" => "stDrawCard",
+        "possibleactions" => ["actDrawCards"]
     ],
     /*
      * BGA framework final state. Do not modify.

@@ -2,8 +2,11 @@
 
 namespace Linko\States\Traits;
 
+use Linko\Managers\Exception\StateManagerException;
+use Linko\Managers\GlobalVarManager;
 use Linko\Managers\Logger;
 use Linko\Models\Factories\StateFactory;
+use Linko\Models\GlobalVar;
 
 /**
  *
@@ -29,6 +32,8 @@ trait NewTurnTrait {
         $states[] = StateFactory::create(ST_PLAYER_PLAY_NUMBER, $stateOrder, $activePlayer);
         $states[] = StateFactory::create(ST_END_OF_TURN, $stateOrder);
 
+        GlobalVarManager::setVar(GlobalVar::ACTIVE_PLAYER, $activePlayer);
+
         $stateRepo->create($states);
         $stateManager->closeActualState();
 
@@ -45,23 +50,13 @@ trait NewTurnTrait {
             Logger::log("No actual state", "SRS");
             throw new StateManagerException("End Of State Stack");
         } else {
-            Logger::log("Actual state : " . $actualState->getId(), "SRS");
+            Logger::log("Actual state : " . $actualState->getState(), "SRS");
         }
 
-//        $stateManager->closeActualState();
-        switch ($actualState->getState()) {
-            case ST_RESOLVE_STATE:
-                Logger::log("Actual Mechanical State");
-                $stateManager->closeActualState();
-                $this->stResolveState();
-                break;
-            case ST_PLAYER_PLAY_NUMBER:
-                Logger::log("Player should play");
-                break;
-            default :
-                Logger::log("Default case : " . $actualState->getState());
-        }
-//        $this->gamestate->nextState($actualState->getState());
+        $this->gamestate->jumpToState($actualState->getState());
+//        if (null !== $actualState->getPlayerId()) {
+//            $this->gamestate->changeActivePlayer($actualState->getPlayerId());
+//        }
     }
 
 }
