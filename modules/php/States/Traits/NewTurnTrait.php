@@ -2,10 +2,11 @@
 
 namespace Linko\States\Traits;
 
+use Linko\Managers\Exception\StateManagerException;
 use Linko\Managers\GlobalVarManager;
 use Linko\Managers\Logger;
+use Linko\Models\Factories\StateFactory;
 use Linko\Models\GlobalVar;
-use Linko\States\StackState;
 
 /**
  *
@@ -18,18 +19,44 @@ trait NewTurnTrait {
      * 
      */
     public function stStartOfTurn() {
-        $pid = $this->activeNextPlayer();
-        Logger::log("Current Active Player :" . $pid, "NTT");
-        GlobalVarManager::setVar(GlobalVar::ACTIVE_PLAYER, $pid);
-//        $stack = new StackState();
+        Logger::log("Begin Start of A Player Turn", "SSOT");
+        $activePlayer = $this->activeNextPlayer();
+        Logger::log("Active Player : " . $activePlayer, "SSOT");
+        self::giveExtraTime($activePlayer);
+
+        $stateManager = $this->getStateManager();
+        $stateRepo = $stateManager->getRepository();
+        $stateOrder = $stateRepo->getNextOrder();
+
+        $states = [];
+        $states[] = StateFactory::create(ST_PLAYER_PLAY_NUMBER, $stateOrder, $activePlayer);
+        $states[] = StateFactory::create(ST_END_OF_TURN, $stateOrder);
+
+        GlobalVarManager::setVar(GlobalVar::ACTIVE_PLAYER, $activePlayer);
+
+        $stateRepo->create($states);
+        $stateManager->closeActualState();
+
+        Logger::log("Player Turn is created", "SSOT");
+        $this->gamestate->nextState();
     }
 
     public function stResolveState() {
-//        $globalManger = \Linko\Managers\Factories\GlobalVarManagerFactory::create();
-//        $globalManger->
-//        $activePlayer = Linko::getInstance()->getCurrentPlayer();
-//        var_dump($activePlayer);
-//        die;
+        Logger::log("Begin Resolve State", "SRS");
+        $stateManager = $this->getStateManager();
+        $stateRepo = $stateManager->getRepository();
+        $actualState = $stateRepo->getActualState();
+        if (null === $actualState) {
+            Logger::log("No actual state", "SRS");
+            throw new StateManagerException("End Of State Stack");
+        } else {
+            Logger::log("Actual state : " . $actualState->getState(), "SRS");
+        }
+
+        $this->gamestate->jumpToState($actualState->getState());
+//        if (null !== $actualState->getPlayerId()) {
+//            $this->gamestate->changeActivePlayer($actualState->getPlayerId());
+//        }
     }
 
 }

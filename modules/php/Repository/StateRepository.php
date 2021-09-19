@@ -2,7 +2,11 @@
 
 namespace Linko\Repository;
 
+use DateTime;
+use Linko\Managers\Logger;
+use Linko\Models\State;
 use Linko\Repository\Core\SuperRepository;
+use Linko\Tools\QueryBuilder;
 
 /**
  * PlayerRepository allows you to  manage the Log Model / Data link
@@ -26,6 +30,92 @@ class StateRepository extends SuperRepository {
 
     public function getTableName() {
         return self::TABLE_NAME;
+    }
+
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Specific Repository Methods
+     * ---------------------------------------------------------------------- */
+
+    /**
+     * build the inital query
+     * @return QueryBuilder
+     */
+    private function buildGetAll() {
+
+        return $this->getQueryBuilder()
+                        ->select()
+                        ->addClause($this->getFieldByProperty("playedDate"), null)
+                        ->addOrderBy($this->getFieldByProperty("order", "ASC"));
+    }
+
+    public function getActualState() {
+        $states = $this->getAll();
+        if ($states instanceof State) {
+            return $states;
+        } elseif (!empty($states)) {
+            return $states[0];
+        }
+        return;
+    }
+
+    public function getNextState() {
+        $states = $this->getAll();
+        if ($states instanceof State) {
+            return; // no next state
+        } elseif (!empty($states) && !sizeof($states) > 0) {
+            return $states[1];
+        }
+        return;
+    }
+
+    public function getLastState() {
+        $states = $this->getAll();
+        if ($states instanceof State) {
+            return $states;
+        } elseif (!empty($states) && !sizeof($states) > 0) {
+            return $states[sizeof($states) - 1];
+        }
+        return;
+    }
+    
+    public function closeState(State $state) {
+        $closeField = $this->getFieldByProperty("playedDate");
+        $primary = $this->getPrimaryField();
+        
+        $state->setPlayedDate(new DateTime());
+        
+        
+         $qb = $this->getQueryBuilder()
+                ->update()
+                ->addSetter($closeField, $state->getPlayedDate())
+                ->addClause($primary, $state->getId());
+        
+        $this->execute($qb);
+        
+        return $state;
+    }
+    
+    public function getNextOrder(){
+        $lastState = $this->getLastState();
+         if (null === $lastState) {
+            Logger::log("NO STATE ..??");
+            return 1;
+        } else {
+            Logger::log("STATE Order : ".$lastState->getOrder());
+            return $lastState->getOrder() + 1;
+        }
+    }
+
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Override 
+     * ---------------------------------------------------------------------- */
+
+    public function getAll() {
+        $qb = $this->buildGetAll();
+
+        $this->setDoUnserialization(true);
+
+        return $this->execute($qb);
     }
 
 }

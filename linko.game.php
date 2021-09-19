@@ -4,8 +4,8 @@ use Linko\Managers\CardManager;
 use Linko\Managers\Logger;
 use Linko\Managers\PlayerManager;
 use Linko\Managers\StateManager;
-use Linko\States\StackState;
 use Linko\States\Traits\NewTurnTrait;
+use Linko\States\Traits\PlayCardTrait;
 
 /**
  * ------
@@ -42,6 +42,7 @@ require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 class Linko extends Table {
 
     use NewTurnTrait;
+    use PlayCardTrait;
 
     private static $instance;
 
@@ -118,7 +119,7 @@ class Linko extends Table {
         
         $this->getStateManager()
                 ->initForNewGame($players, $options);
-        Logger::log("END LOGGER !");
+        Logger::log("END setup game");
 
         /*         * ********** Start the game initialization **** */
 

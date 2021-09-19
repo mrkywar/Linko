@@ -18,6 +18,7 @@ class StateFieldsFactory extends SuperFieldFactory {
         //-- newField($fieldName,$fieldType,$DBprefix = "", $isUi = false,$isPrimary = false)
         $fields[] = self::newField("id", Field::INTEGER_FORMAT, $repo->getFieldsPrefix(), true, true);
         $fields[] = self::newField("order", Field::INTEGER_FORMAT, $repo->getFieldsPrefix(), true);
+        $fields[] = self::newField("state", Field::INTEGER_FORMAT, $repo->getFieldsPrefix(), true);
 
         $playerField = self::newField("player_id", Field::INTEGER_FORMAT, $repo->getFieldsPrefix(), true);
         $playerField->setProperty("playerId");
