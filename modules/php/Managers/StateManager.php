@@ -43,46 +43,6 @@ class StateManager extends Manager {
         $this->getRepository()->create($states); 
     }
 
-//    public function initForNewGame(array $players = array(), array $options = array()) {
-//        $nextTurn = new State();
-//        $nextTurn->setOrder(1)
-//                ->setState(ST_START_OF_TURN);
-//
-//        $this->getRepository()->create($nextTurn);
-//    }
-//
-//    public function initNewTurn(array $players = array()) {
-//        $stateRepo = $this->getRepository();
-//        $lastState = $stateRepo->getLastState();
-//
-//        if (null === $lastState) {
-//            Logger::log("NO STATE ..??");
-//            $order = 1;
-//        } else {
-//            Logger::log("STATE Order : " . $lastState->getOrder());
-//            $order = $lastState->getOrder() + 1;
-//        }
-//
-//        $newStates = [];
-//        foreach ($players as $player) {
-//            $state = new State();
-//            $state->setOrder($order)
-//                    ->setPlayerId($player->getId())
-//                    ->setState(ST_PLAYER_PLAY_NUMBER);
-//
-//            $order++;
-//            $newStates[] = $state;
-//        }
-//
-//        $nextTurn = new State();
-//        $nextTurn->setOrder($order)
-//                ->setState(ST_END_OF_TURN);
-//
-//        $newStates[] = $nextTurn;
-//
-//        $stateRepo->create($newStates);
-//    }
-
     public function closeActualState() {
         $actualState = $this->getRepository()->getActualState();
         if (null === $actualState) {
