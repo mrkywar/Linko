@@ -17,7 +17,7 @@ define([
                 constructor: function () {
                     this.debug('linko.setupTrait constructor');
                 },
-                
+
                 /* -------------------------------------------------------------
                  *                  BEGIN - Setup Game
                  * ---------------------------------------------------------- */
@@ -58,7 +58,7 @@ define([
                         dojo.connect(div, 'onclick', (evt) => {
                             evt.preventDefault();
                             evt.stopPropagation();
-                            this.onClickCard(card);
+                            this.onClickCard(evt);
                         });
                     }
 
@@ -78,7 +78,12 @@ define([
                 setupDraw: function (gamedatas) {
                     for (var cardId in gamedatas.draw) {
                         var card = gamedatas.draw[cardId];
-                        dojo.place(this.format_block('jstpl_card', card), 'aviableDraw');
+                        var div = dojo.place(this.format_block('jstpl_card', card), 'aviableDraw');
+                        dojo.connect(div, 'onclick', (evt) => {
+                            evt.preventDefault();
+                            evt.stopPropagation();
+                            this.onClickCard(card);
+                        });
                     }
                 },
 

@@ -48,7 +48,18 @@ define([
                 },
                 
                 onClickCard(ocard) {
+                    
+                    
+                    //this.debug("card click",ocard.attr('data-id'));
                     this.debug("card click",ocard);
+                    this.debug("card className",ocard.target.className);
+                    this.debug("card datatype",ocard.target.attributes["data-type"]);
+                    
+                    dojo.removeClass(ocard.target,"selected");
+//                    
+//                    dojo.removeClass();
+                    
+                    
                 }
                     
 
