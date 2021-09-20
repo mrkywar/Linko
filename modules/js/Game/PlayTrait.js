@@ -48,33 +48,22 @@ define([
                 },
 
                 onClickCard(ocard) {
+                    var cardType = ocard.target.attributes['data-type'].value;
+//                    dojo.query('#myhand .card_' + cardType).removeClass("selected");
                     if (null === this.selectedNumber) {
-                        var cardType = ocard.target.attributes['data-type'].value;
-                        this.debug("Number cardType : ", cardType);
-                        this.debug("Query : ", '#myhand .card_' + cardType);
-//                        this.debug("Number Null", cardType, '#myhand .card_' + cardType);
-//                        this.debug("query", dojo.query('#myhand .card_' + cardType));
-
+                        this.debug("New Number cardType : ", cardType);
                         dojo.query('#myhand .card_' + cardType).addClass("selected");
                         this.selectedNumber = cardType;
-                    } else {
-                        this.debug("Number Not Null", ocard);
-                        this.selectedNumber = null;
+                    } else if ("14" === cardType) {
+                        this.debug("Joker selected", ocard);
+                        dojo.query('#myhand .card_' + cardType).addClass("selected");
+                    } else if (this.selectedNumber !== cardType) {
+                        this.debug("Change Number cardType : ", cardType);
+                        dojo.query('#myhand .card_' + this.selectedNumber).removeClass("selected");
+                        dojo.query('#myhand .card_' + cardType).addClass("selected");
+                        this.selectedNumber = cardType;
                     }
-
-                    //this.debug("card click",ocard.attr('data-id'));
-//                    this.debug("card click",ocard);
-//                    this.debug("card className",ocard.target.className);
-//                    this.debug("card datatype",ocard.target.attributes["data-type"]);
-
-//                    dojo.removeClass(ocard.target,"selected");
-//                    
-//                    dojo.removeClass();
-
-
                 }
-
-
 
             });
 
