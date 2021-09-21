@@ -36,7 +36,9 @@ define([
                  * ---------------------------------------------------------- */
 
                 onSelectionReset: function () {
-
+                    dojo.query('#myhand .selected').removeClass("selected");
+                    this.selectedJokers = [];
+                    this.selectedNumber = null;
                 },
 
                 onCompleteSelection: function () {
