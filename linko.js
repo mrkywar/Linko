@@ -41,7 +41,8 @@ define([
                 constructor: function () {
                     this.debug('linko constructor');
                     this.selectedNumber = null;
-
+                    this.selectedJokers = [];
+                    this.handCards = [];
                 },
 
                 /* =============================================================

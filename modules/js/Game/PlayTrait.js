@@ -47,22 +47,39 @@ define([
                     this.debug("Hand click");
                 },
 
-                onClickCard(ocard) {
-                    var cardType = ocard.target.attributes['data-type'].value;
-//                    dojo.query('#myhand .card_' + cardType).removeClass("selected");
-                    if (null === this.selectedNumber) {
-                        this.debug("New Number cardType : ", cardType);
+                getCardInHand: function (targetedCard) {
+                    var cardId = targetedCard.target.attributes['data-id'].value;
+                    return this.handCards[cardId];
+                },
+
+                onClickCard(targetedCard) {
+                    var card = this.getCardInHand(targetedCard);
+                    var cardType = card.card_type;
+                    if ("14" === cardType) {
+                        var pos = this.selectedJokers.indexOf(card.card_id);
+                        if (pos >= 0) {
+                            dojo.query('#myhand #linko_card_' + card.card_id).removeClass("selected");
+                            this.selectedJokers.splice(pos, 1);
+                        } else {
+                            dojo.query('#myhand #linko_card_' + card.card_id).addClass("selected");
+                            this.selectedJokers.push(card.card_id);
+                        }
+                    } else if (null === this.selectedNumber) {
                         dojo.query('#myhand .card_' + cardType).addClass("selected");
                         this.selectedNumber = cardType;
-                    } else if ("14" === cardType) {
-                        this.debug("Joker selected", ocard);
-                        dojo.query('#myhand .card_' + cardType).addClass("selected");
                     } else if (this.selectedNumber !== cardType) {
-                        this.debug("Change Number cardType : ", cardType);
                         dojo.query('#myhand .card_' + this.selectedNumber).removeClass("selected");
                         dojo.query('#myhand .card_' + cardType).addClass("selected");
                         this.selectedNumber = cardType;
+                    } else {
+                        if (targetedCard.target.attributes['class'].value.indexOf("selected") > 0) {
+                            dojo.query('#myhand #linko_card_' + card.card_id).removeClass("selected");
+                        } else {
+                            dojo.query('#myhand #linko_card_' + card.card_id).addClass("selected");
+                        }
+
                     }
+
                 }
 
             });
