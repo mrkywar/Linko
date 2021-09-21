@@ -42,7 +42,20 @@ define([
                 },
 
                 onCompleteSelection: function () {
-
+                    var cards = dojo.query('#myhand .selected').map((card) => {
+                        return dojo.attr(card, 'data-id');
+                    });
+                    this.debug('cards : ', cards);
+                    this.ajaxcall("/" + this.game_name + "/" + this.game_name + "/playCards.html", {
+                        ids: cards.toString(),
+                        lock: true
+                    }, this, function (result) {
+                        this.debug("Play :", result);
+                    }, function (is_error) {
+                        //--error
+                        this.debug("Play fail:", is_error);
+                    });
+                    
                 },
 
                 onHandClick: function () {

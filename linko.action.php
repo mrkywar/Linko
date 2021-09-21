@@ -37,6 +37,7 @@ class action_linko extends APP_GameAction {
     public function playCards() {
         self::setAjaxMode();
         $cardsId = self::getArg("ids", AT_numberlist, true);
+        var_dump($cardsId);die;
 
         $this->game->actionPlayCards($cardsId);
         self::ajaxResponse();
