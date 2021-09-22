@@ -54,7 +54,19 @@ trait PlayCardTrait {
             //-- TODO KYW : Check if log is needed !
         }
         $destination = Deck::TABLE_NAME . "_" . $playerId;
-        $cardRepo->moveCardsToLocation($cards, $destination, 0);
+        //tempory desactivation
+        //$cardRepo->moveCardsToLocation($cards, $destination, 0);
+        
+        $this->afterActionPlayCards();
+        
+    }
+    
+    private function afterActionPlayCards(){
+        $stateManager = $this->getStateManager();
+        $newState = $stateManager->closeActualState();
+        
+        Logger::log("NextState : ".$newState->getState());
+        $this->gamestate->jumpToState($newState->getState());
     }
 
     public function stPlayCards() {

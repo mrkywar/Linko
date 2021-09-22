@@ -107,7 +107,7 @@ $machinestates = [
         "type" => "activeplayer",
         "args" => "argPlayCards",
         "action" => "stPlayCards",
-        "possibleactions" => ["actPlayCards"]
+        "possibleactions" => ["playCards"]
     ],
     ST_PLAYER_DRAW => [
         "name" => "playNumber",
