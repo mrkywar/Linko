@@ -3,6 +3,7 @@
 namespace Linko\States\Traits;
 
 use Linko\Managers\Logger;
+use Linko\Models\Factories\StateFactory;
 
 /**
  *
@@ -12,8 +13,20 @@ trait EndTurnTrait {
 
     public function stEndOfTurn() {
         Logger::log("END OF TURN !");
-        $this->gamestate->jumpToState(ST_PLAYER_PLAY_NUMBER);// tempory back to player
-        //ST_PLAYER_PLAY_NUMBER
+        
+        $stateManager = $this->getStateManager();
+        $stateRepo = $stateManager->getRepository();
+        $stateOrder = $stateRepo->getNextOrder();
+
+        $states = [];
+        $states[] = StateFactory::create(ST_START_OF_TURN, $stateOrder);
+
+        $stateRepo->create($states);
+         
+        $newState = $stateManager->closeActualState();
+        Logger::log("NextState : ".$newState->getState());
+        $this->gamestate->jumpToState($newState->getState());
+
     }
 
 }

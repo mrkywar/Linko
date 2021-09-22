@@ -26,6 +26,7 @@ class GlobalVarManager extends Manager {
 
     public function createOrUpdate($globalId, $value) {
         $globalVar = $this->getRepository()
+                ->setDoUnserialization(true)
                 ->getById($globalId);
 
         if (null === $globalVar) {

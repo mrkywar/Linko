@@ -54,8 +54,7 @@ trait PlayCardTrait {
             //-- TODO KYW : Check if log is needed !
         }
         $destination = Deck::TABLE_NAME . "_" . $playerId;
-        //tempory desactivation
-        //$cardRepo->moveCardsToLocation($cards, $destination, 0);
+        $cardRepo->moveCardsToLocation($cards, $destination, 0);
         
         $this->afterActionPlayCards();
         
