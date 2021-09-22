@@ -36,21 +36,25 @@ trait PlayCardTrait {
         Logger::log("Action Play Card " . $cardIds, "PCT-APC");
 
         $cardManager = $this->getCardManager();
+        $cardRepo = $cardManager->getRepository();
         $playerId = self::getActivePlayerId();
-        $cards = $cardManager
-                ->getRepository()
+        $cards = $cardRepo
                 ->setDoUnserialization(true)
                 ->getById(explode(",", $cardIds));
 
         $checkPosition = true;
-        foreach ($cards as $card){
+        foreach ($cards as $card) {
             $checkPosition = $checkPosition &&
                     Deck::HAND_NAME === $card->getLocation() &&
                     $playerId === $card->getLocationArg();
         }
 
-        var_dump($checkPosition, $cards);
-        die;
+        if (!$checkPosition) {
+            throw new BgaUserException(self::_("Invalid Selection"));
+            //-- TODO KYW : Check if log is needed !
+        }
+        $destination = Deck::TABLE_NAME . "_" . $playerId;
+        $cardRepo->moveCardsToLocation($cards, $destination, 0);
     }
 
     public function stPlayCards() {
