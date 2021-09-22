@@ -2,6 +2,7 @@
 
 namespace Linko\States\Traits;
 
+use Linko\Managers\Deck\Deck;
 use Linko\Managers\GlobalVarManager;
 use Linko\Managers\Logger;
 use Linko\Managers\PlayerManager;
@@ -30,13 +31,30 @@ trait PlayCardTrait {
             ],
         ];
     }
-    
-    public function actionPlayCards($cardIds){
-        Logger::log("Action Play Card ".$cardIds,"PCT-APC");
+
+    public function actionPlayCards($cardIds) {
+        Logger::log("Action Play Card " . $cardIds, "PCT-APC");
+
+        $cardManager = $this->getCardManager();
+        $playerId = self::getActivePlayerId();
+        $cards = $cardManager
+                ->getRepository()
+                ->setDoUnserialization(true)
+                ->getById(explode(",", $cardIds));
+
+        $checkPosition = true;
+        foreach ($cards as $card){
+            $checkPosition = $checkPosition &&
+                    Deck::HAND_NAME === $card->getLocation() &&
+                    $playerId === $card->getLocationArg();
+        }
+
+        var_dump($checkPosition, $cards);
+        die;
     }
 
-    
     public function stPlayCards() {
         
     }
+
 }
