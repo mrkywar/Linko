@@ -26,6 +26,7 @@ class GlobalVarManager extends Manager {
 
     public function createOrUpdate($globalId, $value) {
         $globalVar = $this->getRepository()
+                ->setDoUnserialization(true)
                 ->getById($globalId);
 
         if (null === $globalVar) {
@@ -36,7 +37,6 @@ class GlobalVarManager extends Manager {
             $this->getRepository()->create($globalVar);
         }else{
             $globalVar->setValue($value);
-            
             $this->getRepository()->update($globalVar);
         }
 
@@ -50,6 +50,7 @@ class GlobalVarManager extends Manager {
     
     public static function getVar($globalId) {
         return self::getInstance()->getRepository()
+                ->setDoUnserialization(true)
                 ->getById($globalId);
     }
 

@@ -85,6 +85,15 @@ $machinestates = [
             '' => ST_RESOLVE_STATE,
         ],
     ],
+    ST_END_OF_TURN => [
+        'name' => 'endOfTurn',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stEndOfTurn',
+        'transitions' => [
+            '' => ST_RESOLVE_STATE,
+        ],
+    ],
     ST_RESOLVE_STATE => [
         'name' => 'resolveStack',
         'description' => '',
@@ -107,7 +116,7 @@ $machinestates = [
         "type" => "activeplayer",
         "args" => "argPlayCards",
         "action" => "stPlayCards",
-        "possibleactions" => ["actPlayCards"]
+        "possibleactions" => ["playCards"]
     ],
     ST_PLAYER_DRAW => [
         "name" => "playNumber",

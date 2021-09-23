@@ -1,8 +1,3 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 
 define([
@@ -39,7 +34,6 @@ define([
                  * @param gamedatas contains all datas retrieved by 
                  * your "getAllDatas" PHP method.     
                  */
-
                 setup: function (gamedatas)
                 {
                     this.debug("Starting game setup");
@@ -60,11 +54,15 @@ define([
                     dojo.place(this.format_block('jstpl_myhand', null), 'board');
                     for (var cardId in gamedatas.hand) {
                         var card = gamedatas.hand[cardId];
-                        dojo.place(this.format_block('jstpl_card', card), 'myhand');
+                        this.handCards[card.card_id] = card;
+                        var div = dojo.place(this.format_block('jstpl_card', card), 'myhand');
+                        dojo.connect(div,'onclick', (evt) => {
+                            evt.preventDefault();
+                            evt.stopPropagation();
+                            this.onClickCard(evt);
+                        });
+                       
                     }
-
-
-
 
                     // Setup game notifications to handle (see "setupNotifications" method below)
                     this.setupNotifications();
@@ -82,7 +80,12 @@ define([
                 setupDraw: function (gamedatas) {
                     for (var cardId in gamedatas.draw) {
                         var card = gamedatas.draw[cardId];
-                        dojo.place(this.format_block('jstpl_card', card), 'aviableDraw');
+                        var div = dojo.place(this.format_block('jstpl_card', card), 'aviableDraw');
+                        dojo.connect(div, 'onclick', (evt) => {
+                            evt.preventDefault();
+                            evt.stopPropagation();
+                            this.onClickCard(card);
+                        });
                     }
                 },
 

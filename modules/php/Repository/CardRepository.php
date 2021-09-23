@@ -127,7 +127,8 @@ class CardRepository extends SuperRepository {
 
         foreach ($players as $player) {
             $location = Deck::TABLE_NAME . "_" . $player->getId();
-            $cards = $this->getCardsInLocation($location);
+            $cards = $this->setDoUnserialization(false)
+                    ->getCardsInLocation($location);
             $results[$player->getId()] = CollectionAdapter::adapt($cards);
         }
 

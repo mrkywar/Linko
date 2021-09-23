@@ -2,7 +2,10 @@
 
 namespace Linko\Tools\Core;
 
+use DateTime;
+use Exception;
 use Linko\Models\Core\Field;
+use Linko\Models\GlobalVar;
 
 /**
  * Transpose and prepare fields values for DB queries
@@ -21,6 +24,10 @@ abstract class FieldValueTransposer {
         if (null === $value) {
             return "null";
         }
+        if($value instanceof GlobalVar){
+            var_dump($value,$field);
+            throw new Exception("Unsuported Transposition");
+        }
         switch ($field->getFieldType()) {
             case Field::STRING_FORMAT:
                 return "'" . addslashes($value) . "'";
@@ -37,7 +44,7 @@ abstract class FieldValueTransposer {
         }
     }
 
-    private static function transposeDateTime(\DateTime $datetime) {
+    private static function transposeDateTime(DateTime $datetime) {
         return $datetime->format("Y-m-d H:i:s");
     }
 

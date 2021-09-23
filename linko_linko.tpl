@@ -49,7 +49,7 @@
     
     
     var jstpl_card = `
-        <div class="cardontable card_\${card_type}" data-id="\${card_id}">
+        <div class="cardontable card_\${card_type}" id="linko_card_\${card_id}" data-id="\${card_id}">
         </div>
     `;
     

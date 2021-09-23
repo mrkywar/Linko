@@ -16,16 +16,12 @@ abstract class CollectionAdapter {
         if (null === $results || empty($results)) {
             return $collections;
         } else {
-            foreach ($results as $card) {
-                $collections[$this->extractCollection($card)][] = $card;
+            foreach ($results as $card) {      
+                $collections[$card["card_location_arg"]][] = $card;
             }
 
             return $collections;
         }
-    }
-
-    private static function extractCollection(Card $card) {
-        return $card->getLocationArg();
     }
 
 }

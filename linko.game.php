@@ -4,6 +4,7 @@ use Linko\Managers\CardManager;
 use Linko\Managers\Logger;
 use Linko\Managers\PlayerManager;
 use Linko\Managers\StateManager;
+use Linko\States\Traits\EndTurnTrait;
 use Linko\States\Traits\NewTurnTrait;
 use Linko\States\Traits\PlayCardTrait;
 
@@ -43,6 +44,7 @@ class Linko extends Table {
 
     use NewTurnTrait;
     use PlayCardTrait;
+    use EndTurnTrait;
 
     private static $instance;
 
