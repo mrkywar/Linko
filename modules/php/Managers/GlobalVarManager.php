@@ -37,7 +37,6 @@ class GlobalVarManager extends Manager {
             $this->getRepository()->create($globalVar);
         }else{
             $globalVar->setValue($value);
-            
             $this->getRepository()->update($globalVar);
         }
 
@@ -51,6 +50,7 @@ class GlobalVarManager extends Manager {
     
     public static function getVar($globalId) {
         return self::getInstance()->getRepository()
+                ->setDoUnserialization(true)
                 ->getById($globalId);
     }
 

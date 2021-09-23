@@ -37,7 +37,7 @@ class GlobalVarRepository extends SuperRepository {
                 ->update()           
                 ->addSetter($valueField, $globalVar->getValue())
                 ->addClause($primary, $globalVar->getId());
-        
+ 
         $this->execute($qb);
         return $globalVar;
     }

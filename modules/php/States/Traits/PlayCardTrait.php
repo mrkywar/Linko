@@ -20,10 +20,11 @@ trait PlayCardTrait {
          * @var PlayerManager
          */
         $playerManager = $this->getPlayerManager();
+        $activePlayerId = GlobalVarManager::getVar(GlobalVar::ACTIVE_PLAYER)->getValue();
         $rawPlayer = $playerManager
                 ->getRepository()
                 ->setDoUnserialization(false)
-                ->getById(GlobalVarManager::getVar(GlobalVar::ACTIVE_PLAYER));
+                ->getById($activePlayerId);
 
         return [
             '_private' => [
@@ -50,7 +51,7 @@ trait PlayCardTrait {
         }
 
         if (!$checkPosition) {
-            throw new BgaUserException(self::_("Invalid Selection"));
+            throw new \BgaUserException(self::_("Invalid Selection"));
             //-- TODO KYW : Check if log is needed !
         }
         $destination = Deck::TABLE_NAME . "_" . $playerId;
