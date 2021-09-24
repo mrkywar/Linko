@@ -56,7 +56,8 @@ define([
 
 
                     //-- setup player hand
-                    dojo.place(this.format_block('jstpl_myhand', null), 'board');
+//                    this.debug("CP", gamedatas.currentPlayer);
+                    dojo.place(this.format_block('jstpl_myhand', gamedatas.currentPlayer), 'board');
                     for (var cardId in gamedatas.hand) {
                         var card = gamedatas.hand[cardId];
                         this.handCards[card.card_id] = card;
@@ -116,7 +117,7 @@ define([
                 },
 
                 /**
-                 *  SetupDraw : This method must set up the table of each player
+                 *  setupTables : This method must set up the table of each player
                  *  
                  * @param gamedatas contains all datas retrieved by 
                  * your "getAllDatas" PHP method.        
@@ -131,7 +132,6 @@ define([
 
                         for (var cardId in gamedatas.tableInfos[playerId][collectionId]) {
                             var card = gamedatas.tableInfos[playerId][collectionId][cardId];
-//                            var position = 'player_board_' + playerId + ' .collection_' + collectionId;
                             dojo.place(this.format_block('jstpl_card', card), div);
                         }
                     }

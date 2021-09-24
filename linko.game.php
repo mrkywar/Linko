@@ -170,6 +170,9 @@ class Linko extends Table {
         $result['deck'] = count($cardRepo->getCardsInDeck());
         $result['draw'] = $cardRepo->getVisibleDraw();
         $result['discard'] = $cardRepo->getCardsInDiscard();
+        $result['currentPlayer'] = $playerRepo
+                ->setDoUnserialization(false)
+                ->getById(Linko::getInstance()->getCurrentPlayerId());
         
         $result['tableInfos'] = $cardRepo->getTablesInfos($players); 
         

@@ -131,6 +131,22 @@
     background: none;
     border: solid black 1px;
 }
+/*-----------------------------------------------------------------------------
+            BEGIN - cards collection
+------------------------------------------------------------------------------*/
+.collection{
+    width: 60px;
+    float: left;
+    margin-right: 5px;
+}
+.collection .cardontable{
+    height: 20px;
+    margin-bottom: 0;
+}
+
+/*-----------------------------------------------------------------------------
+            BEGIN - Selection
+------------------------------------------------------------------------------*/
 .selectable{
     border : 1px solid gray;
     cursor: pointer;
@@ -138,7 +154,9 @@
 .selected {
     border: 2px solid #C70039;
 }
-
+/*-----------------------------------------------------------------------------
+            BEGIN - Draw & Discard count
+------------------------------------------------------------------------------*/
 .count-status{
     margin: auto;
     text-align: center;
@@ -156,6 +174,8 @@
     user-select: none; /* Non-prefixed version, currently
                           supported by Chrome, Edge, Opera and Firefox */
 }
+
+
 
 /*-----------------------------------------------------------------------------
             BEGIN - Debug
