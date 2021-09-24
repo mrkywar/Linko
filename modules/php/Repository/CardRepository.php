@@ -124,14 +124,16 @@ class CardRepository extends SuperRepository {
      */
     public function getTablesInfos(array $players) {
         $results = [];
+        $initalDoSerialize = $this->getDoUnserialization();
 
         foreach ($players as $player) {
             $location = Deck::TABLE_NAME . "_" . $player->getId();
-            $cards = $this->setDoUnserialization(false)
+            $cards = $this->setDoUnserialization(true)
                     ->getCardsInLocation($location);
             $results[$player->getId()] = CollectionAdapter::adapt($cards);
         }
-
+        $this->setDoUnserialization($initalDoSerialize);
+        
         return $results;
     }
 

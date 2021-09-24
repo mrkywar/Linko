@@ -2,7 +2,9 @@
 
 namespace Linko\Adapters;
 
+use Linko;
 use Linko\Models\Card;
+use Linko\Serializers\CardSerializer;
 
 /**
  * Description of CollectionAdapter
@@ -11,17 +13,36 @@ use Linko\Models\Card;
  */
 abstract class CollectionAdapter {
 
+    /**
+     * @var array<Field>
+     */
+    private static $cardFields;
+
+    /**
+     * @var CardSerializer
+     */
+    private static $cardSerializer;
+
     public static function adapt($results) {
         $collections = [];
-        if (1===1 || null === $results || empty($results)) { // tempory hack !
-            return $collections;
-        } else {
-            foreach ($results as $card) {      
-                $collections[$card["card_location_arg"]][] = $card;
+        $cardManger = Linko::getInstance()->getCardManager();
+        self::$cardSerializer = $cardManger->getSerializer();
+        self::$cardFields = $cardManger->getRepository()->getFields();
+        
+        if(is_array($results)){
+             foreach ($results as $card) {
+                self::adaptCard($collections, $card);
             }
-
-            return $collections;
+        }elseif($results instanceof Card){
+            self::adaptCard($collections, $results);
         }
+        return $collections;
+
+    }
+
+    private static function adaptCard(&$collections, Card $card) {
+        $rawCard = self::$cardSerializer->serialize($card, self::$cardFields);
+        $collections[$card->getLocationArg()][] = $rawCard;
     }
 
 }
