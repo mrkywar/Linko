@@ -43,12 +43,17 @@ define([
                     for (var playerId in gamedatas.players) {
                         var player = gamedatas.players[playerId];
                         dojo.place(this.format_block('jstpl_player_board', player), 'board');
+                        //-- setup player tables
+                        this.setupTables(gamedatas, playerId);
                     }
+
 
                     //-- setup draw
                     this.setupDraw(gamedatas);
                     //-- setup deck & discard
                     this.setupDeck(gamedatas);
+
+
 
                     //-- setup player hand
                     dojo.place(this.format_block('jstpl_myhand', null), 'board');
@@ -56,12 +61,12 @@ define([
                         var card = gamedatas.hand[cardId];
                         this.handCards[card.card_id] = card;
                         var div = dojo.place(this.format_block('jstpl_card', card), 'myhand');
-                        dojo.connect(div,'onclick', (evt) => {
+                        dojo.connect(div, 'onclick', (evt) => {
                             evt.preventDefault();
                             evt.stopPropagation();
                             this.onClickCard(evt);
                         });
-                       
+
                     }
 
                     // Setup game notifications to handle (see "setupNotifications" method below)
@@ -108,6 +113,34 @@ define([
                         discard: (null === gamedatas.discard) ? 0 : gamedatas.discard.length
                     };
                     dojo.place(this.format_block('jstpl_discard', discard), 'deck');
+                },
+
+                /**
+                 *  SetupDraw : This method must set up the table of each player
+                 *  
+                 * @param gamedatas contains all datas retrieved by 
+                 * your "getAllDatas" PHP method.        
+                 */
+                setupTables: function (gamedatas, playerId) {
+                    this.debug("setup tables for player " + playerId, gamedatas.tableInfos[playerId]);
+                    for (var collectionId in gamedatas.tableInfos[playerId]) {
+                        var collection = {
+                            collection_index: collectionId
+                        };
+                        dojo.place(this.format_block('jstpl_collection', collection), 'playertable_' + playerId);
+                        
+                        this.debug(dojo.query('playertable_' + playerId));
+                        this.debug(dojo.query('playertable_' + playerId+ ' .collection_0'));
+
+//                        for (var cardId in gamedatas.tableInfos[playerId][collectionId]) {
+//                            var card = gamedatas.hand[cardId];
+//                            var position = 'player_board_' + playerId + ' .collection_' + collectionId;
+//                            dojo.place(this.format_block('jstpl_card', card), position);
+//                        }
+                    }
+
+
+
                 }
 
             });
