@@ -127,16 +127,13 @@ define([
                         var collection = {
                             collection_index: collectionId
                         };
-                        dojo.place(this.format_block('jstpl_collection', collection), 'playertable_' + playerId);
-                        
-                        this.debug(dojo.query('playertable_' + playerId));
-                        this.debug(dojo.query('playertable_' + playerId+ ' .collection_0'));
+                        var div = dojo.place(this.format_block('jstpl_collection', collection), 'playertable_' + playerId);
 
-//                        for (var cardId in gamedatas.tableInfos[playerId][collectionId]) {
-//                            var card = gamedatas.hand[cardId];
+                        for (var cardId in gamedatas.tableInfos[playerId][collectionId]) {
+                            var card = gamedatas.tableInfos[playerId][collectionId][cardId];
 //                            var position = 'player_board_' + playerId + ' .collection_' + collectionId;
-//                            dojo.place(this.format_block('jstpl_card', card), position);
-//                        }
+                            dojo.place(this.format_block('jstpl_card', card), div);
+                        }
                     }
 
 

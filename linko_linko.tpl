@@ -35,6 +35,7 @@
                 </div>
                 <div class="playertablecard" id="playertable_\${player_id}">
                 </div>
+                <div class="clear"></div>
             </div>
             `;
     
@@ -65,7 +66,7 @@
     `;
     
     var jstpl_collection = `
-        <div class="collection collection_\${collection_index} debug" style="z-index:\${collection_index}0">
+        <div class="collection collection_\${collection_index}" style="z-index:\${collection_index}0">
         </div>
     `;
 
