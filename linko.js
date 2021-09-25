@@ -210,6 +210,9 @@ define([
                 setupNotifications: function ()
                 {
                     this.debug('notifications subscriptions setup');
+                    
+                    
+                    dojo.subscribe( 'playNumber', this, "notifPlayNumber" );
 
                     // TODO: here, associate your game notifications with local methods
 

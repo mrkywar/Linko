@@ -41,6 +41,23 @@ trait PlayCardTrait {
         $cardRepo->moveCardsToLocation($cards, $destination, $collectionIndex);
 
         $this->afterActionPlayCards($cardIds, $cards);
+        if (1 === sizeof($cardIds)) {
+            $number = $cards->getType();
+        }else{
+            $number = $cards[0]->getType();
+        }
+
+        self::notifyAllPlayers("playNumber", clienttranslate('${playerName} plays a collection of ${count} card(s) with a value of ${number}'),
+                [
+                    'playerId' => self::getActivePlayerId(),
+                    'playerName' => self::getActivePlayerName(),
+                    'count' => count($cardIds),
+                    'number' => $number,
+                    'collectionIndex' => $collectionIndex,
+                    'destination' => $destination,
+                    'cardIds' => $cardIds
+                ]
+        );
     }
 
     /* -------------------------------------------------------------------------
@@ -93,21 +110,7 @@ trait PlayCardTrait {
 
         Logger::log("NextState : " . $newState->getState());
 
-        if (1 === sizeof($cardsId)) {
-            $number = $cards->getType();
-        }else{
-            $number = $cards[0]->getType();
-        }
-
-        self::notifyAllPlayers("playNumber", clienttranslate('${playerName} plays a collection of ${count} card(s) with a value of ${number}'),
-                [
-                    'playerId' => self::getActivePlayerId(),
-                    'playerName' => self::getActivePlayerName(),
-                    'count' => count($cardsId),
-                    'number' => $number,
-                    'ids' => $cardsId
-                ]
-        );
+        
 
         $this->gamestate->jumpToState($newState->getState());
     }

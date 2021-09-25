@@ -126,7 +126,8 @@ define([
                     this.debug("setup tables for player " + playerId, gamedatas.tableInfos[playerId]);
                     for (var collectionId in gamedatas.tableInfos[playerId]) {
                         var collection = {
-                            collection_index: collectionId
+                            collection_index: collectionId,
+                            add_class: ""
                         };
                         var div = dojo.place(this.format_block('jstpl_collection', collection), 'playertable_' + playerId);
 
