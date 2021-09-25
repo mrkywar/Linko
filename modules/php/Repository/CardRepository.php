@@ -133,7 +133,7 @@ class CardRepository extends SuperRepository {
             $results[$player->getId()] = CollectionAdapter::adapt($cards);
         }
         $this->setDoUnserialization($initalDoSerialize);
-        
+
         return $results;
     }
 
@@ -159,6 +159,31 @@ class CardRepository extends SuperRepository {
      */
     public function getCardsInDiscard() {
         return $this->getCardsInLocation(Deck::DISCARD_NAME);
+    }
+
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Specific Repository Methods 
+     *              Collection support
+     * ---------------------------------------------------------------------- */
+
+    public function getNextCollectionIndex($playerId) {
+        $locationArgField = $this->getFieldByProperty("locationArg");
+        $locationField = $this->getFieldByProperty("location");
+        $location = Deck::TABLE_NAME . "_" . $playerId;
+
+        $qb = $this->getQueryBuilder()
+                ->select()
+                ->addClause($locationField, $location)
+                ->addOrderBy($locationArgField, QueryString::ORDER_DESC)
+                ->setLimit(1);
+
+        $result = $this->execute($qb);
+        if (null === $result) {
+            // No collection for this player
+            return 1;
+        } else {
+            return $result->getLocationArg() + 1;
+        }
     }
 
 }
