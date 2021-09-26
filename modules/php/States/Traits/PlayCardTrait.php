@@ -32,6 +32,7 @@ trait PlayCardTrait {
         $checkPosition = $this->checkPosition($cards, $playerId);
         $checkNumber = $this->checkNumbers($cards);
         if (!$checkPosition || !$checkNumber) {
+//            var_dump($checkNumber, $checkPosition);die;
             throw new \BgaUserException(self::_("Invalid Selection"));
             //-- TODO KYW : Check if log is needed !
         }
@@ -63,7 +64,7 @@ trait PlayCardTrait {
         $countJoker = 0;
         $checkNumber = true;
         foreach ($cards as $card) {
-            if (14 === $card->getType()) {
+            if ("14" === $card->getType()) {
                 $countJoker++;
             } elseif (null === $numbers) {
                 $numbers = $card->getType();
