@@ -32,9 +32,6 @@ abstract class UIAdapter {
      * @return array : UI datas
      */
     static public function adapt(Repository $repo, $datas) {
-        if(1 === sizeof($datas)){
-            return self::adaptOnce($repo, $datas[0]);
-        }
         $results = [];
         foreach ($datas as $key => $data) {
             $results[$key] = self::adaptOnce($repo, $data);

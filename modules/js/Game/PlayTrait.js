@@ -100,8 +100,7 @@ define([
                     this.debug('NPN', datas.args);
                     var collection = {
                         collection_index: datas.args.collectionIndex,
-                        player_id: datas.args.playerId,
-                        add_class: "debug"
+                        player_id: datas.args.playerId
                     };
 
                     var collDestination = "playertable_" + datas.args.playerId;
@@ -110,17 +109,14 @@ define([
 
                     for (var cardId in datas.args.cards) {
                         var card = datas.args.cards[cardId];
-                        
-                        var divId = "hand_card_" + datas.args.cardIds[cardId];
-                        this.slideToObjectAndDestroy(divId, collectionDiv).play();
+
+                        var divId = "hand_card_" + card.card_id;
+                        if (datas.args.playerId === this.player_id) {
+                            this.slideToObjectAndDestroy(divId, collectionDiv);
+                        }else{
+                            this.debug("NPN - NOT IMPLENTED PART");
+                        }
                         dojo.place(this.format_block('jstpl_card', card), collectionDiv);
-                        
-                        
-//                        this.debug('NPN-2', cardId);
-//                        this.debug('NPN-3',  datas.args.cardIds[cardId]);
-//
-//                        var divId = "linko_card_" + datas.args.cardIds[cardId];
-//                        this.slideToObject(divId, collectionDiv).play();
 
                     }
                 }

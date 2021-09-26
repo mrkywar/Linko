@@ -172,7 +172,7 @@ class Linko extends Table {
         $result['discard'] = $cardRepo->getCardsInDiscard();
         $result['currentPlayer'] = $playerRepo
                 ->setDoUnserialization(false)
-                ->getById(Linko::getInstance()->getCurrentPlayerId());
+                ->getById(Linko::getInstance()->getCurrentPlayerId())[0];
         
         $result['tableInfos'] = $cardRepo->getTablesInfos($players); 
         

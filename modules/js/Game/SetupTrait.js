@@ -128,7 +128,6 @@ define([
                         var collection = {
                             collection_index: collectionId,
                             player_id: playerId,
-                            add_class: ""
                         };
                         var div = dojo.place(this.format_block('jstpl_collection', collection), 'playertable_' + playerId);
 
