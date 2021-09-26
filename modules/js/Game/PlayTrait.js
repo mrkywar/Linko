@@ -72,10 +72,10 @@ define([
                     if ("14" === cardType) {
                         var pos = this.selectedJokers.indexOf(card.card_id);
                         if (pos >= 0) {
-                            dojo.query('#myhand #linko_card_' + card.card_id).removeClass("selected");
+                            dojo.query('#hand_card_' + card.card_id).removeClass("selected");
                             this.selectedJokers.splice(pos, 1);
                         } else {
-                            dojo.query('#myhand #linko_card_' + card.card_id).addClass("selected");
+                            dojo.query('#hand_card_' + card.card_id).addClass("selected");
                             this.selectedJokers.push(card.card_id);
                         }
                     } else if (null === this.selectedNumber) {
