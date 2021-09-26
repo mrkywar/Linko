@@ -20,4 +20,11 @@ class CardSerializer extends SuperSerializer {
         return Card::class;
     }
 
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Override 
+     * ---------------------------------------------------------------------- */
+    protected function isArrayForced() {
+        return true;
+    }
+
 }

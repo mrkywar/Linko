@@ -41,11 +41,7 @@ trait PlayCardTrait {
         //$cardRepo->moveCardsToLocation($cards, $destination, $collectionIndex);
 
         $this->afterActionPlayCards($cardIds, $cards);
-        if (1 === sizeof($cardIds)) {
-            $number = $cards->getType();
-        }else{
-            $number = $cards[0]->getType();
-        }
+        $number = $cards[0]->getType();
 
         self::notifyAllPlayers("playNumber", clienttranslate('${playerName} plays a collection of ${count} card(s) with a value of ${number}'),
                 [
@@ -54,7 +50,9 @@ trait PlayCardTrait {
                     'count' => count($cardIds),
                     'number' => $number,
                     'collectionIndex' => $collectionIndex,
-                    'cardIds' => $cardIds
+                    'cards' => $cardRepo
+                            ->setDoUnserialization(false)
+                            ->getById($cardIds)
                 ]
         );
     }
@@ -65,17 +63,13 @@ trait PlayCardTrait {
 
     private function checkPosition($cards, $playerId) {
         $checkPosition = true;
-        if (is_array($cards)) {
-            foreach ($cards as $card) {
-                $checkPosition = $checkPosition &&
-                        Deck::HAND_NAME === $card->getLocation() &&
-                        $playerId === $card->getLocationArg();
-            }
-        } else {
+
+        foreach ($cards as $card) {
             $checkPosition = $checkPosition &&
-                    Deck::HAND_NAME === $cards->getLocation() &&
-                    $playerId === $cards->getLocationArg();
+                    Deck::HAND_NAME === $card->getLocation() &&
+                    $playerId === $card->getLocationArg();
         }
+
         return $checkPosition;
     }
 
@@ -84,9 +78,6 @@ trait PlayCardTrait {
         $countNumber = 0;
         $countJoker = 0;
         $checkNumber = true;
-        if ($cards instanceof Card) {
-            return $checkNumber; // no collection only one card
-        }
         foreach ($cards as $card) {
             if (14 === $card->getType()) {
                 $countJoker++;
@@ -108,8 +99,6 @@ trait PlayCardTrait {
         $newState = $stateManager->closeActualState();
 
         Logger::log("NextState : " . $newState->getState());
-
-        
 
         $this->gamestate->jumpToState($newState->getState());
     }
