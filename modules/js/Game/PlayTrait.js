@@ -66,6 +66,9 @@ define([
                 onClickCard(targetedCard) {
                     var card = this.getCardInHand(targetedCard);
                     var cardType = card.card_type;
+
+//                    this.debug("Clicked : " + cardType + " | Selected : " + this.selectedNumber);
+
                     if ("14" === cardType) {
                         var pos = this.selectedJokers.indexOf(card.card_id);
                         if (pos >= 0) {
@@ -83,10 +86,11 @@ define([
                         dojo.query('#myhand .card_' + cardType).addClass("selected");
                         this.selectedNumber = cardType;
                     } else {
+//                        this.debug('Case 4');
                         if (targetedCard.target.attributes['class'].value.indexOf("selected") > 0) {
-                            dojo.query('#myhand #linko_card_' + card.card_id).removeClass("selected");
+                            dojo.query('#hand_card_' + card.card_id).removeClass("selected");
                         } else {
-                            dojo.query('#myhand #linko_card_' + card.card_id).addClass("selected");
+                            dojo.query('#hand_card_' + card.card_id).addClass("selected");
                         }
 
                     }
