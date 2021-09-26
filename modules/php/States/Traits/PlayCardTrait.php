@@ -6,7 +6,6 @@ use Linko\Managers\Deck\Deck;
 use Linko\Managers\GlobalVarManager;
 use Linko\Managers\Logger;
 use Linko\Managers\PlayerManager;
-use Linko\Models\Card;
 use Linko\Models\GlobalVar;
 
 /**
@@ -36,19 +35,15 @@ trait PlayCardTrait {
             throw new \BgaUserException(self::_("Invalid Selection"));
             //-- TODO KYW : Check if log is needed !
         }
-        $destination = Deck::TABLE_NAME . "_" . $playerId;
         $collectionIndex = $cardRepo->getNextCollectionIndex($playerId);
-        //$cardRepo->moveCardsToLocation($cards, $destination, $collectionIndex);
-
         $this->afterActionPlayCards($cardIds, $cards);
-        $number = $cards[0]->getType();
 
         self::notifyAllPlayers("playNumber", clienttranslate('${playerName} plays a collection of ${count} card(s) with a value of ${number}'),
                 [
                     'playerId' => self::getActivePlayerId(),
                     'playerName' => self::getActivePlayerName(),
                     'count' => count($cardIds),
-                    'number' => $number,
+                    'number' => $cards[0]->getType(),
                     'collectionIndex' => $collectionIndex,
                     'cards' => $cardRepo
                             ->setDoUnserialization(false)

@@ -182,7 +182,7 @@ class CardRepository extends SuperRepository {
             // No collection for this player
             return 1;
         } else {
-            return $result->getLocationArg() + 1;
+            return $result[0]->getLocationArg() + 1;
         }
     }
 

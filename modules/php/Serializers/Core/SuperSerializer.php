@@ -87,7 +87,7 @@ abstract class SuperSerializer implements Serializer {
      * @return array $rawDatas
      */
     public function unserialize($rawDatas, array $fields) {
-        if (1 === sizeof($rawDatas) && $this->isArrayForced()) {
+        if (1 === sizeof($rawDatas) && !$this->isArrayForced()) {
             $key = array_keys($rawDatas)[0];
             return $this->unserializeOnce($rawDatas[$key], $key, $fields);
         }
