@@ -38,7 +38,7 @@ trait PlayCardTrait {
         }
         $destination = Deck::TABLE_NAME . "_" . $playerId;
         $collectionIndex = $cardRepo->getNextCollectionIndex($playerId);
-        $cardRepo->moveCardsToLocation($cards, $destination, $collectionIndex);
+        //$cardRepo->moveCardsToLocation($cards, $destination, $collectionIndex);
 
         $this->afterActionPlayCards($cardIds, $cards);
         if (1 === sizeof($cardIds)) {
@@ -54,7 +54,6 @@ trait PlayCardTrait {
                     'count' => count($cardIds),
                     'number' => $number,
                     'collectionIndex' => $collectionIndex,
-                    'destination' => $destination,
                     'cardIds' => $cardIds
                 ]
         );

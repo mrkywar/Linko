@@ -29,7 +29,7 @@
 
 <script type="text/javascript">
     var jstpl_player_board = `
-            <div  class="playertable whiteblock playertable player_board_\${player_id}">
+            <div  class="playertable whiteblock playertable" id="player_board_\${player_id}" >
                 <div class="playertablename" style="color:#\${player_color}">
                     \${player_name}
                 </div>
@@ -66,7 +66,7 @@
     `;
     
     var jstpl_collection = `
-        <div class="collection collection_\${collection_index} \${add_class}" style="z-index:\${collection_index}0">
+        <div class="collection collection_\${collection_index} \${add_class}" id="collection_\${player_id}_\${collection_index}" style="z-index:\${collection_index}0">
         </div>
     `;
 

@@ -76,6 +76,7 @@
 ------------------------------------------------------------------------------*/
 
 .cardontable {
+    position: relative;
     display: block;
     width: 60px;
     height: 92px;
@@ -135,6 +136,7 @@
             BEGIN - cards collection
 ------------------------------------------------------------------------------*/
 .collection{
+    position: relative;
     width: 60px;
     float: left;
     margin-right: 5px;

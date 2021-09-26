@@ -100,17 +100,20 @@ define([
                     this.debug('NPN', datas.args);
                     var collection = {
                         collection_index: datas.args.collectionIndex,
+                        player_id: datas.args.playerId,
                         add_class: "debug"
                     };
 
-                    var collectionDiv = dojo.place(this.format_block('jstpl_collection', collection), datas.args.destination);
+                    var collDestination = "playertable_" + datas.args.playerId;
+                    dojo.place(this.format_block('jstpl_collection', collection), collDestination);
+                    var collectionDiv = "collection_" + datas.args.playerId + "_" + datas.args.collectionIndex;
 
                     for (var cardId in datas.args.cardIds) {
 //                        this.debug('NPN-2', cardId);
 //                        this.debug('NPN-3',  datas.args.cardIds[cardId]);
 //
-//                           var divId = "linko_card_"+datas.args.cardIds[cardId];
-//                           this.slideToObject( "linko_card_"+datas.args.cardIds[cardId], collectionDiv ).play();
+                        var divId = "linko_card_" + datas.args.cardIds[cardId];
+                        this.slideToObject(divId, collectionDiv).play();
 
                     }
                 }
