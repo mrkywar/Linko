@@ -111,9 +111,9 @@ define([
                         var card = datas.args.cards[cardId];
 
                         var divId = "hand_card_" + card.card_id;
-                        if (datas.args.playerId === this.player_id) {
+                        if (parseInt(datas.args.playerId) === this.player_id) {
                             this.slideToObjectAndDestroy(divId, collectionDiv);
-                        }else{
+                        } else {
                             this.debug("NPN - NOT IMPLENTED PART");
                         }
                         dojo.place(this.format_block('jstpl_card', card), collectionDiv);

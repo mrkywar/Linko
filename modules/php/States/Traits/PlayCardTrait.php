@@ -35,21 +35,10 @@ trait PlayCardTrait {
             throw new \BgaUserException(self::_("Invalid Selection"));
             //-- TODO KYW : Check if log is needed !
         }
-        $collectionIndex = $cardRepo->getNextCollectionIndex($playerId);
-        $this->afterActionPlayCards($cardIds, $cards);
+        $destination = Deck::TABLE_NAME . "_" . $playerId;
+        $cardRepo->moveCardsToLocation($cards, $destination, 0);
 
-        self::notifyAllPlayers("playNumber", clienttranslate('${playerName} plays a collection of ${count} card(s) with a value of ${number}'),
-                [
-                    'playerId' => self::getActivePlayerId(),
-                    'playerName' => self::getActivePlayerName(),
-                    'count' => count($cardIds),
-                    'number' => $cards[0]->getType(),
-                    'collectionIndex' => $collectionIndex,
-                    'cards' => $cardRepo
-                            ->setDoUnserialization(false)
-                            ->getById($cardIds)
-                ]
-        );
+        $this->afterActionPlayCards($cardIds, $cards);
     }
 
     /* -------------------------------------------------------------------------
@@ -89,12 +78,29 @@ trait PlayCardTrait {
         return $checkNumber && (($countNumber + $countJoker) === count($cards));
     }
 
-    private function afterActionPlayCards(array $cardsId, $cards) {
+    private function afterActionPlayCards(array $cardIds, $cards) {
+        $playerId = self::getActivePlayerId();
+        $cardManager = $this->getCardManager();
+        $cardRepo = $cardManager->getRepository();
+
+        $collectionIndex = $cardRepo->getNextCollectionIndex($playerId);
+
+        self::notifyAllPlayers("playNumber", clienttranslate('${playerName} plays a collection of ${count} card(s) with a value of ${number}'),
+                [
+                    'playerId' => self::getActivePlayerId(),
+                    'playerName' => self::getActivePlayerName(),
+                    'count' => count($cardIds),
+                    'number' => $cards[0]->getType(),
+                    'collectionIndex' => $collectionIndex,
+                    'cards' => $cardRepo
+                            ->setDoUnserialization(false)
+                            ->getById($cardIds)
+                ]
+        );
         $stateManager = $this->getStateManager();
         $newState = $stateManager->closeActualState();
 
         Logger::log("NextState : " . $newState->getState());
-
         $this->gamestate->jumpToState($newState->getState());
     }
 

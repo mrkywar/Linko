@@ -40,7 +40,7 @@
             `;
     
     var jstpl_myhand = `
-            <div id="myhand_wrap" class="whiteblock" style="background:#\${player_color}"">
+            <div id="myhand_wrap" class="whiteblock">
                 <h3>{MY_HAND}</h3>
                 <div id="myhand">
                 </div>
