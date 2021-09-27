@@ -65,7 +65,7 @@ trait PlayCardTrait {
      * ---------------------------------------------------------------------- */
 
     private function afterActionPlayCards() {
-
+        $cardRepo = $this->getCardManager()->getRepository();
 
         self::notifyAllPlayers("playNumber", clienttranslate('${playerName} plays a collection of ${count} card(s) with a value of ${number}'),
                 [
@@ -74,19 +74,29 @@ trait PlayCardTrait {
                     'count' => count($this->collection->getCards()),
                     'number' => $this->collection->getNumber(),
                     'collectionIndex' => $this->collection->getCollectionIndex(),
-                    'cards' => $this->getCardManager()
-                            ->getRepository()
-                            ->setDoUnserialization(false)
+                    'cards' => $cardRepo->setDoUnserialization(false)
                             ->getById($this->cardIds)
                 ]
         );
-        
+
+        $players = $this->getPlayerManager()
+                ->getRepository()
+                ->setDoUnserialization(true)
+                ->getAll();
+        $cardRepo->setDoUnserialization(true);
+        foreach ($players as $player) {
+            $lastCardsPlayed = $cardRepo->getLastPlayedCards($player->getId());
+            if(null !== $lastCardsPlayed){
+                $collection = CardsToCollectionTransformer::adapt($lastCardsPlayed);
+                //$this->collection->is
+            }
+        }
+
         $stateManager = $this->getStateManager();
         $newState = $stateManager->closeActualState();
-        
-        Logger::log("NextState : ".$newState->getState());
-        $this->gamestate->jumpToState($newState->getState());
 
+        Logger::log("NextState : " . $newState->getState());
+        $this->gamestate->jumpToState($newState->getState());
     }
 
     /* -------------------------------------------------------------------------

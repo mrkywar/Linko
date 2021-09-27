@@ -186,4 +186,18 @@ class CardRepository extends SuperRepository {
         }
     }
 
+    public function getLastPlayedCards($playerId) {
+        $maxIndex = $this->getNextCollectionIndex($playerId) - 1;
+
+        $locationArgField = $this->getFieldByProperty("locationArg");
+        $locationField = $this->getFieldByProperty("location");
+
+        $qb = $this->getQueryBuilder()
+                ->select()
+                ->addClause($locationField, Deck::TABLE_NAME + "_" + $playerId)
+                ->addClause($locationArgField, $maxIndex);
+
+        return $this->execute($qb);
+    }
+
 }
