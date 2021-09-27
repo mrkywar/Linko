@@ -55,11 +55,7 @@ define([
                         //--error
                         this.debug("Play fail:", is_error);
                     });
-                    
-                },
 
-                onHandClick: function () {
-                    this.debug("Hand click");
                 },
 
                 getCardInHand: function (targetedCard) {
@@ -70,13 +66,16 @@ define([
                 onClickCard(targetedCard) {
                     var card = this.getCardInHand(targetedCard);
                     var cardType = card.card_type;
+
+//                    this.debug("Clicked : " + cardType + " | Selected : " + this.selectedNumber);
+
                     if ("14" === cardType) {
                         var pos = this.selectedJokers.indexOf(card.card_id);
                         if (pos >= 0) {
-                            dojo.query('#myhand #linko_card_' + card.card_id).removeClass("selected");
+                            dojo.query('#hand_card_' + card.card_id).removeClass("selected");
                             this.selectedJokers.splice(pos, 1);
                         } else {
-                            dojo.query('#myhand #linko_card_' + card.card_id).addClass("selected");
+                            dojo.query('#hand_card_' + card.card_id).addClass("selected");
                             this.selectedJokers.push(card.card_id);
                         }
                     } else if (null === this.selectedNumber) {
@@ -87,14 +86,43 @@ define([
                         dojo.query('#myhand .card_' + cardType).addClass("selected");
                         this.selectedNumber = cardType;
                     } else {
+//                        this.debug('Case 4');
                         if (targetedCard.target.attributes['class'].value.indexOf("selected") > 0) {
-                            dojo.query('#myhand #linko_card_' + card.card_id).removeClass("selected");
+                            dojo.query('#hand_card_' + card.card_id).removeClass("selected");
                         } else {
-                            dojo.query('#myhand #linko_card_' + card.card_id).addClass("selected");
+                            dojo.query('#hand_card_' + card.card_id).addClass("selected");
                         }
 
                     }
 
+                },
+
+                /* -------------------------------------------------------------
+                 *                  BEGIN - Notifications
+                 * ---------------------------------------------------------- */
+                notifPlayNumber(datas) {
+                    this.debug('NPN', datas.args);
+                    var collection = {
+                        collection_index: datas.args.collectionIndex,
+                        player_id: datas.args.playerId
+                    };
+
+                    var collDestination = "playertable_" + datas.args.playerId;
+                    dojo.place(this.format_block('jstpl_collection', collection), collDestination);
+                    var collectionDiv = "collection_" + datas.args.playerId + "_" + datas.args.collectionIndex;
+
+                    for (var cardId in datas.args.cards) {
+                        var card = datas.args.cards[cardId];
+
+                        var divId = "hand_card_" + card.card_id;
+                        if (parseInt(datas.args.playerId) === this.player_id) {
+                            this.slideToObjectAndDestroy(divId, collectionDiv);
+                        } else {
+                            this.debug("NPN - NOT IMPLENTED PART");
+                        }
+                        dojo.place(this.format_block('jstpl_card', card), collectionDiv);
+
+                    }
                 }
 
             });
@@ -103,4 +131,28 @@ define([
 
 
 });
-                        
+
+//                        dojo.query('#myhand .selected').map((card) => {
+//                            
+////                            return dojo.attr(card, 'data-id');
+//                        });
+
+
+//                        this.slideToObject( mobile_obj, target_obj, duration, delay )
+
+//You can use slideToObject to "slide" an element to a target position.
+//
+//Sliding element on the game area is the recommended and the most used way to animate your game interface. Using slides allow players to figure out what is happening on the game, as if they were playing with the real boardgame.
+//
+//The parameters are:
+//
+//mobile_obj: the ID of the object to move. This object must be "relative" or "absolute" positioned.
+//target_obj: the ID of the target object. This object must be "relative" or "absolute" positioned. Note that it is not mandatory that mobile_obj and target_obj have the same size. If their size are different, the system slides the center of mobile_obj to the center of target_obj.
+//duration: (optional) defines the duration in millisecond of the slide. The default is 500 milliseconds.
+//delay: (optional). If you defines a delay, the slide will start only after this delay. This is particularly useful when you want to slide several object from the same position to the same position: you can give a 0ms delay to the first object, a 100ms delay to the second one, a 200ms delay to the third one, ... this way they won't be superposed during the slide.
+//BE CAREFUL: The method returns an dojo.fx animation, so you can combine it with other animation if you want to. It means that you have to call the "play()" method, otherwise the animation WON'T START.
+//
+//Example:
+//
+//   this.slideToObject( "some_token", "some_place_on_board" ).play();
+                      

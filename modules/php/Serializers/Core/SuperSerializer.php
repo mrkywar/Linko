@@ -24,9 +24,9 @@ abstract class SuperSerializer implements Serializer {
         $raw = [];
 
         foreach ($fields as $field) {
-            if (isset($raw[$field->getDb()])) {
+//            if (isset($raw[$field->getDb()])) {
                 $raw[$field->getDb()] = $this->serializeValue($object, $field);
-            }
+//            }
         }
 
         return $raw;
@@ -46,6 +46,14 @@ abstract class SuperSerializer implements Serializer {
      * @return type
      */
     abstract public function getModelClass();
+    
+    /**
+     * optionnal parmater to force array when only one result.
+     * @return boolean
+     */
+    protected function isArrayForced(){
+        return false;
+    }
 
     /**
      * Transform Array to Object (only one raw in input)
@@ -79,7 +87,7 @@ abstract class SuperSerializer implements Serializer {
      * @return array $rawDatas
      */
     public function unserialize($rawDatas, array $fields) {
-        if (1 === sizeof($rawDatas)) {
+        if (1 === sizeof($rawDatas) && !$this->isArrayForced()) {
             $key = array_keys($rawDatas)[0];
             return $this->unserializeOnce($rawDatas[$key], $key, $fields);
         }

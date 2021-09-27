@@ -2,6 +2,8 @@
 
 namespace Linko\States\Traits;
 
+use Linko\CardsCollection\CardsToCollectionTransformer;
+use Linko\CardsCollection\Collection;
 use Linko\Managers\Deck\Deck;
 use Linko\Managers\GlobalVarManager;
 use Linko\Managers\Logger;
@@ -14,6 +16,82 @@ use Linko\Models\GlobalVar;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 trait PlayCardTrait {
+
+    private $cardIds;
+
+    /**
+     * @var Collection
+     */
+    private $collection;
+
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Play Cards Actions
+     * ---------------------------------------------------------------------- */
+
+    public function actionPlayCards($rawCardIds) {
+        Logger::log("Action Play Card " . $rawCardIds, "PCT-APC");
+        $this->cardIds = explode(",", $rawCardIds);
+
+        $cardManager = $this->getCardManager();
+        $cardRepo = $cardManager->getRepository();
+        $playerId = self::getActivePlayerId();
+        $player = $this->getPlayerManager()
+                ->getRepository()
+                ->setDoUnserialization(true)
+                ->getById($playerId);
+        $cards = $cardRepo
+                ->setDoUnserialization(true)
+                ->getById($this->cardIds);
+
+        $this->collection = CardsToCollectionTransformer::adapt($cards);
+        if (!$this->collection->isPlayableFor($player)) {
+            throw new \BgaUserException(self::_("Invalid Selection"));
+        }
+        $this->collection->setPlayer($player)
+                ->setDestination(Deck::TABLE_NAME . "_" . $playerId)
+                ->setCollectionIndex($cardRepo->getNextCollectionIndex($playerId));
+
+        $cardRepo->moveCardsToLocation(
+                $this->collection->getCards(),
+                $this->collection->getDestination(),
+                $this->collection->getCollectionIndex()
+        );
+
+        $this->afterActionPlayCards();
+    }
+
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Play Cards Actions - TOOLS
+     * ---------------------------------------------------------------------- */
+
+    private function afterActionPlayCards() {
+
+
+        self::notifyAllPlayers("playNumber", clienttranslate('${playerName} plays a collection of ${count} card(s) with a value of ${number}'),
+                [
+                    'playerId' => $this->collection->getPlayer()->getId(),
+                    'playerName' => $this->collection->getPlayer()->getName(),
+                    'count' => count($this->collection->getCards()),
+                    'number' => $this->collection->getNumber(),
+                    'collectionIndex' => $this->collection->getCollectionIndex(),
+                    'cards' => $this->getCardManager()
+                            ->getRepository()
+                            ->setDoUnserialization(false)
+                            ->getById($this->cardIds)
+                ]
+        );
+        
+        $stateManager = $this->getStateManager();
+        $newState = $stateManager->closeActualState();
+        
+        Logger::log("NextState : ".$newState->getState());
+        $this->gamestate->jumpToState($newState->getState());
+
+    }
+
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Display
+     * ---------------------------------------------------------------------- */
 
     public function argPlayCards() {
         /**
@@ -31,42 +109,6 @@ trait PlayCardTrait {
                 'active' => $rawPlayer,
             ],
         ];
-    }
-
-    public function actionPlayCards($cardIds) {
-        Logger::log("Action Play Card " . $cardIds, "PCT-APC");
-
-        $cardManager = $this->getCardManager();
-        $cardRepo = $cardManager->getRepository();
-        $playerId = self::getActivePlayerId();
-        $cards = $cardRepo
-                ->setDoUnserialization(true)
-                ->getById(explode(",", $cardIds));
-
-        $checkPosition = true;
-        foreach ($cards as $card) {
-            $checkPosition = $checkPosition &&
-                    Deck::HAND_NAME === $card->getLocation() &&
-                    $playerId === $card->getLocationArg();
-        }
-
-        if (!$checkPosition) {
-            throw new \BgaUserException(self::_("Invalid Selection"));
-            //-- TODO KYW : Check if log is needed !
-        }
-        $destination = Deck::TABLE_NAME . "_" . $playerId;
-        $cardRepo->moveCardsToLocation($cards, $destination, 0);
-        
-        $this->afterActionPlayCards();
-        
-    }
-    
-    private function afterActionPlayCards(){
-        $stateManager = $this->getStateManager();
-        $newState = $stateManager->closeActualState();
-        
-        Logger::log("NextState : ".$newState->getState());
-        $this->gamestate->jumpToState($newState->getState());
     }
 
     public function stPlayCards() {
