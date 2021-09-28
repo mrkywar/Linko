@@ -77,33 +77,49 @@ class StateRepository extends SuperRepository {
         }
         return;
     }
-    
+
     public function closeState(State $state) {
         $closeField = $this->getFieldByProperty("playedDate");
         $primary = $this->getPrimaryField();
-        
+
         $state->setPlayedDate(new DateTime());
-        
-        
-         $qb = $this->getQueryBuilder()
+
+        $qb = $this->getQueryBuilder()
                 ->update()
                 ->addSetter($closeField, $state->getPlayedDate())
                 ->addClause($primary, $state->getId());
-        
+
         $this->execute($qb);
-        
+
         return $state;
     }
-    
-    public function getNextOrder(){
+
+    public function getNextOrder() {
         $lastState = $this->getLastState();
-         if (null === $lastState) {
+        if (null === $lastState) {
             Logger::log("NO STATE ..??");
             return 1;
         } else {
-            Logger::log("STATE Order : ".$lastState->getOrder());
+            Logger::log("STATE Order : " . $lastState->getOrder());
             return $lastState->getOrder() + 1;
         }
+    }
+
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Update 
+     * ---------------------------------------------------------------------- */
+
+    public function update(State $state) {
+        $orderField = $this->getFieldByProperty("order");
+        $primary = $this->getPrimaryField();
+
+        $qb = $this->getQueryBuilder()
+                ->update()
+                ->addSetter($orderField, $state->getOrder())
+                ->addClause($primary, $state->getId());
+
+        $this->execute($qb);
+        return $state;
     }
 
     /* -------------------------------------------------------------------------

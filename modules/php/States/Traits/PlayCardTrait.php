@@ -57,6 +57,8 @@ trait PlayCardTrait {
                 $this->collection->getCollectionIndex()
         );
 
+//        $this
+        $this->sendPlayNotification();
         $this->afterActionPlayCards();
     }
 
@@ -64,7 +66,7 @@ trait PlayCardTrait {
      *            BEGIN - Play Cards Actions - TOOLS
      * ---------------------------------------------------------------------- */
 
-    private function afterActionPlayCards() {
+    private function sendPlayNotification() {
         $cardRepo = $this->getCardManager()->getRepository();
 
         self::notifyAllPlayers("playNumber", clienttranslate('${playerName} plays a collection of ${count} card(s) with a value of ${number}'),
@@ -78,26 +80,46 @@ trait PlayCardTrait {
                             ->getById($this->cardIds)
                 ]
         );
+    }
 
+    private function afterActionPlayCards() {
+        $cardRepo = $this->getCardManager()->getRepository();
         $players = $this->getPlayerManager()
                 ->getRepository()
                 ->setDoUnserialization(true)
                 ->getAll();
         $cardRepo->setDoUnserialization(true);
-        
+
         $stateManager = $this->getStateManager();
         $stateRepo = $stateManager->getRepository();
+        $endOfTurn = $stateRepo->getLastState();
+        $stateOrder = $endOfTurn->getOrder();
+        $newStates = [];
         foreach ($players as $player) {
             $lastCardsPlayed = $cardRepo->getLastPlayedCards($player->getId());
             if (null === $lastCardsPlayed) {
                 continue;
             }
-            $collection = CardsToCollectionTransformer::adapt($lastCardsPlayed);
-            if ($collection->isTakeableFor($this->collection)) {
-                $endOfTurn = $stateRepo->getLastState();
-                $order = $endOfTurn->getOrder();
-                
+            $targetCollection = CardsToCollectionTransformer::adapt($lastCardsPlayed);
+            if ($targetCollection->isTakeableFor($this->collection)) {
+
+                $activePlayerId = $this->collection->getPlayer()->getId();
+                $targetPlayerId = $targetCollection->getPlayer()->getId();
+
+                $takeParam = [
+                    "targetCollection" => Deck::COLLECTION_NAME . "_" . $targetPlayerId . "_" . $targetCollection->getCollectionIndex(),
+                ];
+                $newStates[] = StateFactory::create(ST_PLAYER_TAKE_COLLECTION, $stateOrder, $activePlayerId, $takeParam);
+                $targetParam = [
+                    "numberOfCards" => $this->collection->getCountCards()
+                ];
+                $newStates[] = StateFactory::create(ST_PLAYER_TAKE_COLLECTION, $stateOrder, $activePlayerId, $targetParam);
+                $stateRepo->create($newStates);
             }
+        }
+        if (!empty($newStates)) {
+            $endOfTurn->setOrder($stateOrder);
+            $stateRepo->update($endOfTurn);
         }
 
 //        $stateManager = $this->getStateManager();
