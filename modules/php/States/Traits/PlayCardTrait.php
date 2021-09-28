@@ -8,6 +8,7 @@ use Linko\Managers\Deck\Deck;
 use Linko\Managers\GlobalVarManager;
 use Linko\Managers\Logger;
 use Linko\Managers\PlayerManager;
+use Linko\Models\Factories\StateFactory;
 use Linko\Models\GlobalVar;
 
 /**
@@ -101,6 +102,7 @@ trait PlayCardTrait {
                 continue;
             }
             $targetCollection = CardsToCollectionTransformer::adapt($lastCardsPlayed);
+            $targetCollection->setPlayer($player);
             if ($targetCollection->isTakeableFor($this->collection)) {
 
                 $activePlayerId = $this->collection->getPlayer()->getId();

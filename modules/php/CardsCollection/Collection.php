@@ -203,6 +203,9 @@ class Collection {
      * @return int
      */
     public function getCollectionIndex(): int {
+        if (null === $this->collectionIndex) {
+            $this->collectionIndex = $this->getCardAt()->getLocationArg();
+        }
         return $this->collectionIndex;
     }
 

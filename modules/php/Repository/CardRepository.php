@@ -192,9 +192,11 @@ class CardRepository extends SuperRepository {
         $locationArgField = $this->getFieldByProperty("locationArg");
         $locationField = $this->getFieldByProperty("location");
 
+        //var_dump($playerId, $maxIndex);die;
+
         $qb = $this->getQueryBuilder()
                 ->select()
-                ->addClause($locationField, Deck::TABLE_NAME + "_" + $playerId)
+                ->addClause($locationField, Deck::TABLE_NAME . "_" . $playerId)
                 ->addClause($locationArgField, $maxIndex);
 
         return $this->execute($qb);

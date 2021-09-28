@@ -60,9 +60,10 @@ class StateRepository extends SuperRepository {
 
     public function getNextState() {
         $states = $this->getAll();
+
         if ($states instanceof State) {
             return; // no next state
-        } elseif (!empty($states) && !sizeof($states) > 0) {
+        } elseif (!empty($states) && sizeof($states) > 1) {
             return $states[1];
         }
         return;
@@ -70,9 +71,10 @@ class StateRepository extends SuperRepository {
 
     public function getLastState() {
         $states = $this->getAll();
+
         if ($states instanceof State) {
             return $states;
-        } elseif (!empty($states) && !sizeof($states) > 0) {
+        } elseif (!empty($states)) {
             return $states[sizeof($states) - 1];
         }
         return;
