@@ -11,17 +11,19 @@ use Linko\Models\Core\Model;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 class State implements Model {
+
     private $id;
     private $state;
     private $createdDate;
     private $playedDate;
     private $order;
     private $playerId;
-    
+    private $params;
+
     public function __construct() {
         $this->createdDate = new DateTime();
     }
-    
+
     public function getId() {
         return $this->id;
     }
@@ -44,6 +46,10 @@ class State implements Model {
 
     public function getPlayerId() {
         return $this->playerId;
+    }
+
+    public function getParams() {
+        return $this->params;
     }
 
     public function setId($id) {
@@ -76,5 +82,9 @@ class State implements Model {
         return $this;
     }
 
+    public function setParams($params) {
+        $this->params = $params;
+        return $this;
+    }
 
 }

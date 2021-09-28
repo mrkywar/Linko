@@ -12,7 +12,7 @@ use Linko\Models\State;
  */
 abstract class StateFactory {
 
-    public static function create(int $stateType, int &$stateOrder = 1, int $playerId = null) {
+    public static function create(int $stateType, int &$stateOrder = 1, int $playerId = null, array $params = array()) {
         $state = new State();
 
         $state->setCreatedDate(new DateTime())
