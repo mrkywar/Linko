@@ -115,7 +115,7 @@ trait PlayCardTrait {
                 $targetParam = [
                     "numberOfCards" => $this->collection->getCountCards()
                 ];
-                $newStates[] = StateFactory::create(ST_PLAYER_TAKE_COLLECTION, $stateOrder, $activePlayerId, $targetParam);
+                $newStates[] = StateFactory::create(ST_PLAYER_TAKE_COLLECTION, $stateOrder, $targetPlayerId, $targetParam);
                 $stateRepo->create($newStates);
             }
         }
