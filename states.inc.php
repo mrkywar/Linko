@@ -101,14 +101,7 @@ $machinestates = [
         'action' => 'stResolveState',
         'transitions' => [],
     ],
-//    ST_START_OF_TURN => [
-//        "name" => "playerTurn",
-//        "description" => clienttranslate('${actplayer} must play a card or pass'),
-//        "descriptionmyturn" => clienttranslate('${you} must play a card or pass'),
-//        "type" => "activeplayer",
-//        "possibleactions" => ["playCard", "pass"],
-//        "transitions" => ["playCard" => ST_START_OF_TURN, "pass" => ST_START_OF_TURN]
-//    ],
+    //-- PLAYER ACTIONS
     ST_PLAYER_PLAY_NUMBER => [
         "name" => "playNumber",
         "description" => clienttranslate('${actplayer} can play card(s)'),
@@ -118,8 +111,17 @@ $machinestates = [
         "action" => "stPlayCards",
         "possibleactions" => ["playCards"]
     ],
+    ST_PLAYER_TAKE_COLLECTION => [
+        "name" => "takeCollection",
+        "description" => clienttranslate('${actplayer} can steal cards collection(s)'),
+        "descriptionmyturn" => clienttranslate('${you} can steal cards collections)'),
+        "type" => "activeplayer",
+        "args" => "argStealCollection",
+        "action" => "stStealCollection",
+        "possibleactions" => ["stealCollection","discardCollection"]
+    ],
     ST_PLAYER_DRAW => [
-        "name" => "playNumber",
+        "name" => "playerDraw",
         "description" => clienttranslate('${actplayer} should draw ${numberOfCard} card(s)'),
         "descriptionmyturn" => clienttranslate('${you} should draw ${numberOfCard} card(s)'),
         "type" => "activeplayer",

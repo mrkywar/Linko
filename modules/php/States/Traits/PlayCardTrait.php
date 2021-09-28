@@ -71,7 +71,7 @@ trait PlayCardTrait {
                 [
                     'playerId' => $this->collection->getPlayer()->getId(),
                     'playerName' => $this->collection->getPlayer()->getName(),
-                    'count' => count($this->collection->getCards()),
+                    'count' => $this->collection->getCountCards(),
                     'number' => $this->collection->getNumber(),
                     'collectionIndex' => $this->collection->getCollectionIndex(),
                     'cards' => $cardRepo->setDoUnserialization(false)
@@ -84,15 +84,23 @@ trait PlayCardTrait {
                 ->setDoUnserialization(true)
                 ->getAll();
         $cardRepo->setDoUnserialization(true);
+        
+        $stateManager = $this->getStateManager();
+        $stateRepo = $stateManager->getRepository();
         foreach ($players as $player) {
             $lastCardsPlayed = $cardRepo->getLastPlayedCards($player->getId());
-            if(null !== $lastCardsPlayed){
-                $collection = CardsToCollectionTransformer::adapt($lastCardsPlayed);
-                //$this->collection->is
+            if (null === $lastCardsPlayed) {
+                continue;
+            }
+            $collection = CardsToCollectionTransformer::adapt($lastCardsPlayed);
+            if ($collection->isTakeableFor($this->collection)) {
+                $endOfTurn = $stateRepo->getLastState();
+                $order = $endOfTurn->getOrder();
+                
             }
         }
 
-        $stateManager = $this->getStateManager();
+//        $stateManager = $this->getStateManager();
         $newState = $stateManager->closeActualState();
 
         Logger::log("NextState : " . $newState->getState());
