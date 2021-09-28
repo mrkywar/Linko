@@ -18,7 +18,8 @@ abstract class StateFactory {
         $state->setCreatedDate(new DateTime())
                 ->setOrder($stateOrder)
                 ->setPlayerId($playerId)
-                ->setState($stateType);
+                ->setState($stateType)
+                ->setParams($params);
 
         $stateOrder++;
 
