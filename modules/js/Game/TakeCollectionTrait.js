@@ -23,7 +23,8 @@ define([
                  * ---------------------------------------------------------- */
 
                 initalizeStealCollection: function (args) {
-                    this.debug('stel init');
+                    this.debug('stel init', args.args.actualState.state_params.targetCollection);
+                    dojo.query("#"+args.args.actualState.state_params.targetCollection).addClass("selected");
 
                     this.addActionButton('stealCollection_button', _('Steal Collection'), 'onStealCollection', null, false, 'blue');
                     this.addActionButton('discardCollection_button', _('Discard Collection'), 'onDiscardCollection', null, false, 'red');
