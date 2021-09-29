@@ -25,10 +25,17 @@ trait StealTrait {
                 ->getRepository()
                 ->setDoUnserialization(false)
                 ->getById($activePlayerId);
+        
+        $stateManager = $this->getStateManager();
+        $actualState = $stateManager
+                ->getRepository()
+                ->setDoUnserialization(false)
+                ->getActualState();
 
         return [
             '_private' => [
                 'active' => $rawPlayer,
+                'state' => $actualState
             ],
         ];
     }
