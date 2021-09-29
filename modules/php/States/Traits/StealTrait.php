@@ -25,23 +25,22 @@ trait StealTrait {
                 ->getRepository()
                 ->setDoUnserialization(false)
                 ->getById($activePlayerId);
-        
+
         $stateManager = $this->getStateManager();
         $actualState = $stateManager
                 ->getRepository()
                 ->setDoUnserialization(false)
                 ->getActualState();
-
+//        var_dump($actualState);die;
         return [
             '_private' => [
                 'active' => $rawPlayer,
-                'state' => $actualState
             ],
-        ];
+            "actualState" => $actualState
+        ]; 
     }
-    
+
     public function stStealCollection() {
-        
     }
 
 }

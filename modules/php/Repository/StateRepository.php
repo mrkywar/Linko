@@ -131,8 +131,6 @@ class StateRepository extends SuperRepository {
     public function getAll() {
         $qb = $this->buildGetAll();
 
-        $this->setDoUnserialization(true);
-
         return $this->execute($qb);
     }
 

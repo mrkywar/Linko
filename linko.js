@@ -24,6 +24,7 @@ define([
 
     g_gamethemeurl + 'modules/js/Game/SetupTrait.js',
     g_gamethemeurl + 'modules/js/Game/PlayTrait.js',
+    g_gamethemeurl + 'modules/js/Game/TakeCollectionTrait.js',
 ], function (dojo, declare) {
     return declare(
             "bgagame.linko",
@@ -31,7 +32,8 @@ define([
             [
                 common.ToolsTrait,
                 linko.SetupTrait,
-                linko.PlayTrait
+                linko.PlayTrait,
+                linko.TakeCollectionTrait
             ],
             {
 
@@ -59,6 +61,7 @@ define([
                 onEnteringState: function (stateName, args)
                 {
                     this.debug('Entering state: ' + stateName);
+                    this.debug('Entering state arg', args);
 
                     switch (stateName)
                     {
@@ -69,7 +72,7 @@ define([
                             break;
                         case "takeCollection":
                             if (this.isCurrentPlayerActive()) {
-                                this.initalizeTakeCollection();
+                                this.initalizeStealCollection();
                             }
                             break;
 //                        this.isCurrentPlayerActive()
