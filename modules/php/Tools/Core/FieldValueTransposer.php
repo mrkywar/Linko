@@ -24,15 +24,11 @@ abstract class FieldValueTransposer {
         if (null === $value) {
             return "null";
         }
-        if($value instanceof GlobalVar){
-            var_dump($value,$field);
-            throw new Exception("Unsuported Transposition");
-        }
         switch ($field->getFieldType()) {
             case Field::STRING_FORMAT:
                 return "'" . addslashes($value) . "'";
             case Field::JSON_FORMAT:
-                return json_encode($value);
+                return "'" . json_encode($value) . "'";
             case Field::BOOLEAN_FORMAT:
                 return (true === $value) ? 1 : 0;
             case Field::INTEGER_FORMAT:

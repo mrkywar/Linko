@@ -59,6 +59,10 @@ class Collection {
         return;
     }
 
+    public function getCountCards() {
+        return count($this->getCards());
+    }
+
     /* -------------------------------------------------------------------------
      *                BEGIN - isPlayableFor Player Check
      * ---------------------------------------------------------------------- */
@@ -115,16 +119,27 @@ class Collection {
     }
 
     /* -------------------------------------------------------------------------
+     *                BEGIN - isTakeableFor Collection Check
+     * ---------------------------------------------------------------------- */
+
+    public function isTakeableFor(Collection $askCollection) {
+        return(
+                $this->getNumber() < $askCollection->getNumber() &&
+                $this->getCountCards() === $askCollection->getCountCards()
+                );
+    }
+
+    /* -------------------------------------------------------------------------
      *                BEGIN - number determine
      * ---------------------------------------------------------------------- */
-    private function initNumber(){
-        foreach ($this->getCards() as $card){
-            if(null === $this->number || intval($card->getType()) < $this->number){
+
+    private function initNumber() {
+        foreach ($this->getCards() as $card) {
+            if (null === $this->number || intval($card->getType()) < $this->number) {
                 $this->number = intval($card->getType());
             }
         }
     }
-
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 
@@ -188,6 +203,9 @@ class Collection {
      * @return int
      */
     public function getCollectionIndex(): int {
+        if (null === $this->collectionIndex) {
+            $this->collectionIndex = $this->getCardAt()->getLocationArg();
+        }
         return $this->collectionIndex;
     }
 

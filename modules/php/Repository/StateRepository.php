@@ -60,9 +60,10 @@ class StateRepository extends SuperRepository {
 
     public function getNextState() {
         $states = $this->getAll();
+
         if ($states instanceof State) {
             return; // no next state
-        } elseif (!empty($states) && !sizeof($states) > 0) {
+        } elseif (!empty($states) && sizeof($states) > 1) {
             return $states[1];
         }
         return;
@@ -70,40 +71,57 @@ class StateRepository extends SuperRepository {
 
     public function getLastState() {
         $states = $this->getAll();
+
         if ($states instanceof State) {
             return $states;
-        } elseif (!empty($states) && !sizeof($states) > 0) {
+        } elseif (!empty($states)) {
             return $states[sizeof($states) - 1];
         }
         return;
     }
-    
+
     public function closeState(State $state) {
         $closeField = $this->getFieldByProperty("playedDate");
         $primary = $this->getPrimaryField();
-        
+
         $state->setPlayedDate(new DateTime());
-        
-        
-         $qb = $this->getQueryBuilder()
+
+        $qb = $this->getQueryBuilder()
                 ->update()
                 ->addSetter($closeField, $state->getPlayedDate())
                 ->addClause($primary, $state->getId());
-        
+
         $this->execute($qb);
-        
+
         return $state;
     }
-    
-    public function getNextOrder(){
+
+    public function getNextOrder() {
         $lastState = $this->getLastState();
-         if (null === $lastState) {
+        if (null === $lastState) {
             Logger::log("NO STATE ..??");
             return 1;
         } else {
-            Logger::log("STATE Order : ".$lastState->getOrder());
+            Logger::log("STATE Order : " . $lastState->getOrder());
             return $lastState->getOrder() + 1;
         }
+    }
+
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Update 
+     * ---------------------------------------------------------------------- */
+
+    public function update(State $state) {
+        $orderField = $this->getFieldByProperty("order");
+        $primary = $this->getPrimaryField();
+
+        $qb = $this->getQueryBuilder()
+                ->update()
+                ->addSetter($orderField, $state->getOrder())
+                ->addClause($primary, $state->getId());
+
+        $this->execute($qb);
+        return $state;
     }
 
     /* -------------------------------------------------------------------------
@@ -112,8 +130,6 @@ class StateRepository extends SuperRepository {
 
     public function getAll() {
         $qb = $this->buildGetAll();
-
-        $this->setDoUnserialization(true);
 
         return $this->execute($qb);
     }

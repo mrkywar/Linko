@@ -16,6 +16,7 @@ class Deck {
     CONST HAND_NAME = "hand";
     CONST DISCARD_NAME = "discard";
     CONST TABLE_NAME = "player_table";
+    CONST COLLECTION_NAME = "collection";
 
     /**
      * @var CardRepository

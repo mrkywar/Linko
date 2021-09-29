@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS `state` (
     `state_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `state_state` int(10) UNSIGNED NOT NULL,
     `state_player_id` int(10) UNSIGNED NULL,
+    `state_params` text NULL,
     `state_created_date` varchar(50) NOT NULL,
     `state_played_date` varchar(50) NULL,
     `state_order` int(10) UNSIGNED NOT NULL,

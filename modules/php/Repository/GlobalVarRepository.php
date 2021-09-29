@@ -30,8 +30,6 @@ class GlobalVarRepository extends SuperRepository {
     public function update(GlobalVar $globalVar) {
         $valueField = $this->getFieldByProperty("value");
         $primary = $this->getPrimaryField();
-        
-        $this->setIsDebug(true);
 
         $qb = $this->getQueryBuilder()
                 ->update()           

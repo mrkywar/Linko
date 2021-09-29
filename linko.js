@@ -24,6 +24,7 @@ define([
 
     g_gamethemeurl + 'modules/js/Game/SetupTrait.js',
     g_gamethemeurl + 'modules/js/Game/PlayTrait.js',
+    g_gamethemeurl + 'modules/js/Game/TakeCollectionTrait.js',
 ], function (dojo, declare) {
     return declare(
             "bgagame.linko",
@@ -31,7 +32,8 @@ define([
             [
                 common.ToolsTrait,
                 linko.SetupTrait,
-                linko.PlayTrait
+                linko.PlayTrait,
+                linko.TakeCollectionTrait
             ],
             {
 
@@ -59,12 +61,18 @@ define([
                 onEnteringState: function (stateName, args)
                 {
                     this.debug('Entering state: ' + stateName);
+                    this.debug('Entering state arg', args);
 
                     switch (stateName)
                     {
                         case "playNumber":
                             if (this.isCurrentPlayerActive()) {
                                 this.initalizePlayNumber();
+                            }
+                            break;
+                        case "takeCollection":
+                            if (this.isCurrentPlayerActive()) {
+                                this.initalizeStealCollection();
                             }
                             break;
 //                        this.isCurrentPlayerActive()
@@ -210,9 +218,9 @@ define([
                 setupNotifications: function ()
                 {
                     this.debug('notifications subscriptions setup');
-                    
-                    
-                    dojo.subscribe( 'playNumber', this, "notifPlayNumber" );
+
+
+                    dojo.subscribe('playNumber', this, "notifPlayNumber");
 
                     // TODO: here, associate your game notifications with local methods
 

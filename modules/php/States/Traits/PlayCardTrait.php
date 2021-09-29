@@ -8,6 +8,7 @@ use Linko\Managers\Deck\Deck;
 use Linko\Managers\GlobalVarManager;
 use Linko\Managers\Logger;
 use Linko\Managers\PlayerManager;
+use Linko\Models\Factories\StateFactory;
 use Linko\Models\GlobalVar;
 
 /**
@@ -57,6 +58,8 @@ trait PlayCardTrait {
                 $this->collection->getCollectionIndex()
         );
 
+//        $this
+        $this->sendPlayNotification();
         $this->afterActionPlayCards();
     }
 
@@ -64,29 +67,68 @@ trait PlayCardTrait {
      *            BEGIN - Play Cards Actions - TOOLS
      * ---------------------------------------------------------------------- */
 
-    private function afterActionPlayCards() {
-
+    private function sendPlayNotification() {
+        $cardRepo = $this->getCardManager()->getRepository();
 
         self::notifyAllPlayers("playNumber", clienttranslate('${playerName} plays a collection of ${count} card(s) with a value of ${number}'),
                 [
                     'playerId' => $this->collection->getPlayer()->getId(),
                     'playerName' => $this->collection->getPlayer()->getName(),
-                    'count' => count($this->collection->getCards()),
+                    'count' => $this->collection->getCountCards(),
                     'number' => $this->collection->getNumber(),
                     'collectionIndex' => $this->collection->getCollectionIndex(),
-                    'cards' => $this->getCardManager()
-                            ->getRepository()
-                            ->setDoUnserialization(false)
+                    'cards' => $cardRepo->setDoUnserialization(false)
                             ->getById($this->cardIds)
                 ]
         );
-        
-        $stateManager = $this->getStateManager();
-        $newState = $stateManager->closeActualState();
-        
-        Logger::log("NextState : ".$newState->getState());
-        $this->gamestate->jumpToState($newState->getState());
+    }
 
+    private function afterActionPlayCards() {
+        $cardRepo = $this->getCardManager()->getRepository();
+        $players = $this->getPlayerManager()
+                ->getRepository()
+                ->setDoUnserialization(true)
+                ->getAll();
+        $cardRepo->setDoUnserialization(true);
+
+        $stateManager = $this->getStateManager();
+        $stateRepo = $stateManager->getRepository();
+        $endOfTurn = $stateRepo->getLastState();
+        $stateOrder = $endOfTurn->getOrder();
+        $newStates = [];
+        foreach ($players as $player) {
+            $lastCardsPlayed = $cardRepo->getLastPlayedCards($player->getId());
+            if (null === $lastCardsPlayed) {
+                continue;
+            }
+            $targetCollection = CardsToCollectionTransformer::adapt($lastCardsPlayed);
+            $targetCollection->setPlayer($player);
+            if ($targetCollection->isTakeableFor($this->collection)) {
+
+                $activePlayerId = $this->collection->getPlayer()->getId();
+                $targetPlayerId = $targetCollection->getPlayer()->getId();
+
+                $takeParam = [
+                    "targetCollection" => Deck::COLLECTION_NAME . "_" . $targetPlayerId . "_" . $targetCollection->getCollectionIndex(),
+                ];
+                $newStates[] = StateFactory::create(ST_PLAYER_TAKE_COLLECTION, $stateOrder, $activePlayerId, $takeParam);
+                $targetParam = [
+                    "numberOfCards" => $this->collection->getCountCards()
+                ];
+                $newStates[] = StateFactory::create(ST_PLAYER_TAKE_COLLECTION, $stateOrder, $targetPlayerId, $targetParam);
+                $stateRepo->create($newStates);
+            }
+        }
+        if (!empty($newStates)) {
+            $endOfTurn->setOrder($stateOrder);
+            $stateRepo->update($endOfTurn);
+        }
+
+//        $stateManager = $this->getStateManager();
+        $newState = $stateManager->closeActualState();
+
+        Logger::log("NextState : " . $newState->getState());
+        $this->gamestate->jumpToState($newState->getState());
     }
 
     /* -------------------------------------------------------------------------

@@ -7,6 +7,7 @@ use Linko\Managers\StateManager;
 use Linko\States\Traits\EndTurnTrait;
 use Linko\States\Traits\NewTurnTrait;
 use Linko\States\Traits\PlayCardTrait;
+use Linko\States\Traits\StealTrait;
 
 /**
  * ------
@@ -45,6 +46,7 @@ class Linko extends Table {
     use NewTurnTrait;
     use PlayCardTrait;
     use EndTurnTrait;
+    use StealTrait;
 
     private static $instance;
 

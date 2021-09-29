@@ -25,7 +25,7 @@ abstract class SuperSerializer implements Serializer {
 
         foreach ($fields as $field) {
 //            if (isset($raw[$field->getDb()])) {
-                $raw[$field->getDb()] = $this->serializeValue($object, $field);
+            $raw[$field->getDb()] = $this->serializeValue($object, $field);
 //            }
         }
 
@@ -46,12 +46,12 @@ abstract class SuperSerializer implements Serializer {
      * @return type
      */
     abstract public function getModelClass();
-    
+
     /**
      * optionnal parmater to force array when only one result.
      * @return boolean
      */
-    protected function isArrayForced(){
+    protected function isArrayForced() {
         return false;
     }
 
@@ -101,7 +101,13 @@ abstract class SuperSerializer implements Serializer {
     private function unserializeValue(Model &$object, Field $field, $rawDatas) {
         $setter = "set" . ucfirst($field->getProperty());
         if (isset($rawDatas[$field->getDb()])) {
-            $object->$setter($rawDatas[$field->getDb()]);
+            switch ($field->getFieldType()) {
+                case Field::JSON_FORMAT:
+                    $object->$setter(json_decode($rawDatas[$field->getDb()]));
+                    break;
+                default :
+                    $object->$setter($rawDatas[$field->getDb()]);
+            }
         }
         return $this;
     }
