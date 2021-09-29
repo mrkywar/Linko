@@ -22,9 +22,21 @@ define([
                  *                  BEGIN - Btn Actions
                  * ---------------------------------------------------------- */
 
-                initalizeStealCollection: function () {
+                initalizeStealCollection: function (args) {
                     this.debug('stel init');
+
+                    this.addActionButton('stealCollection_button', _('Steal Collection'), 'onStealCollection', null, false, 'blue');
+                    this.addActionButton('discardCollection_button', _('Discard Collection'), 'onDiscardCollection', null, false, 'red');
+                },
+
+                onStealCollection: function () {
+
+                },
+
+                onDiscardCollection: function () {
+
                 }
+
 //                initalizeTakeCollection: function () {
 ////                    this.debug("args", args);
 //                    this.addActionButton('takeCollection_button', _('Steal Collection'), 'onStealSelection', null, false, 'red');

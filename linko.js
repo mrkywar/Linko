@@ -61,7 +61,7 @@ define([
                 onEnteringState: function (stateName, args)
                 {
                     this.debug('Entering state: ' + stateName);
-                    this.debug('Entering state arg', args);
+                    this.debug('Entering state args ', args);
 
                     switch (stateName)
                     {
@@ -72,7 +72,7 @@ define([
                             break;
                         case "takeCollection":
                             if (this.isCurrentPlayerActive()) {
-                                this.initalizeStealCollection();
+                                this.initalizeStealCollection(args);
                             }
                             break;
 //                        this.isCurrentPlayerActive()
