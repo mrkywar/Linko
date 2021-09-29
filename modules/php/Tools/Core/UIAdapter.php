@@ -2,6 +2,7 @@
 
 namespace Linko\Tools\Core;
 
+use Linko\Models\Core\Field;
 use Linko\Repository\Core\Repository;
 
 /**
@@ -20,7 +21,14 @@ abstract class UIAdapter {
     private static function adaptOnce(Repository $repo, $data) {
         $result = [];
         foreach ($repo->getUIFields() as $field) {
-            $result[$field->getDB()] = $data[$field->getDB()];
+            switch ($field->getFieldType()) {
+                case Field::JSON_FORMAT:
+                    $result[$field->getDB()] = json_decode($data[$field->getDB()]);
+                    break;
+                default :
+                    $result[$field->getDB()] = $data[$field->getDB()];
+                    break;
+            }
         }
         return $result;
     }
