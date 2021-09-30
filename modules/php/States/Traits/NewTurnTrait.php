@@ -26,7 +26,7 @@ trait NewTurnTrait {
 
         $stateManager = $this->getStateManager();
         $stateRepo = $stateManager->getRepository();
-        $stateOrder = $stateRepo->getNextOrder();
+        $stateOrder = $stateRepo->setDoUnserialization(true)->getNextOrder();
 
         $states = [];
         $states[] = StateFactory::create(ST_PLAYER_PLAY_NUMBER, $stateOrder, $activePlayer);

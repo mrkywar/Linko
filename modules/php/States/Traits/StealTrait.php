@@ -5,6 +5,7 @@ namespace Linko\States\Traits;
 use Linko\Managers\GlobalVarManager;
 use Linko\Managers\PlayerManager;
 use Linko\Models\GlobalVar;
+use Linko\Models\State;
 
 /**
  *
@@ -27,17 +28,26 @@ trait StealTrait {
                 ->getById($activePlayerId);
 
         $stateManager = $this->getStateManager();
-        $actualState = $stateManager
+        $rawState = $stateManager
                 ->getRepository()
                 ->setDoUnserialization(false)
                 ->getActualState();
-//        echo "<pre>";
-//        var_dump($actualState);die;
+        /**
+         * @var State
+         */
+        $actualState = $stateManager
+                ->getRepository()
+                ->setDoUnserialization(true)
+                ->getActualState();
+        
+        var_dump($actualState->getParams());die;
+
         return [
             '_private' => [
                 'active' => $rawPlayer,
+                'tarplayer' => $actualState->getParams()["targetPlayer"]
             ],
-            "actualState" => $actualState
+            "actualState" => $rawState
         ]; 
     }
 

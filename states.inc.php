@@ -113,8 +113,8 @@ $machinestates = [
     ],
     ST_PLAYER_TAKE_COLLECTION => [
         "name" => "takeCollection",
-        "description" => clienttranslate('${actplayer} can steal cards collection(s)'),
-        "descriptionmyturn" => clienttranslate('${you} can steal cards collection(s)'),
+        "description" => clienttranslate('${actplayer} can steal cards or have ${tarplayer} discard'),
+        "descriptionmyturn" => clienttranslate('${you} can steal cards or have ${tarplayer} discard'),
         "type" => "activeplayer",
         "args" => "argStealCollection",
         "action" => "stStealCollection",
