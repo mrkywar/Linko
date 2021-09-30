@@ -72,7 +72,7 @@ define([
                             break;
                         case "takeCollection":
                             if (this.isCurrentPlayerActive()) {
-                                this.initalizeStealCollection(args);
+                                this.initalizeStealCards(args);
                             }
                             break;
 //                        this.isCurrentPlayerActive()

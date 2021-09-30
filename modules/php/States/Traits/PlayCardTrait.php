@@ -93,7 +93,7 @@ trait PlayCardTrait {
 
         $stateManager = $this->getStateManager();
         $stateRepo = $stateManager->getRepository();
-        $endOfTurn = $stateRepo->getLastState();
+        $endOfTurn = $stateRepo->setDoUnserialization(true)->getLastState();
         $stateOrder = $endOfTurn->getOrder();
         $newStates = [];
         foreach ($players as $player) {

@@ -22,19 +22,19 @@ define([
                  *                  BEGIN - Btn Actions
                  * ---------------------------------------------------------- */
 
-                initalizeStealCollection: function (args) {
+                initalizeStealCards: function (args) {
                     this.debug('stel init', args.args.actualState.state_params.targetCollection);
                     dojo.query("#"+args.args.actualState.state_params.targetCollection).addClass("selected");
 
-                    this.addActionButton('stealCollection_button', _('Steal Collection'), 'onStealCollection', null, false, 'blue');
-                    this.addActionButton('discardCollection_button', _('Discard Collection'), 'onDiscardCollection', null, false, 'red');
+                    this.addActionButton('stealCard_button', _('Steal Cards'), 'onStealCard', null, false, 'blue');
+                    this.addActionButton('discardCard_button', _('Discard Cards'), 'onDiscardCard', null, false, 'red');
                 },
 
-                onStealCollection: function () {
+                onStealCard: function () {
 
                 },
 
-                onDiscardCollection: function () {
+                onDiscardCard: function () {
 
                 }
 

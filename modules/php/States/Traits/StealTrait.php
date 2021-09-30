@@ -39,19 +39,20 @@ trait StealTrait {
                 ->getRepository()
                 ->setDoUnserialization(true)
                 ->getActualState();
-        
-        var_dump($actualState->getParams());die;
+
+//        var_dump($actualState->getParams());die;
 
         return [
             '_private' => [
                 'active' => $rawPlayer,
-                'tarplayer' => $actualState->getParams()["targetPlayer"]
             ],
+            'tarplayer' => $actualState->getParams()->targetPlayer,
             "actualState" => $rawState
-        ]; 
+        ];
     }
 
     public function stStealCollection() {
+        
     }
 
 }
