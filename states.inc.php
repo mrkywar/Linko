@@ -118,7 +118,7 @@ $machinestates = [
         "type" => "activeplayer",
         "args" => "argStealCollection",
         "action" => "stStealCollection",
-        "possibleactions" => ["stealCollection","discardCollection"]
+        "possibleactions" => ["actionStealCards"]
     ],
     ST_PLAYER_DRAW => [
         "name" => "playerDraw",

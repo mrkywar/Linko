@@ -54,5 +54,16 @@ trait StealTrait {
     public function stStealCollection() {
         
     }
+    
+    
+    public function actionStealCards($action){
+        self::checkAction('actionStealCards');
+        
+        $stateManager = $this->getStateManager();
+        $actualState = $stateManager->getRepository()->getActualState();
+        
+        
+        var_dump($actualState);die;
+    }
 
 }

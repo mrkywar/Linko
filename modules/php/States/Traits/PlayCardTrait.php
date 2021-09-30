@@ -30,6 +30,7 @@ trait PlayCardTrait {
      * ---------------------------------------------------------------------- */
 
     public function actionPlayCards($rawCardIds) {
+        self::checkAction('playCards');
         Logger::log("Action Play Card " . $rawCardIds, "PCT-APC");
         $this->cardIds = explode(",", $rawCardIds);
 

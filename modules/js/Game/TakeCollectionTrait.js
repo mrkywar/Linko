@@ -24,18 +24,34 @@ define([
 
                 initalizeStealCards: function (args) {
                     this.debug('stel init', args.args.actualState.state_params.targetCollection);
-                    dojo.query("#"+args.args.actualState.state_params.targetCollection).addClass("selected");
+                    dojo.query("#" + args.args.actualState.state_params.targetCollection).addClass("selected");
 
                     this.addActionButton('stealCard_button', _('Steal Cards'), 'onStealCard', null, false, 'blue');
                     this.addActionButton('discardCard_button', _('Discard Cards'), 'onDiscardCard', null, false, 'red');
                 },
 
                 onStealCard: function () {
-
+                    this.ajaxcall("/" + this.game_name + "/" + this.game_name + "/stealCards.html", {
+                        lock: true,
+                        useraction: 'steal'
+                    }, this, function (result) {
+                        this.debug("Discard Card :", result);
+                    }, function (is_error) {
+                        //--error
+                        this.debug("Play fail:", is_error);
+                    });
                 },
 
                 onDiscardCard: function () {
-
+                    this.ajaxcall("/" + this.game_name + "/" + this.game_name + "/stealCards.html", {
+                        lock: true,
+                        useraction: 'discard'
+                    }, this, function (result) {
+                        this.debug("Discard Card :", result);
+                    }, function (is_error) {
+                        //--error
+                        this.debug("Play fail:", is_error);
+                    });
                 }
 
 //                initalizeTakeCollection: function () {
