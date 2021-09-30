@@ -62,6 +62,13 @@ trait StealTrait {
         $stateManager = $this->getStateManager();
         $actualState = $stateManager->getRepository()->getActualState();
         
+        $cardManager = $this->getCardManager();
+        $cardRepo = $cardManager->getRepository();
+        
+        
+//        $cards = 
+        
+        
         
         var_dump($actualState);die;
     }

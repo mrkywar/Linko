@@ -111,6 +111,8 @@ trait PlayCardTrait {
 
                 $takeParam = [
                     "targetCollection" => Deck::COLLECTION_NAME . "_" . $targetPlayerId . "_" . $targetCollection->getCollectionIndex(),
+                    "location" => $targetCollection->getCardAt()->getLocation(),
+                    "locationArg" => $targetCollection->getCardAt()->getLocationArg(),
                     "targetPlayer" => $targetCollection->getPlayer()->getName()
                 ];
                 $newStates[] = StateFactory::create(ST_PLAYER_TAKE_COLLECTION, $stateOrder, $activePlayerId, $takeParam);
