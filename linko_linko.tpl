@@ -60,7 +60,7 @@
     `;
     
     var jstpl_discard = `
-        <div class="cardontable discard card_\${last}">
+        <div class="cardontable discard card_\${last}" id="discard">
             <div class="count-status">\${discard}</div>
         </div>
     `;

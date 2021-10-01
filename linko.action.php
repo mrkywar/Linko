@@ -42,4 +42,12 @@ class action_linko extends APP_GameAction {
         self::ajaxResponse();
     }
 
+    public function stealCards() {
+        self::setAjaxMode();
+        
+        $userAction = self::getArg("useraction", AT_alphanum, true);
+        
+        $this->game->actionStealCards($userAction);
+        self::ajaxResponse();
+    }
 }

@@ -61,7 +61,7 @@ define([
                 onEnteringState: function (stateName, args)
                 {
                     this.debug('Entering state: ' + stateName);
-                    this.debug('Entering state arg', args);
+                    this.debug('Entering state args ', args);
 
                     switch (stateName)
                     {
@@ -72,7 +72,7 @@ define([
                             break;
                         case "takeCollection":
                             if (this.isCurrentPlayerActive()) {
-                                this.initalizeStealCollection();
+                                this.initalizeStealCards(args);
                             }
                             break;
 //                        this.isCurrentPlayerActive()
@@ -219,8 +219,10 @@ define([
                 {
                     this.debug('notifications subscriptions setup');
 
-
                     dojo.subscribe('playNumber', this, "notifPlayNumber");
+                    dojo.subscribe('stealCard', this, "notifStealCard");
+                    dojo.subscribe('discardCard', this, "notifDiscardCard");
+                    
 
                     // TODO: here, associate your game notifications with local methods
 

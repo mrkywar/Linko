@@ -66,8 +66,8 @@ define([
                 onClickCard(targetedCard) {
                     var card = this.getCardInHand(targetedCard);
                     var cardType = card.card_type;
-                    
-                    if (! targetedCard.target.attributes['class'].value.indexOf("selectable") > 0) {
+
+                    if (targetedCard.target.attributes['class'].value.indexOf("selectable") < 0) {
                         return; //ignore when not selectable
                     }
 

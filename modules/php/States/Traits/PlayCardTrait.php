@@ -30,6 +30,7 @@ trait PlayCardTrait {
      * ---------------------------------------------------------------------- */
 
     public function actionPlayCards($rawCardIds) {
+        self::checkAction('playCards');
         Logger::log("Action Play Card " . $rawCardIds, "PCT-APC");
         $this->cardIds = explode(",", $rawCardIds);
 
@@ -93,7 +94,7 @@ trait PlayCardTrait {
 
         $stateManager = $this->getStateManager();
         $stateRepo = $stateManager->getRepository();
-        $endOfTurn = $stateRepo->getLastState();
+        $endOfTurn = $stateRepo->setDoUnserialization(true)->getLastState();
         $stateOrder = $endOfTurn->getOrder();
         $newStates = [];
         foreach ($players as $player) {
@@ -110,6 +111,9 @@ trait PlayCardTrait {
 
                 $takeParam = [
                     "targetCollection" => Deck::COLLECTION_NAME . "_" . $targetPlayerId . "_" . $targetCollection->getCollectionIndex(),
+                    "location" => $targetCollection->getCardAt()->getLocation(),
+                    "locationArg" => $targetCollection->getCardAt()->getLocationArg(),
+                    "targetPlayer" => $targetCollection->getPlayer()->getName()
                 ];
                 $newStates[] = StateFactory::create(ST_PLAYER_TAKE_COLLECTION, $stateOrder, $activePlayerId, $takeParam);
                 $targetParam = [

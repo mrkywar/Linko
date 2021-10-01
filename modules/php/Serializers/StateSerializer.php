@@ -20,4 +20,8 @@ class StateSerializer extends SuperSerializer {
         return State::class;
     }
 
+    
+    protected function isArrayForced() {
+        return false;
+    }
 }

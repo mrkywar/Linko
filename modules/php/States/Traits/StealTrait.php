@@ -2,9 +2,13 @@
 
 namespace Linko\States\Traits;
 
+use Linko\CardsCollection\CardsToCollectionTransformer;
+use Linko\CardsCollection\Collection;
+use Linko\Managers\Deck\Deck;
 use Linko\Managers\GlobalVarManager;
 use Linko\Managers\PlayerManager;
 use Linko\Models\GlobalVar;
+use Linko\Models\State;
 
 /**
  *
@@ -14,6 +18,11 @@ trait StealTrait {
     /* -------------------------------------------------------------------------
      *            BEGIN - Display
      * ---------------------------------------------------------------------- */
+
+    /**
+     * @var Collection
+     */
+    private $collection;
 
     public function argStealCollection() {
         /**
@@ -27,20 +36,120 @@ trait StealTrait {
                 ->getById($activePlayerId);
 
         $stateManager = $this->getStateManager();
-        $actualState = $stateManager
+        $rawState = $stateManager
                 ->getRepository()
                 ->setDoUnserialization(false)
                 ->getActualState();
-//        var_dump($actualState);die;
+        /**
+         * @var State
+         */
+        $actualState = $stateManager
+                ->getRepository()
+                ->setDoUnserialization(true)
+                ->getActualState();
+
         return [
             '_private' => [
                 'active' => $rawPlayer,
             ],
-            "actualState" => $actualState
-        ]; 
+            'tarplayer' => $actualState->getParams()->targetPlayer,
+            "actualState" => $rawState
+        ];
     }
 
     public function stStealCollection() {
+        
+    }
+
+    public function actionStealCards($userAction) {
+        self::checkAction('actionStealCards');
+
+        $stateManager = $this->getStateManager();
+        $actualState = $stateManager->getRepository()->getActualState();
+
+        $cardManager = $this->getCardManager();
+        $cardRepo = $cardManager
+                ->getRepository();
+
+        $cards = $cardRepo->setDoUnserialization(true)
+                ->getCardsInLocation($actualState->getParams()->location, $actualState->getParams()->locationArg);
+        $player = $this->getPlayerManager()
+                ->getRepository()
+                ->setDoUnserialization(true)
+                ->getById(self::getActivePlayerId());
+        $this->collection = CardsToCollectionTransformer::adapt($cards);
+        $this->collection->setPlayer($player);
+
+        switch (strtolower($userAction)) {
+            case "steal":
+                $this->sendStealNotification();
+                $cardRepo->moveCardsToLocation(
+                        $cards,
+                        Deck::HAND_NAME,
+                        $player->getId()
+                );
+
+                break;
+            case "discard":
+                $this->sendDiscardNotification();
+                $cardRepo->moveCardsToLocation(
+                        $cards,
+                        Deck::DISCARD_NAME,
+                        $cardRepo->getNextDiscardLocationArg()
+                );
+
+                break;
+            default :
+                throw new \BgaUserException(self::_("Invalid Action"));
+        }
+    }
+
+    private function sendStealNotification() {
+        $cardRepo = $this->getCardManager()->getRepository();
+
+        $stateManager = $this->getStateManager();
+        $actualState = $stateManager->getRepository()->getActualState();
+
+        $cardIds = [];
+        foreach ($this->collection->getCards() as $card) {
+            $cardIds[] = $card->getId();
+        }
+
+        self::notifyAllPlayers("stealCard", clienttranslate('${playerName} steal ${count} cards to ${targetPlayer}'),
+                [
+                    'playerId' => $this->collection->getPlayer()->getId(),
+                    'playerName' => $this->collection->getPlayer()->getName(),
+                    'count' => $this->collection->getCountCards(),
+                    'number' => $this->collection->getNumber(),
+                    'cards' => $cardRepo->setDoUnserialization(false)
+                            ->getById($cardIds),
+                    'targetPlayer' => $actualState->getParams()->targetPlayer
+                ]
+        );
+    }
+
+    private function sendDiscardNotification() {
+        $cardRepo = $this->getCardManager()->getRepository();
+
+        $stateManager = $this->getStateManager();
+        $actualState = $stateManager->getRepository()->getActualState();
+
+        $cardIds = [];
+        foreach ($this->collection->getCards() as $card) {
+            $cardIds[] = $card->getId();
+        }
+
+        self::notifyAllPlayers("discardCard", clienttranslate('${playerName} make discard ${count} cards to ${targetPlayer}'),
+                [
+                    'playerId' => $this->collection->getPlayer()->getId(),
+                    'playerName' => $this->collection->getPlayer()->getName(),
+                    'count' => $this->collection->getCountCards(),
+                    'number' => $this->collection->getNumber(),
+                    'cards' => $cardRepo->setDoUnserialization(false)
+                            ->getById($cardIds),
+                    'targetPlayer' => $actualState->getParams()->targetPlayer
+                ]
+        );
     }
 
 }
