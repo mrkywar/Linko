@@ -70,12 +70,26 @@ define([
                         } else {
                             this.debug("NSC - NOT IMPLENTED PART");
                         }
-                        
+
                     }
                 },
 
                 notifDiscardCard: function (datas) {
                     this.debug('NDC', datas.args);
+                    for (var cardId in datas.args.cards) {
+                        var card = datas.args.cards[cardId];
+
+                        var divId = card.card_location + "_card_" + card.card_id;
+                        this.slideToObjectAndDestroy(divId, "discard");
+
+                        dojo.query("#discard").removeClass('card_empty card_1 card_2 card_3 card_4 card_5 card_6 card_7 card_8 card_9 card_10 card_11 card_12 card_13 card_14')
+                                .addClass('card_' + card.card_type);
+                    }
+
+                    var divCount = dojo.query("#discard .count-status");
+                    var newVal = parseInt(divCount.innerHTML()) + datas.args.cards.length;
+
+                    divCount.innerHTML(newVal);
                 }
 
             });
