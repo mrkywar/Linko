@@ -68,7 +68,7 @@ trait StealTrait {
 
         $stateManager = $this->getStateManager();
         $actualState = $stateManager->getRepository()->getActualState();
-        
+
 //        var_dump($actualState);die;
 
         $cardManager = $this->getCardManager();
@@ -83,7 +83,7 @@ trait StealTrait {
                 ->getById(self::getActivePlayerId());
         $this->collection = CardsToCollectionTransformer::adapt($cards);
         $this->collection->setPlayer($player)
-                ;
+        ;
 
         switch (strtolower($userAction)) {
             case "steal":
@@ -95,27 +95,54 @@ trait StealTrait {
                 $this->sendStealNotification();
                 break;
             case "discard":
-                throw new \BgaUserException(self::_("Not implemented"));
-//                break;
+                $cardRepo->moveCardsToLocation(
+                        $cards,
+                        Deck::DISCARD_NAME,
+                        $cardRepo->getNextDiscardLocationArg()
+                );
+                $this->sendDiscardNotification();
+                break;
             default :
                 throw new \BgaUserException(self::_("Invalid Action"));
         }
-
     }
 
     private function sendStealNotification() {
         $cardRepo = $this->getCardManager()->getRepository();
-        
-        
+
         $stateManager = $this->getStateManager();
         $actualState = $stateManager->getRepository()->getActualState();
-        
-        $cardIds= [];
-        foreach ($this->collection->getCards() as $card){
+
+        $cardIds = [];
+        foreach ($this->collection->getCards() as $card) {
             $cardIds[] = $card->getId();
         }
 
         self::notifyAllPlayers("stealCard", clienttranslate('${playerName} steal ${count} cards to ${targetPlayer}'),
+                [
+                    'playerId' => $this->collection->getPlayer()->getId(),
+                    'playerName' => $this->collection->getPlayer()->getName(),
+                    'count' => $this->collection->getCountCards(),
+                    'number' => $this->collection->getNumber(),
+                    'cards' => $cardRepo->setDoUnserialization(false)
+                            ->getById($cardIds),
+                    'targetPlayer' => $actualState->getParams()->targetPlayer
+                ]
+        );
+    }
+    
+    private function sendDiscardNotification() {
+        $cardRepo = $this->getCardManager()->getRepository();
+
+        $stateManager = $this->getStateManager();
+        $actualState = $stateManager->getRepository()->getActualState();
+
+        $cardIds = [];
+        foreach ($this->collection->getCards() as $card) {
+            $cardIds[] = $card->getId();
+        }
+
+        self::notifyAllPlayers("discardCard", clienttranslate('${playerName} make discard ${count} cards to ${targetPlayer}'),
                 [
                     'playerId' => $this->collection->getPlayer()->getId(),
                     'playerName' => $this->collection->getPlayer()->getName(),

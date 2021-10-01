@@ -162,8 +162,7 @@ class CardRepository extends SuperRepository {
     }
 
     /* -------------------------------------------------------------------------
-     *            BEGIN - Specific Repository Methods 
-     *              Collection support
+     *            BEGIN - Collection Methods
      * ---------------------------------------------------------------------- */
 
     public function getNextCollectionIndex($playerId) {
@@ -200,6 +199,29 @@ class CardRepository extends SuperRepository {
                 ->addClause($locationArgField, $maxIndex);
 
         return $this->execute($qb);
+    }
+
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Discard Methods
+     * ---------------------------------------------------------------------- */
+
+    public function getNextDiscardLocationArg() {
+        $locationArgField = $this->getFieldByProperty("locationArg");
+        $locationField = $this->getFieldByProperty("location");
+
+        $qb = $this->getQueryBuilder()
+                ->select()
+                ->addClause($locationField, Deck::DISCARD_NAME)
+                ->addOrderBy($locationArgField, QueryString::ORDER_DESC)
+                ->setLimit(1);
+
+        $result = $this->execute($qb);
+        if (null === $result) {
+            // No collection for this player
+            return 1;
+        } else {
+            return $result[0]->getLocationArg() + 1;
+        }
     }
 
 }
