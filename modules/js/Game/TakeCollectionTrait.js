@@ -52,13 +52,21 @@ define([
                         //--error
                         this.debug("Play fail:", is_error);
                     });
+                },
+
+                /* -------------------------------------------------------------
+                 *                  BEGIN - Notifications
+                 * ---------------------------------------------------------- */
+
+                notifStealCard: function (datas) {
+                    this.debug('NSC', datas.args);
+
+                },
+
+                notifDiscardCard: function (datas) {
+                    this.debug('NDC', datas.args);
                 }
 
-//                initalizeTakeCollection: function () {
-////                    this.debug("args", args);
-//                    this.addActionButton('takeCollection_button', _('Steal Collection'), 'onStealSelection', null, false, 'red');
-//                    this.addActionButton('unselectSelection_button', _('Reset'), 'onSelectionReset', null, false, 'gray');
-//                }
             });
 
 

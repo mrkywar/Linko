@@ -48,8 +48,6 @@ trait StealTrait {
                 ->setDoUnserialization(true)
                 ->getActualState();
 
-//        var_dump($actualState->getParams());die;
-
         return [
             '_private' => [
                 'active' => $rawPlayer,
@@ -69,8 +67,6 @@ trait StealTrait {
         $stateManager = $this->getStateManager();
         $actualState = $stateManager->getRepository()->getActualState();
 
-//        var_dump($actualState);die;
-
         $cardManager = $this->getCardManager();
         $cardRepo = $cardManager
                 ->getRepository();
@@ -82,25 +78,26 @@ trait StealTrait {
                 ->setDoUnserialization(true)
                 ->getById(self::getActivePlayerId());
         $this->collection = CardsToCollectionTransformer::adapt($cards);
-        $this->collection->setPlayer($player)
-        ;
+        $this->collection->setPlayer($player);
 
         switch (strtolower($userAction)) {
             case "steal":
+                $this->sendStealNotification();
                 $cardRepo->moveCardsToLocation(
                         $cards,
                         Deck::HAND_NAME,
                         $player->getId()
                 );
-                $this->sendStealNotification();
+
                 break;
             case "discard":
+                $this->sendDiscardNotification();
                 $cardRepo->moveCardsToLocation(
                         $cards,
                         Deck::DISCARD_NAME,
                         $cardRepo->getNextDiscardLocationArg()
                 );
-                $this->sendDiscardNotification();
+
                 break;
             default :
                 throw new \BgaUserException(self::_("Invalid Action"));
@@ -130,7 +127,7 @@ trait StealTrait {
                 ]
         );
     }
-    
+
     private function sendDiscardNotification() {
         $cardRepo = $this->getCardManager()->getRepository();
 

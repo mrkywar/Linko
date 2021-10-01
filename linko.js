@@ -219,8 +219,10 @@ define([
                 {
                     this.debug('notifications subscriptions setup');
 
-
                     dojo.subscribe('playNumber', this, "notifPlayNumber");
+                    dojo.subscribe('stealCard', this, "notifStealCard");
+                    dojo.subscribe('discardCard', this, "notifDiscardCard");
+                    
 
                     // TODO: here, associate your game notifications with local methods
 
