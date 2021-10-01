@@ -68,6 +68,8 @@ trait StealTrait {
 
         $stateManager = $this->getStateManager();
         $actualState = $stateManager->getRepository()->getActualState();
+        
+//        var_dump($actualState);die;
 
         $cardManager = $this->getCardManager();
         $cardRepo = $cardManager
@@ -80,7 +82,8 @@ trait StealTrait {
                 ->setDoUnserialization(true)
                 ->getById(self::getActivePlayerId());
         $this->collection = CardsToCollectionTransformer::adapt($cards);
-        $this->collection->setPlayer($player);
+        $this->collection->setPlayer($player)
+                ;
 
         switch (strtolower($userAction)) {
             case "steal":
@@ -98,20 +101,14 @@ trait StealTrait {
                 throw new \BgaUserException(self::_("Invalid Action"));
         }
 
-
-//        var_dump($cards);
-//        die;
-//
-////        $cards = 
-//
-//
-//
-//        var_dump($actualState);
-//        die;
     }
 
     private function sendStealNotification() {
         $cardRepo = $this->getCardManager()->getRepository();
+        
+        
+        $stateManager = $this->getStateManager();
+        $actualState = $stateManager->getRepository()->getActualState();
         
         $cardIds= [];
         foreach ($this->collection->getCards() as $card){
@@ -125,7 +122,8 @@ trait StealTrait {
                     'count' => $this->collection->getCountCards(),
                     'number' => $this->collection->getNumber(),
                     'cards' => $cardRepo->setDoUnserialization(false)
-                            ->getById($cardIds)
+                            ->getById($cardIds),
+                    'targetPlayer' => $actualState->getParams()->targetPlayer
                 ]
         );
     }
