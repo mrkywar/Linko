@@ -60,7 +60,18 @@ define([
 
                 notifStealCard: function (datas) {
                     this.debug('NSC', datas.args);
+                    for (var cardId in datas.args.cards) {
+                        var card = datas.args.cards[cardId];
 
+                        var divId = card.card_location + "_card_" + card.card_id;
+                        if (parseInt(datas.args.playerId) === this.player_id) {
+                            this.slideToObjectAndDestroy(divId, "myhand");
+                            dojo.place(this.format_block('jstpl_card', card), "myhand");
+                        } else {
+                            this.debug("NSC - NOT IMPLENTED PART");
+                        }
+                        
+                    }
                 },
 
                 notifDiscardCard: function (datas) {
