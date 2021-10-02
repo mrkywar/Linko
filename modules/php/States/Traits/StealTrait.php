@@ -17,50 +17,8 @@ use Linko\Models\State;
  */
 trait StealTrait {
     /* -------------------------------------------------------------------------
-     *            BEGIN - Display
+     *            BEGIN - Action
      * ---------------------------------------------------------------------- */
-
-    /**
-     * @var Collection
-     */
-    private $collection;
-
-    public function argStealCollection() {
-        /**
-         * @var PlayerManager
-         */
-        $playerManager = $this->getPlayerManager();
-        $activePlayerId = GlobalVarManager::getVar(GlobalVar::ACTIVE_PLAYER)->getValue();
-        $rawPlayer = $playerManager
-                ->getRepository()
-                ->setDoUnserialization(false)
-                ->getById($activePlayerId);
-
-        $stateManager = $this->getStateManager();
-        $rawState = $stateManager
-                ->getRepository()
-                ->setDoUnserialization(false)
-                ->getActualState();
-        /**
-         * @var State
-         */
-        $actualState = $stateManager
-                ->getRepository()
-                ->setDoUnserialization(true)
-                ->getActualState();
-
-        return [
-            '_private' => [
-                'active' => $rawPlayer,
-            ],
-            'tarplayer' => $actualState->getParams()->targetPlayer,
-            "actualState" => $rawState
-        ];
-    }
-
-    public function stStealCollection() {
-        
-    }
 
     public function actionStealCards($userAction) {
         self::checkAction('actionStealCards');
@@ -108,7 +66,7 @@ trait StealTrait {
 
         Logger::log("NextState : " . $newState->getState());
         $this->gamestate->jumpToState($newState->getState());
-        $this->gamestate->changeActivePlayer($newState->getPlayerId());
+//        $this->gamestate->changeActivePlayer($newState->getPlayerId());
     }
 
     private function sendStealNotification() {
@@ -157,6 +115,52 @@ trait StealTrait {
                     'targetPlayer' => $actualState->getParams()->targetPlayer
                 ]
         );
+    }
+
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Display
+     * ---------------------------------------------------------------------- */
+
+    /**
+     * @var Collection
+     */
+    private $collection;
+
+    public function argStealCollection() {
+        /**
+         * @var PlayerManager
+         */
+        $playerManager = $this->getPlayerManager();
+        $activePlayerId = GlobalVarManager::getVar(GlobalVar::ACTIVE_PLAYER)->getValue();
+        $rawPlayer = $playerManager
+                ->getRepository()
+                ->setDoUnserialization(false)
+                ->getById($activePlayerId);
+
+        $stateManager = $this->getStateManager();
+        $rawState = $stateManager
+                ->getRepository()
+                ->setDoUnserialization(false)
+                ->getActualState();
+        /**
+         * @var State
+         */
+        $actualState = $stateManager
+                ->getRepository()
+                ->setDoUnserialization(true)
+                ->getActualState();
+
+        return [
+            '_private' => [
+                'active' => $rawPlayer,
+            ],
+            'tarplayer' => $actualState->getParams()->targetPlayer,
+            "actualState" => $rawState
+        ];
+    }
+
+    public function stStealCollection() {
+        
     }
 
 }
