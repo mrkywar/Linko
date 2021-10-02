@@ -92,10 +92,10 @@ trait PlayCardTrait {
                 ->getAll();
         $cardRepo->setDoUnserialization(true);
 
-        $stateManager = $this->getStateManager();
-        $stateRepo = $stateManager->getRepository();
-        $endOfTurn = $stateRepo->setDoUnserialization(true)->getLastState();
-        $stateOrder = $endOfTurn->getOrder();
+//        $stateManager = $this->getStateManager();
+//        $stateRepo = $stateManager->getRepository();
+//        $endOfTurn = $stateRepo->setDoUnserialization(true)->getLastState();
+//        $stateOrder = $endOfTurn->getOrder();
         $newStates = [];
         foreach ($players as $player) {
             $lastCardsPlayed = $cardRepo->getLastPlayedCards($player->getId());
@@ -106,21 +106,21 @@ trait PlayCardTrait {
             $targetCollection->setPlayer($player);
             if ($targetCollection->isTakeableFor($this->collection)) {
 
-                $activePlayerId = $this->collection->getPlayer()->getId();
-                $targetPlayerId = $targetCollection->getPlayer()->getId();
-
-                $takeParam = [
-                    "targetCollection" => Deck::COLLECTION_NAME . "_" . $targetPlayerId . "_" . $targetCollection->getCollectionIndex(),
-                    "location" => $targetCollection->getCardAt()->getLocation(),
-                    "locationArg" => $targetCollection->getCardAt()->getLocationArg(),
-                    "targetPlayer" => $targetCollection->getPlayer()->getName()
-                ];
-                $newStates[] = StateFactory::create(ST_PLAYER_TAKE_COLLECTION, $stateOrder, $activePlayerId, $takeParam);
-                $targetParam = [
-                    "numberOfCards" => $this->collection->getCountCards()
-                ];
-                $newStates[] = StateFactory::create(ST_PLAYER_DRAW, $stateOrder, $targetPlayerId, $targetParam);
-                $stateRepo->create($newStates);
+//                $activePlayerId = $this->collection->getPlayer()->getId();
+//                $targetPlayerId = $targetCollection->getPlayer()->getId();
+//
+//                $takeParam = [
+//                    "targetCollection" => Deck::COLLECTION_NAME . "_" . $targetPlayerId . "_" . $targetCollection->getCollectionIndex(),
+//                    "location" => $targetCollection->getCardAt()->getLocation(),
+//                    "locationArg" => $targetCollection->getCardAt()->getLocationArg(),
+//                    "targetPlayer" => $targetCollection->getPlayer()->getName()
+//                ];
+//                $newStates[] = StateFactory::create(ST_PLAYER_TAKE_COLLECTION, $stateOrder, $activePlayerId, $takeParam);
+//                $targetParam = [
+//                    "numberOfCards" => $this->collection->getCountCards()
+//                ];
+//                $newStates[] = StateFactory::create(ST_PLAYER_DRAW, $stateOrder, $targetPlayerId, $targetParam);
+//                $stateRepo->create($newStates);
             }
         }
         if (!empty($newStates)) {

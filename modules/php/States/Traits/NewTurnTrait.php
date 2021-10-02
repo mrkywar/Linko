@@ -30,7 +30,7 @@ trait NewTurnTrait {
 
         $states = [];
         $states[] = StateFactory::create(ST_PLAYER_PLAY_NUMBER, $stateOrder, $activePlayer);
-        $states[] = StateFactory::create(ST_END_OF_TURN, $stateOrder);
+        $states[] = StateFactory::create(ST_END_OF_TURN, $stateOrder, $activePlayer);
 
         GlobalVarManager::setVar(GlobalVar::ACTIVE_PLAYER, $activePlayer);
 

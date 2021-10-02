@@ -94,6 +94,15 @@ $machinestates = [
             '' => ST_RESOLVE_STATE,
         ],
     ],
+    ST_END_OF_STEAL => [
+        'name' => 'endOfSteal',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stEndOfSteal',
+        'transitions' => [
+            '' => ST_RESOLVE_STATE,
+        ],
+    ],
     ST_RESOLVE_STATE => [
         'name' => 'resolveStack',
         'description' => '',
