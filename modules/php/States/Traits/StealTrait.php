@@ -6,6 +6,7 @@ use Linko\CardsCollection\CardsToCollectionTransformer;
 use Linko\CardsCollection\Collection;
 use Linko\Managers\Deck\Deck;
 use Linko\Managers\GlobalVarManager;
+use Linko\Managers\Logger;
 use Linko\Managers\PlayerManager;
 use Linko\Models\GlobalVar;
 use Linko\Models\State;
@@ -102,6 +103,12 @@ trait StealTrait {
             default :
                 throw new \BgaUserException(self::_("Invalid Action"));
         }
+
+        $newState = $stateManager->closeActualState();
+
+        Logger::log("NextState : " . $newState->getState());
+        $this->gamestate->jumpToState($newState->getState());
+        $this->gamestate->changeActivePlayer($newState->getPlayerId());
     }
 
     private function sendStealNotification() {
