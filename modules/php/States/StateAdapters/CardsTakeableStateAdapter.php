@@ -5,18 +5,19 @@ namespace Linko\States\StateAdapters;
 use Linko;
 use Linko\CardsCollection\Collection;
 use Linko\Managers\Deck\Deck;
+use Linko\Managers\Logger;
 use Linko\Managers\StateManager;
 use Linko\Models\Factories\StateFactory;
+use Linko\Models\Player;
 use Linko\Models\State;
 use Linko\Repository\StateRepository;
-use Linko\Models\Player;
 
 /**
  * Description of CollectionTakeableStateFactory
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class CollectionTakeableStateAdapter {
+class CardsTakeableStateAdapter {
 
     /**
      * 
@@ -83,6 +84,12 @@ class CollectionTakeableStateAdapter {
                             "numberOfCards" => $targetedCollection->getCountCards()
                         ]
         );
+
+        //-- Insert new states
+        $this->stateRepository->create($states);
+        Logger::log("Add ".count($states)." states ");
+        
+//        var_dump($states);
 
         //---- LAST STATE UPD
         $lastState->setOrder($stateOrder);

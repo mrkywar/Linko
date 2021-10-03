@@ -9,7 +9,7 @@ use Linko\Managers\GlobalVarManager;
 use Linko\Managers\Logger;
 use Linko\Managers\PlayerManager;
 use Linko\Models\GlobalVar;
-use Linko\States\StateAdapters\CollectionTakeableStateAdapter;
+use Linko\States\StateAdapters\CardsTakeableStateAdapter;
 
 /**
  * Description of PlayCardTrait
@@ -100,12 +100,14 @@ trait PlayCardTrait {
             $targetCollection = CardsToCollectionTransformer::adapt($lastCardsPlayed);
             $targetCollection->setPlayer($player);
             if ($targetCollection->isTakeableFor($this->collection)) {
-                $adapter = new CollectionTakeableStateAdapter();
+                $adapter = new CardsTakeableStateAdapter();
                 $adapter->adapt($this->collection->getPlayer(), $targetCollection);
             }
         }
         $stateManager = $this->getStateManager();
         $newState = $stateManager->closeActualState();
+        
+//        var_dump($newState);die;
 
         Logger::log("NextState : " . $newState->getState());
         $this->gamestate->jumpToState($newState->getState());
