@@ -120,8 +120,8 @@ $machinestates = [
         "action" => "stPlayCards",
         "possibleactions" => ["playCards"]
     ],
-    ST_PLAYER_TAKE_COLLECTION => [
-        "name" => "takeCollection",
+    ST_PLAYER_STEAL_CARDS => [
+        "name" => "stealCards",
         "description" => clienttranslate('${actplayer} can steal cards or have ${tarplayer} discard'),
         "descriptionmyturn" => clienttranslate('${you} can steal cards or have ${tarplayer} discard'),
         "type" => "activeplayer",

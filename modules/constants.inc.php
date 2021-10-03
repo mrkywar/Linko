@@ -13,7 +13,7 @@ define("ST_END_OF_STEAL", 4);
 
 //-- Player Action
 define("ST_PLAYER_PLAY_NUMBER",10);
-define("ST_PLAYER_TAKE_COLLECTION",11);
+define("ST_PLAYER_STEAL_CARDS",11);
 define("ST_PLAYER_DRAW",12);
 
 

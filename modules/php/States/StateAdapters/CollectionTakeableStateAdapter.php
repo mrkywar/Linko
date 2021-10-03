@@ -56,7 +56,7 @@ class CollectionTakeableStateAdapter {
 
         //---- STATE STEAL CARD
         $states[] = StateFactory::create(
-                        ST_PLAYER_TAKE_COLLECTION,
+                        ST_PLAYER_STEAL_CARDS,
                         $stateOrder,
                         $activePlayerId,
                         [
