@@ -8,8 +8,8 @@ use Linko\Managers\Deck\Deck;
 use Linko\Managers\GlobalVarManager;
 use Linko\Managers\Logger;
 use Linko\Managers\PlayerManager;
-use Linko\Models\Factories\StateFactory;
 use Linko\Models\GlobalVar;
+use Linko\States\StateAdapters\CollectionTakeableStateAdapter;
 
 /**
  * Description of PlayCardTrait
@@ -92,11 +92,6 @@ trait PlayCardTrait {
                 ->getAll();
         $cardRepo->setDoUnserialization(true);
 
-//        $stateManager = $this->getStateManager();
-//        $stateRepo = $stateManager->getRepository();
-//        $endOfTurn = $stateRepo->setDoUnserialization(true)->getLastState();
-//        $stateOrder = $endOfTurn->getOrder();
-        $newStates = [];
         foreach ($players as $player) {
             $lastCardsPlayed = $cardRepo->getLastPlayedCards($player->getId());
             if (null === $lastCardsPlayed) {
@@ -105,30 +100,11 @@ trait PlayCardTrait {
             $targetCollection = CardsToCollectionTransformer::adapt($lastCardsPlayed);
             $targetCollection->setPlayer($player);
             if ($targetCollection->isTakeableFor($this->collection)) {
-
-//                $activePlayerId = $this->collection->getPlayer()->getId();
-//                $targetPlayerId = $targetCollection->getPlayer()->getId();
-//
-//                $takeParam = [
-//                    "targetCollection" => Deck::COLLECTION_NAME . "_" . $targetPlayerId . "_" . $targetCollection->getCollectionIndex(),
-//                    "location" => $targetCollection->getCardAt()->getLocation(),
-//                    "locationArg" => $targetCollection->getCardAt()->getLocationArg(),
-//                    "targetPlayer" => $targetCollection->getPlayer()->getName()
-//                ];
-//                $newStates[] = StateFactory::create(ST_PLAYER_TAKE_COLLECTION, $stateOrder, $activePlayerId, $takeParam);
-//                $targetParam = [
-//                    "numberOfCards" => $this->collection->getCountCards()
-//                ];
-//                $newStates[] = StateFactory::create(ST_PLAYER_DRAW, $stateOrder, $targetPlayerId, $targetParam);
-//                $stateRepo->create($newStates);
+                $adapter = new CollectionTakeableStateAdapter();
+                $adapter->adapt($this->collection->getPlayer(), $targetCollection);
             }
         }
-        if (!empty($newStates)) {
-            $endOfTurn->setOrder($stateOrder);
-            $stateRepo->update($endOfTurn);
-        }
-
-//        $stateManager = $this->getStateManager();
+        $stateManager = $this->getStateManager();
         $newState = $stateManager->closeActualState();
 
         Logger::log("NextState : " . $newState->getState());

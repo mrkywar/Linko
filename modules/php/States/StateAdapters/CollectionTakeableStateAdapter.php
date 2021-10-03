@@ -47,7 +47,7 @@ class CollectionTakeableStateAdapter {
     }
 
     public function adapt(Player $activePlayer, Collection $targetedCollection) {
-        $activePlayerId = $activePlayer->getPlayer()->getId();
+        $activePlayerId = $activePlayer->getId();
         $targetPlayerId = $targetedCollection->getPlayer()->getId();
 
         $states = [];

@@ -163,4 +163,21 @@ trait StealTrait {
         
     }
 
+    
+    /* -------------------------------------------------------------------------
+     *            BEGIN - End Of Steal
+     * ---------------------------------------------------------------------- */
+    public function stEndOfSteal(){
+        $stateManager = $this->getStateManager();
+        $actualState = $stateManager->getActualState();
+
+        $this->gamestate->changeActivePlayer($actualState->getPlayerId());
+        
+        $newState = $stateManager->closeActualState();
+
+        Logger::log("NextState : " . $newState->getState());
+        $this->gamestate->jumpToState($newState->getState());
+        $this->gamestate->changeActivePlayer($newState->getPlayerId());
+
+    }
 }

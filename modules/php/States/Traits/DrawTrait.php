@@ -27,7 +27,10 @@ trait DrawTrait {
                 ->setDoUnserialization(false)
                 ->getById($activePlayerId);
 
-        $actualState = $stateManager->getRepository()->getActualState();
+        $actualState = $stateManager->getRepository()
+                ->setDoUnserialization(true)
+                ->getActualState();
+//        var_dump($actualState);die;
 
         return [
             '_private' => [
