@@ -1,13 +1,14 @@
 <?php
 
 /*
-  From this file, you can edit the various meta-information of your game.
-  Once you modified the file, don't forget to click on "Reload game informations" from the Control Panel in order in can be taken into account.
-  See documentation about this file here:
-  http://en.doc.boardgamearena.com/Game_meta-information:_gameinfos.inc.php
- */
+    From this file, you can edit the various meta-information of your game.
 
+    Once you modified the file, don't forget to click on "Reload game informations" from the Control Panel in order in can be taken into account.
 
+    See documentation about this file here:
+    http://en.doc.boardgamearena.com/Game_meta-information:_gameinfos.inc.php
+
+*/
 
 $gameinfos = array( 
 
@@ -33,7 +34,7 @@ $gameinfos = array(
 'publisher_bgg_id' => 1234,
 
 // Board game geek ID of the game
-'bgg_id' => 153065,
+'bgg_id' => 37904,
 
 
 // Players configuration that can be played (ex: 2 to 4 players)

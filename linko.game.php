@@ -1,31 +1,5 @@
 <?php
 
-use Linko\Managers\CardManager;
-use Linko\Managers\Logger;
-use Linko\Managers\PlayerManager;
-use Linko\Managers\StateManager;
-use Linko\States\Traits\DrawTrait;
-use Linko\States\Traits\EndTurnTrait;
-use Linko\States\Traits\NewTurnTrait;
-use Linko\States\Traits\PlayCardTrait;
-use Linko\States\Traits\StealTrait;
-
-/**
- * ------
- * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * Linko implementation : © <Your name here> <Your email address here>
- * 
- * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
- * See http://en.boardgamearena.com/#!doc/Studio for more information.
- * -----
- * 
- * linko.game.php
- *
- * This is the main file for your game logic.
- *
- * In this PHP file, you are going to defines the rules of the game.
- *
- */
 $swdNamespaceAutoload = function ($class) {
     $classParts = explode('\\', $class);
     if ($classParts[0] == 'Linko') {
@@ -44,15 +18,13 @@ require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 
 class Linko extends Table {
 
-    use NewTurnTrait;
-    use PlayCardTrait;
-    use EndTurnTrait;
-    use StealTrait;
-    use DrawTrait;
-
-    private static $instance;
-
-    function __construct() {
+    public function __construct() {
+        // Your global variables labels:
+        //  Here, you can assign labels to global variables you are using for this game.
+        //  You can use any number of global variables with IDs between 10 and 99.
+        //  If your game has options (variants), you also have to associate here a label to
+        //  the corresponding ID in gameoptions.inc.php.
+        // Note: afterwards, you can get/set the global variables with getGameStateValue/setGameStateInitialValue/setGameStateValue
         parent::__construct();
 
         self::initGameStateLabels(array(
@@ -63,51 +35,12 @@ class Linko extends Table {
                 //    "my_second_game_variant" => 101,
                 //      ...
         ));
-
-        self::$instance = $this;
-    }
-
-    /* -------------------------------------------------------------------------
-     *                  BEGIN - Getters  
-     * ---------------------------------------------------------------------- */
-
-    public static function getInstance() {
-        return self::$instance;
     }
 
     protected function getGameName() {
         // Used for translations and stuff. Please do not modify.
         return "linko";
     }
-
-    public function getPlayerManager(): PlayerManager {
-        return PlayerManager::getInstance();
-    }
-
-    public function getCardManager(): CardManager {
-        return CardManager::getInstance();
-    }
-
-    public function getStateManager(): StateManager {
-        return StateManager::getInstance();
-    }
-
-
-    public function getLogger(): Logger {
-        return Logger::getInstance();
-    }
-
-    public function getCurrentPlayer() {
-        return self::getCurrentPlayerId();
-//        var_dump("??");die;
-//        return $this->playerManager
-//                ->getRepository()
-//                ->getById(self::getCurrentPlayerId());
-    }
-
-    /* -------------------------------------------------------------------------
-     *                  BEGIN - Required Game Methods 
-     * ---------------------------------------------------------------------- */
 
     /*
       setupNewGame:
@@ -117,15 +50,25 @@ class Linko extends Table {
       the game is ready to be played.
      */
 
-    protected function setupNewGame($rawPlayers, $options = array()) {
-        $players = $this->getPlayerManager()
-                ->initForNewGame($rawPlayers, $options);
-        $this->getCardManager()
-                ->initForNewGame($players, $options);
-        
-        $this->getStateManager()
-                ->initForNewGame($players, $options);
-        Logger::log("END setup game");
+    protected function setupNewGame($players, $options = array()) {
+        // Set the colors of the players with HTML color code
+        // The default below is red/green/blue/orange/brown
+        // The number of colors defined here must correspond to the maximum number of players allowed for the gams
+        $gameinfos = self::getGameinfos();
+        $default_colors = $gameinfos['player_colors'];
+
+        // Create players
+        // Note: if you added some extra field on "player" table in the database (dbmodel.sql), you can initialize it there.
+        $sql = "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar) VALUES ";
+        $values = array();
+        foreach ($players as $player_id => $player) {
+            $color = array_shift($default_colors);
+            $values[] = "('" . $player_id . "','$color','" . $player['player_canal'] . "','" . addslashes($player['player_name']) . "','" . addslashes($player['player_avatar']) . "')";
+        }
+        $sql .= implode($values, ',');
+        self::DbQuery($sql);
+        self::reattributeColorsBasedOnPreferences($players, $gameinfos['player_colors']);
+        self::reloadPlayersBasicInfos();
 
         /*         * ********** Start the game initialization **** */
 
@@ -137,7 +80,7 @@ class Linko extends Table {
         //self::initStat( 'player', 'player_teststat1', 0 );  // Init a player statistics (for all players)
         // TODO: setup the initial game situation here
         // Activate first player (which is in general a good idea :) )
-//        $this->activeNextPlayer();
+        $this->activeNextPlayer();
 
         /*         * ********** End of the game initialization **** */
     }
@@ -155,31 +98,14 @@ class Linko extends Table {
     protected function getAllDatas() {
         $result = array();
 
-        $playerRepo = $this->getPlayerManager()->getRepository();
-        $cardRepo = $this->getCardManager()->getRepository();
+        $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
+        // Get information about players
+        // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
+        $sql = "SELECT player_id id, player_score score FROM player ";
+        $result['players'] = self::getCollectionFromDb($sql);
 
-        $result['players'] = $playerRepo->getAll();
+        // TODO: Gather all information about current game situation (visible by player $current_player_id).
 
-        $currentPlayer = $playerRepo
-                ->setDoUnserialization(true)
-                ->getById(Linko::getInstance()->getCurrentPlayerId());
-
-        $result['hand'] = $cardRepo->getPlayerHand($currentPlayer);
-
-        $playerRepo->setDoUnserialization(true);
-        $players = $playerRepo->getAll();
-
-        $cardRepo->setDoUnserialization(false);
-        $result['handInfos'] = $cardRepo->getHandsInfos($players);
-        $result['deck'] = count($cardRepo->getCardsInDeck());
-        $result['draw'] = $cardRepo->getVisibleDraw();
-        $result['discard'] = $cardRepo->getCardsInDiscard();
-        $result['currentPlayer'] = $playerRepo
-                ->setDoUnserialization(false)
-                ->getById(Linko::getInstance()->getCurrentPlayerId())[0];
-        
-        $result['tableInfos'] = $cardRepo->getTablesInfos($players); 
-        
         return $result;
     }
 
@@ -222,6 +148,7 @@ class Linko extends Table {
     /*
 
       Example:
+
       function playCard( $card_id )
       {
       // Check that this is the player's turn and that it is a "possible action" at this game state (see states.inc.php)
@@ -284,6 +211,7 @@ class Linko extends Table {
     /*
 
       Example for game state "MyGameState":
+
       function stMyGameState()
       {
       // Do some stuff ...
