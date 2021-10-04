@@ -2,6 +2,11 @@
 
 namespace Linko\Serializers;
 
+use Linko\Serializers\Core\SerializerException;
+use Linko\Tools\DB\DBField;
+use ReflectionClass;
+use ReflectionProperty;
+
 /**
  * Description of Serializer
  *
@@ -36,25 +41,72 @@ class Serializer {
     public function unserialize($rawItems) {
         if (null === $this->classModel) {
             throw new SerializerException("No class Model defined");
+        } elseif (!is_array($rawItems)) {
+            throw new SerializerException("Array expected");
         }
-        $reflexion = new \ReflectionClass($this->classModel);
+        $fields = $this->getDBFields();
+
+        if ($this->isUniqRaw($rawItems, $fields)) {
+            return $this->unserializeOnce($rawItems, $fields);
+        } else if (is_array($rawItems)) {
+            $items = [];
+            foreach ($rawItems as $rawItem) {
+                $items[] = $this->unserializeOnce($rawItem, $fields);
+            }
+            return $items;
+        }
+    }
+
+    private function unserializeOnce($rawItem, $fields) {
+        $modelStr = $this->classModel;
+        $model = new $modelStr();
+
+        foreach ($fields as $field) {
+            if (isset($rawItem[$field->getName()])) {
+                $setter = "set" . ucfirst($field->getProperty());
+                $model->$setter($rawItem[$field->getName()]);
+            }
+        }
+
+        return $model;
+    }
+
+    private function isUniqRaw($rawItems, $fields) {
+        foreach ($fields as $field) {
+            if (isset($rawItems[$field->getName()])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function getDBFields() {
+        $reflexion = new ReflectionClass($this->classModel);
+        $fields = [];
         foreach ($reflexion->getProperties() as $property) {
-            var_dump($property->getDocComment(), $property->getName());
-            die;
+            $obj = $this->getColumDeclaration($property);
+            if (null !== $obj) {
+                $field = new DBField();
+                $field->setName($obj->name)
+                        ->setType($obj->type);
+
+                $fields[] = $field;
+            }
         }
 
-//        var_dump($reflexion->getProperties(1)->getDocComment());
-        die;
+        return $fields;
+    }
 
-//        if (1 === sizeof($rawDatas) && !$this->isArrayForced()) {
-//            $key = array_keys($rawDatas)[0];
-//            return $this->unserializeOnce($rawDatas[$key], $key, $fields);
-//        }
-//        $objects = [];
-//        foreach ($rawDatas as $key => $raw) {
-//            $objects[] = $this->unserializeOnce($raw, $key, $fields);
-//        }
-//        return $objects;
+    private function getColumDeclaration(ReflectionProperty $property) {
+        $strpos = strpos($property->getDocComment(), self::PROPERTY_COLUMN);
+        if ($strpos < 0) {
+            return;
+        }
+        $strpos += strlen(self::PROPERTY_COLUMN);
+
+        $chaine = substr($property->getDocComment(), $strpos);
+        $jsonStr = substr($chaine, 0, strpos($chaine, "}") + 1);
+        return json_decode($jsonStr);
     }
 
     /* -------------------------------------------------------------------------

@@ -12,70 +12,70 @@ class Player extends \stdClass {
     /**
      * 
      * @var int
-     * @ORM\Column(type="integer", name="player_id")
+     * @ORM\Column{"type":"integer", "name":"player_id"}
      */
     private $id;
 
     /**
      * 
      * @var int
-     * @ORM\Column(type="integer", name="player_no")
+     * @ORM\Column{"type":"integer", "name":"player_no"}
      */
     private $no;
 
     /**
      * 
      * @var string
-     * @ORM\Column(type="string", name="player_name")
+     * @ORM\Column{"type":"string", "name":"player_name"}
      */
     private $name;
 
     /**
      * 
      * @var string
-     * @ORM\Column(type="string", name="player_color")
+     * @ORM\Column{"type":"string", "name":"player_color"}
      */
     private $color;
 
     /**
      * 
      * @var string
-     * @ORM\Column(type="string", name="player_canal")
+     * @ORM\Column{"type":"string", "name":"player_canal"}
      */
     private $canal;
 
     /**
      * 
      * @var string
-     * @ORM\Column(type="string", name="player_avatar")
+     * @ORM\Column{"type":"string", "name":"player_avatar"}
      */
     private $avatar;
 
     /**
      * 
      * @var bool
-     * @ORM\Column(type="boolean", name="player_ai")
+     * @ORM\Column{"type":"boolean", "name":"player_ai"}
      */
     private $isAi;
 
     /**
      * 
      * @var int
-     * @ORM\Column(type="int", name="player_score")
+     * @ORM\Column{"type":"int", "name":"player_score"}
      */
     private $score;
 
     /**
      * 
      * @var bool
-     * @ORM\Column(type="boolean", name="player_zombie")
+     * @ORM\Column{"type":"boolean", "name":"player_zombie"}
      */
     private $isZombie;
 
     /**
      * 
      * @var bool
-     * @ORM\Column(type="boolean", name="player_zombie")
+     * @ORM\Column{"type":"boolean", "name":"player_eliminated"}
      */
     private $isEliminated;
 
