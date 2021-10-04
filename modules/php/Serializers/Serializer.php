@@ -3,9 +3,7 @@
 namespace Linko\Serializers;
 
 use Linko\Serializers\Core\SerializerException;
-use Linko\Tools\DB\DBField;
-use ReflectionClass;
-use ReflectionProperty;
+use Linko\Tools\DB\DBFieldsRetriver;
 
 /**
  * Description of Serializer
@@ -14,7 +12,6 @@ use ReflectionProperty;
  */
 class Serializer {
 
-    private const PROPERTY_COLUMN = "@ORM\Column";
 
     /**
      * 
@@ -44,7 +41,7 @@ class Serializer {
         } elseif (!is_array($rawItems)) {
             throw new SerializerException("Array expected");
         }
-        $fields = $this->getDBFields();
+        $fields = DBFieldsRetriver::retrive($this->classModel);
 
         if ($this->isUniqRaw($rawItems, $fields)) {
             return $this->unserializeOnce($rawItems, $fields);
@@ -80,34 +77,8 @@ class Serializer {
         return false;
     }
 
-    private function getDBFields() {
-        $reflexion = new ReflectionClass($this->classModel);
-        $fields = [];
-        foreach ($reflexion->getProperties() as $property) {
-            $obj = $this->getColumDeclaration($property);
-            if (null !== $obj) {
-                $field = new DBField();
-                $field->setName($obj->name)
-                        ->setType($obj->type);
 
-                $fields[] = $field;
-            }
-        }
-
-        return $fields;
-    }
-
-    private function getColumDeclaration(ReflectionProperty $property) {
-        $strpos = strpos($property->getDocComment(), self::PROPERTY_COLUMN);
-        if ($strpos < 0) {
-            return;
-        }
-        $strpos += strlen(self::PROPERTY_COLUMN);
-
-        $chaine = substr($property->getDocComment(), $strpos);
-        $jsonStr = substr($chaine, 0, strpos($chaine, "}") + 1);
-        return json_decode($jsonStr);
-    }
+    
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 

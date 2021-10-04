@@ -21,6 +21,13 @@ class PlayerManager {
         $gameinfos = Linko::getInstance()->getGameinfos();
         
         $players = $this->serializer->unserialize($rawPlayers);
+//        var_dump($players);die;
+        
+        $defaultColors = $gameinfos['player_colors'];
+        foreach ($players as &$player) {
+            $color = array_shift($defaultColors);
+            $player->setColor($color);
+        }
         
 //        $defaultColors = $gameinfos['player_colors'];
 //        foreach ($players as &$player) {
