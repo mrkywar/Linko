@@ -106,8 +106,6 @@ trait PlayCardTrait {
         }
         $stateManager = $this->getStateManager();
         $newState = $stateManager->closeActualState();
-        
-//        var_dump($newState);die;
 
         Logger::log("NextState : " . $newState->getState());
         $this->gamestate->jumpToState($newState->getState());

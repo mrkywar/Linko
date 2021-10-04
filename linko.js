@@ -70,7 +70,7 @@ define([
                                 this.initalizePlayNumber();
                             }
                             break;
-                        case "takeCollection":
+                        case "stealCards":
                             if (this.isCurrentPlayerActive()) {
                                 this.initalizeStealCards(args);
                             }
@@ -102,24 +102,29 @@ define([
                 onLeavingState: function (stateName)
                 {
                     this.debug('Leaving state: ' + stateName);
+                    
+                    dojo.query('selected').removeClass('selected');
+                    dojo.query('selectable').removeClass('selectable');
 
-                    switch (stateName)
-                    {
-
-                        /* Example:
-                         
-                         case 'myGameState':
-                         
-                         // Hide the HTML block we are displaying only during this game state
-                         dojo.style( 'my_html_block_id', 'display', 'none' );
-                         
-                         break;
-                         */
-
-
-                        case 'dummmy':
-                            break;
-                    }
+//                    switch (stateName)
+//                    {
+//                        dojo.query('selected').removeClass('selected');
+//                        
+//
+//                        /* Example:
+//                         
+//                         case 'myGameState':
+//                         
+//                         // Hide the HTML block we are displaying only during this game state
+//                         dojo.style( 'my_html_block_id', 'display', 'none' );
+//                         
+//                         break;
+//                         */
+//
+//
+//                        case 'dummmy':
+//                            break;
+//                    }
                 },
 
                 /**

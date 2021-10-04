@@ -79,7 +79,7 @@ class CardsTakeableStateAdapter {
         $states[] = StateFactory::create(
                         ST_PLAYER_DRAW,
                         $stateOrder,
-                        $targetPlayerId,
+                        null,
                         [
                             "numberOfCards" => $targetedCollection->getCountCards()
                         ]
@@ -87,6 +87,9 @@ class CardsTakeableStateAdapter {
 
         //-- Insert new states
         $this->stateRepository->create($states);
+        $log = $activePlayer->getName()." attack "
+                .$targetedCollection->getPlayer()->getName()." and steal "
+                .$targetedCollection->getCountCards()." cards ";
         Logger::log("Add ".count($states)." states ");
         
 //        var_dump($states);

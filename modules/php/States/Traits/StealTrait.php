@@ -24,7 +24,8 @@ trait StealTrait {
         self::checkAction('actionStealCards');
 
         $stateManager = $this->getStateManager();
-        $actualState = $stateManager->getRepository()->getActualState();
+        $stateRepository = $stateManager->getRepository();
+        $actualState = $stateRepository->getActualState();
 
         $cardManager = $this->getCardManager();
         $cardRepo = $cardManager
@@ -39,6 +40,11 @@ trait StealTrait {
         $this->collection = CardsToCollectionTransformer::adapt($cards);
         $this->collection->setPlayer($player);
 
+//        $nextState = $stateManager
+//                ->getRepository()
+//                ->getNextState();
+        $nextState = new State();
+
         switch (strtolower($userAction)) {
             case "steal":
                 $this->sendStealNotification();
@@ -47,25 +53,27 @@ trait StealTrait {
                         Deck::HAND_NAME,
                         $player->getId()
                 );
-
+                $actualState = new State();
+                $nextState->setPlayerId($actualState->getParams()->targetPlayer);
                 break;
-            case "discard":
+                case "discard":
                 $this->sendDiscardNotification();
                 $cardRepo->moveCardsToLocation(
                         $cards,
                         Deck::DISCARD_NAME,
                         $cardRepo->getNextDiscardLocationArg()
                 );
-
+                $nextState->setPlayerId(self::getActivePlayerId());
                 break;
             default :
                 throw new \BgaUserException(self::_("Invalid Action"));
         }
-
+        $stateRepository->update($nextState);
+        
         $newState = $stateManager->closeActualState();
 
         Logger::log("NextState : " . $newState->getState());
-        $this->gamestate->jumpToState($newState->getState());
+        $this->gamestate->nextState();
 //        $this->gamestate->changeActivePlayer($newState->getPlayerId());
     }
 
@@ -163,21 +171,21 @@ trait StealTrait {
         
     }
 
-    
     /* -------------------------------------------------------------------------
      *            BEGIN - End Of Steal
      * ---------------------------------------------------------------------- */
-    public function stEndOfSteal(){
+
+    public function stEndOfSteal() {
         $stateManager = $this->getStateManager();
-        $actualState = $stateManager->getActualState();
+        $actualState = $stateManager->getRepository()->getActualState();
 
         $this->gamestate->changeActivePlayer($actualState->getPlayerId());
-        
+
         $newState = $stateManager->closeActualState();
 
         Logger::log("NextState : " . $newState->getState());
         $this->gamestate->jumpToState($newState->getState());
         $this->gamestate->changeActivePlayer($newState->getPlayerId());
-
     }
+
 }

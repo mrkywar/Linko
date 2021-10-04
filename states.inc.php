@@ -99,16 +99,19 @@ $machinestates = [
         'description' => '',
         'type' => 'game',
         'action' => 'stEndOfSteal',
-        'transitions' => [
-            '' => ST_RESOLVE_STATE,
-        ],
+//        'transitions' => [
+//            '' => ST_RESOLVE_STATE,
+//        ],
     ],
     ST_RESOLVE_STATE => [
         'name' => 'resolveStack',
         'description' => '',
         'type' => 'game',
         'action' => 'stResolveState',
-        'transitions' => [],
+        'transitions' => [
+            'play' => ST_PLAYER_PLAY_NUMBER,
+            'draw' => ST_PLAYER_DRAW
+        ],
     ],
     //-- PLAYER ACTIONS
     ST_PLAYER_PLAY_NUMBER => [
@@ -127,7 +130,10 @@ $machinestates = [
         "type" => "activeplayer",
         "args" => "argStealCollection",
         "action" => "stStealCollection",
-        "possibleactions" => ["actionStealCards"]
+        "possibleactions" => ["actionStealCards"],
+        'transitions' => [
+            '' => ST_RESOLVE_STATE,
+        ]
     ],
     ST_PLAYER_DRAW => [
         "name" => "playerDraw",

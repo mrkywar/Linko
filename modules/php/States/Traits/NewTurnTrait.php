@@ -52,11 +52,15 @@ trait NewTurnTrait {
         } else {
             Logger::log("Actual state : " . $actualState->getState(), "SRS");
         }
-
+        echo '<pre>';
+        var_dump($this->gamestate->state());die;
+        
+        
         $this->gamestate->jumpToState($actualState->getState());
-//        if (null !== $actualState->getPlayerId()) {
-//            $this->gamestate->changeActivePlayer($actualState->getPlayerId());
-//        }
+        if (null !== $actualState->getPlayerId()) {
+            $this->
+            $this->gamestate->changeActivePlayer($actualState->getPlayerId());
+        }
     }
 
 }

@@ -113,12 +113,17 @@ class StateRepository extends SuperRepository {
 
     public function update(State $state) {
         $orderField = $this->getFieldByProperty("order");
+        $playerIdField = $this->getFieldByProperty("playerId");
         $primary = $this->getPrimaryField();
 
         $qb = $this->getQueryBuilder()
                 ->update()
                 ->addSetter($orderField, $state->getOrder())
                 ->addClause($primary, $state->getId());
+
+        if (null !== $state->getPlayerId()) {
+            $qb->addSetter($playerIdField, $state->getPlayerId());
+        }
 
         $this->execute($qb);
         return $state;
