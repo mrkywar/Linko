@@ -1,5 +1,7 @@
 <?php
 
+use Linko\Managers\PlayerManager;
+
 $swdNamespaceAutoload = function ($class) {
     $classParts = explode('\\', $class);
     if ($classParts[0] == 'Linko') {
@@ -18,6 +20,12 @@ require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 
 class Linko extends Table {
 
+    /**
+     * 
+     * @var Linko
+     */
+    private static $instance;
+
     public function __construct() {
         // Your global variables labels:
         //  Here, you can assign labels to global variables you are using for this game.
@@ -26,6 +34,8 @@ class Linko extends Table {
         //  the corresponding ID in gameoptions.inc.php.
         // Note: afterwards, you can get/set the global variables with getGameStateValue/setGameStateInitialValue/setGameStateValue
         parent::__construct();
+        
+        self::$instance = $this;
 
         self::initGameStateLabels(array(
                 //    "my_first_global_variable" => 10,
@@ -51,6 +61,9 @@ class Linko extends Table {
      */
 
     protected function setupNewGame($players, $options = array()) {
+        $playerManager = new PlayerManager();
+        $playerManager->initForNewGame($players, $options);
+        
         // Set the colors of the players with HTML color code
         // The default below is red/green/blue/orange/brown
         // The number of colors defined here must correspond to the maximum number of players allowed for the gams
@@ -298,6 +311,10 @@ class Linko extends Table {
 //        // Please add your future database scheme changes here
 //
 //
+    }
+
+    public static function getInstance(): Linko {
+        return self::$instance;
     }
 
 }
