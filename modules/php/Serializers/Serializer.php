@@ -61,7 +61,7 @@ class Serializer {
         foreach ($fields as $field) {
             if (isset($rawItem[$field->getName()])) {
                 $setter = "set" . ucfirst($field->getProperty());
-                $model->$setter($rawItem[$field->getName()]);
+                $model->$setter($rawItem[$field->getDbName()]);
             }
         }
 
@@ -70,7 +70,7 @@ class Serializer {
 
     private function isUniqRaw($rawItems, $fields) {
         foreach ($fields as $field) {
-            if (isset($rawItems[$field->getName()])) {
+            if (isset($rawItems[$field->getDbName()])) {
                 return true;
             }
         }

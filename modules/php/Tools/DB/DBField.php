@@ -19,7 +19,7 @@ class DBField {
      * 
      * @var string
      */
-    private $name;
+    private $dbName;
 
     /**
      * 
@@ -35,10 +35,11 @@ class DBField {
         return $this->type;
     }
 
-    public function getName(): string {
-        return $this->name;
+    public function getDbName(): string {
+        return $this->dbName;
     }
 
+    
     public function getProperty(): string {
         return $this->property;
     }
@@ -48,11 +49,12 @@ class DBField {
         return $this;
     }
 
-    public function setName(string $name) {
-        $this->name = $name;
+    public function setDbName(string $dbName) {
+        $this->dbName = $dbName;
         return $this;
     }
 
+    
     public function setProperty(string $property) {
         $this->property = $property;
         return $this;

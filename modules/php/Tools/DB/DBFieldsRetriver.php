@@ -25,7 +25,7 @@ abstract class DBFieldsRetriver {
             }
             if (null !== $obj) {
                 $field = new DBField();
-                $field->setName($obj->name)
+                $field->setDbName($obj->name)
                         ->setType($obj->type)
                         ->setProperty($property->getName());
 
