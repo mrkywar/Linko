@@ -6,6 +6,7 @@ namespace Linko\Models;
  * Description of Player
  *
  * @author Mr_Kywar mr_kywar@gmail.com
+ * @ORM\Table{"name":"player"}
  */
 class Player extends \stdClass {
 
