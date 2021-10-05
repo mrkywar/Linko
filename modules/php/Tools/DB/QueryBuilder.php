@@ -22,20 +22,9 @@ class QueryBuilder {
     private $tableName;
 
     /**
-     * @var string|null
-     */
-    private $statement;
-
-    /**
      * @var QueryString
      */
     private $transformer;
-
-    /**
-     * to setup a keyIndex
-     * @var Field|null
-     */
-//    private $keyIndex;
 
     /* -------------------------------------------------------------------------
      *                  Properties - Select
@@ -90,7 +79,6 @@ class QueryBuilder {
      * ---------------------------------------------------------------------- */
 
     public function __construct(DBTable $tableName = null) {
-
         if (null !== $tableName) {
             $this->tableName = $tableName->getName();
         }
@@ -99,8 +87,6 @@ class QueryBuilder {
     }
 
     private function init() {
-        $this->statement = "";
-        $this->keyIndex = null;
         //-- (re)init select
         $this->orderBy = [];
         $this->limit = null;
@@ -247,10 +233,6 @@ class QueryBuilder {
         return $this->tableName;
     }
 
-    public function getStatement(): ?string {
-        return $this->statement;
-    }
-
     public function getFields(): array {
         return $this->fields;
     }
@@ -286,11 +268,6 @@ class QueryBuilder {
 
     public function setTableName(?string $tableName) {
         $this->tableName = $tableName;
-        return $this;
-    }
-
-    public function setStatement(?string $statement) {
-        $this->statement = $statement;
         return $this;
     }
 

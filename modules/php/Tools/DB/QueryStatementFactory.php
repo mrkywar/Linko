@@ -145,6 +145,8 @@ abstract class QueryStatementFactory {
         $statement .= "`" . $qb->getTableName() . "`";
         
         
+        
+        
         var_dump($qb->getValues());die;
         
 

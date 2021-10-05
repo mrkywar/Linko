@@ -2,9 +2,8 @@
 
 namespace Linko\Managers\Core;
 
-use Linko\Models\Core\Model;
 use Linko\Serializers\Core\SerializerException;
-use Linko\Tools\DB\DBTableRetriver;
+use Linko\Serializers\Serializer;
 use Linko\Tools\DB\QueryBuilder;
 use Linko\Tools\DB\QueryStatementFactory;
 
@@ -15,6 +14,9 @@ use Linko\Tools\DB\QueryStatementFactory;
  */
 abstract class SuperManager {
 
+    /**
+     * @return Serializer
+     */
     abstract public function getSerializer();
 
     protected function execute(QueryBuilder &$qb) {
@@ -25,6 +27,10 @@ abstract class SuperManager {
 
     protected function create($items) {
         $tableName = null;
+        $rawItems = $this->getSerializer()->serialize($items);
+        var_dump($rawItems);
+        die;
+
         if ($items instanceof Model) {
             $tableName = DBTableRetriver::retrive(get_class($items));
         } elseif (is_array($items)) {

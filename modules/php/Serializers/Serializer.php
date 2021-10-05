@@ -2,6 +2,7 @@
 
 namespace Linko\Serializers;
 
+use Linko\Models\Core\Model;
 use Linko\Serializers\Core\SerializerException;
 use Linko\Tools\DB\DBFieldsRetriver;
 
@@ -27,7 +28,26 @@ class Serializer {
      * ---------------------------------------------------------------------- */
 
     public function serialize($items) {
-        
+        $fields = DBFieldsRetriver::retrive($this->classModel);
+
+        if (is_array($items)) {
+            $results = [];
+            foreach ($items as $key => $item) {
+                $results[] = $this->serializeOnce($item, $fields, $key);
+            }
+            return $results;
+        } else {
+            return $this->serializeOnce($items, $fields);
+        }
+    }
+
+    private function serializeOnce(Model $item, $fields, $key = null) {
+        $rawData = [];
+        foreach ($fields as $field) {
+            $getter = "get" . ucfirst($field->getProperty());
+            $rawData[$field->getDbName()] = $item->$getter();
+        }
+        return $rawData;
     }
 
     /* -------------------------------------------------------------------------
@@ -46,13 +66,23 @@ class Serializer {
             return $this->unserializeOnce($rawItems, $fields);
         } else if (is_array($rawItems)) {
             $items = [];
-            foreach ($rawItems as $rawItem) {
-                $items[] = $this->unserializeOnce($rawItem, $fields);
+            foreach ($rawItems as $key => $rawItem) {
+                $model = $this->unserializeOnce($rawItem, $fields);
+                if (null === $model->getId()) {
+                    $model->setId($key);
+                }
+                $items[] = $model;
             }
             return $items;
         }
     }
 
+    /**
+     * Allow you Data To Object transform
+     * @param array $rawItem : Raw item to transform
+     * @param array<DBField> $fields : Field to use for unserialization
+     * @return Model
+     */
     private function unserializeOnce($rawItem, $fields) {
         $modelStr = $this->classModel;
         $model = new $modelStr();
@@ -67,6 +97,12 @@ class Serializer {
         return $model;
     }
 
+    /**
+     * Determine if a dataset is an unique raw or not
+     * @param array $rawItems : dataset used for test
+     * @param array<DBField>  $fields : Field list to check
+     * @return boolean true if only one Row false otherwise
+     */
     private function isUniqRaw($rawItems, $fields) {
         foreach ($fields as $field) {
             if (isset($rawItems[$field->getDbName()])) {

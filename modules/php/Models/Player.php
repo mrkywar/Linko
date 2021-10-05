@@ -2,25 +2,27 @@
 
 namespace Linko\Models;
 
+use Linko\Models\Core\Model;
+
 /**
  * Description of Player
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  * @ORM\Table{"name":"player"}
  */
-class Player extends \stdClass {
+class Player extends Model {
 
     /**
      * 
-     * @var int
-     * @ORM\Column{"type":"integer", "name":"player_id"}
+     * @var int|null
+     * @ORM\Column{"type":"integer", "name":"player_id", "default":null}
      */
     private $id;
 
     /**
      * 
-     * @var int
-     * @ORM\Column{"type":"integer", "name":"player_no"}
+     * @var int|null
+     * @ORM\Column{"type":"integer", "name":"player_no", "default":null}
      */
     private $no;
 
@@ -95,11 +97,11 @@ class Player extends \stdClass {
      *                  BEGIN - Getters & Setters 
      * ---------------------------------------------------------------------- */
 
-    public function getId(): int {
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function getNo(): int {
+    public function getNo(): ?int {
         return $this->no;
     }
 
@@ -135,12 +137,12 @@ class Player extends \stdClass {
         return $this->isEliminated;
     }
 
-    public function setId(int $id) {
+    public function setId(?int $id) {
         $this->id = $id;
         return $this;
     }
 
-    public function setNo(int $no) {
+    public function setNo(?int $no) {
         $this->no = $no;
         return $this;
     }
