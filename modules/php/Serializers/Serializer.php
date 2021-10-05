@@ -12,7 +12,6 @@ use Linko\Tools\DB\DBFieldsRetriver;
  */
 class Serializer {
 
-
     /**
      * 
      * @var string
@@ -59,7 +58,7 @@ class Serializer {
         $model = new $modelStr();
 
         foreach ($fields as $field) {
-            if (isset($rawItem[$field->getName()])) {
+            if (isset($rawItem[$field->getDbName()])) {
                 $setter = "set" . ucfirst($field->getProperty());
                 $model->$setter($rawItem[$field->getDbName()]);
             }
@@ -76,9 +75,6 @@ class Serializer {
         }
         return false;
     }
-
-
-    
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 

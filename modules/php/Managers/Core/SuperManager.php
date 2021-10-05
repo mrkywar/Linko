@@ -6,6 +6,7 @@ use Linko\Models\Core\Model;
 use Linko\Serializers\Core\SerializerException;
 use Linko\Tools\DB\DBTableRetriver;
 use Linko\Tools\DB\QueryBuilder;
+use Linko\Tools\DB\QueryStatementFactory;
 
 /**
  * Description of SuperManager
@@ -15,9 +16,11 @@ use Linko\Tools\DB\QueryBuilder;
 abstract class SuperManager {
 
     abstract public function getSerializer();
-    
-    protected function execute(QueryBuilder &$qb){
-        $query = \Linko\Tools\DB\QueryStatementFactory::create($qb);
+
+    protected function execute(QueryBuilder &$qb) {
+        $query = QueryStatementFactory::create($qb);
+        var_dump($query);
+        die;
     }
 
     protected function create($items) {
@@ -35,7 +38,7 @@ abstract class SuperManager {
         $qb = new QueryBuilder($tableName);
         $qb->insert()
                 ->setValues($items);
-        
+
         $this->execute($qb);
     }
 

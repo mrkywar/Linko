@@ -2,6 +2,8 @@
 
 namespace Linko\Tools\DB;
 
+use Linko\Models\Core\Model;
+
 /**
  * Description of QueryBuilder
  *
@@ -87,9 +89,10 @@ class QueryBuilder {
      *                  BEGIN - construct
      * ---------------------------------------------------------------------- */
 
-    public function __construct($tableName = null) {
+    public function __construct(DBTable $tableName = null) {
+
         if (null !== $tableName) {
-            $this->tableName = $tableName;
+            $this->tableName = $tableName->getName();
         }
         $this->transformer = new QueryString();
         $this->init();
@@ -199,7 +202,6 @@ class QueryBuilder {
         return $this;
     }
 
-    
     /**
      * Allows you to add a ordering instruction for a query
      * @param DbField $field : Field use for the query ordering
@@ -211,7 +213,7 @@ class QueryBuilder {
                 . "` " . $dir;
         return $this;
     }
-    
+
     /**
      * Allows you to add a set instruction for a query
      * @param DbField $field : Field use for the query set

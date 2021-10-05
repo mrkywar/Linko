@@ -2,6 +2,8 @@
 
 namespace Linko\Tools\DB;
 
+use ReflectionClass;
+
 /**
  * Description of DBTableRetriver
  *
@@ -11,6 +13,11 @@ class DBTableRetriver {
 
     private const PROPERTY_TABLE = "@ORM\Table";
 
+    /**
+     * Allows you to determine the name of the table used
+     * @param type $classModel
+     * @return DBTable
+     */
     public static function retrive($classModel) {
         $reflexion = new ReflectionClass($classModel);
         $strpos = strpos($reflexion->getDocComment(), self::PROPERTY_TABLE);
