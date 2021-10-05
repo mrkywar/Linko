@@ -21,11 +21,6 @@ class QueryBuilder {
      */
     private $tableName;
 
-    /**
-     * @var QueryString
-     */
-    private $transformer;
-
     /* -------------------------------------------------------------------------
      *                  Properties - Select
      * ---------------------------------------------------------------------- */
@@ -82,7 +77,7 @@ class QueryBuilder {
         if (null !== $tableName) {
             $this->tableName = $tableName->getName();
         }
-        $this->transformer = new QueryString();
+
         $this->init();
     }
 
@@ -174,13 +169,13 @@ class QueryBuilder {
         if (is_array($value)) {
             $rawValues = [];
             foreach ($value as $val) {
-                $rawValues [] = $this->transformer->stringifyValue($field, $val);
+                $rawValues [] = DBFieldTransposer::transpose($field, $val);
             }
             $clause .= " IN ( " . implode(",", $rawValues) . " )";
         } elseif (null === $value) {
             $clause .= " IS NULL ";
         } else {
-            $clause .= " = " . $this->transformer->stringifyValue($field, $value);
+            $clause .= " = " .  DBFieldTransposer::transpose($field, $value);
         }
 
         $this->clauses[] = $clause;
@@ -208,7 +203,7 @@ class QueryBuilder {
      */
     public function addSetter(DbField $field, $value) {
         $setter = "`" . $field->getDbName() . "`";
-        $setter .= " = " . $this->transformer->stringifyValue($field, $value);
+        $setter .= " = " .  DBFieldTransposer::transpose($field, $value);
         $this->setters[$field->getDbName()] = $setter;
         return $this;
     }

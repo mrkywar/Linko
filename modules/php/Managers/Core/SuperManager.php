@@ -2,8 +2,10 @@
 
 namespace Linko\Managers\Core;
 
-use Linko\Serializers\Core\SerializerException;
+use Linko\Models\Core\Model;
 use Linko\Serializers\Serializer;
+use Linko\Tools\DB\DBFieldsRetriver;
+use Linko\Tools\DB\DBTableRetriver;
 use Linko\Tools\DB\QueryBuilder;
 use Linko\Tools\DB\QueryStatementFactory;
 
@@ -25,24 +27,32 @@ abstract class SuperManager {
         die;
     }
 
+    /**
+     * 
+     * @param Model $model
+     * @param array<Field> $fields
+     */
+    private function getValues(Model $model, array $fields) {
+        $values = [];
+        foreach ($fields as $field) {
+            
+        }
+    }
+
     protected function create($items) {
         $tableName = null;
         $rawItems = $this->getSerializer()->serialize($items);
-        var_dump($rawItems);
-        die;
-
         if ($items instanceof Model) {
             $tableName = DBTableRetriver::retrive(get_class($items));
+            $fields = DBFieldsRetriver::retrive(get_class($items));
         } elseif (is_array($items)) {
             $tableName = DBTableRetriver::retrive(get_class($items[0]));
-        }
-
-        if (null === $tableName) {
-            throw new SerializerException("Invalid items param");
+            $fields = DBFieldsRetriver::retrive(get_class($items[0]));
         }
 
         $qb = new QueryBuilder($tableName);
         $qb->insert()
+                ->setFields($fields)
                 ->setValues($items);
 
         $this->execute($qb);
