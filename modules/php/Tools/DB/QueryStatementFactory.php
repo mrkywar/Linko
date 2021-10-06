@@ -2,6 +2,8 @@
 
 namespace Linko\Tools\DB;
 
+use Linko\Serializers\Serializer;
+
 /**
  * Description of QueryStatementFactory
  *
@@ -79,12 +81,7 @@ abstract class QueryStatementFactory {
     private static function createFieldList(QueryBuilder $qb) {
         $fieldDb = [];
         foreach ($qb->getFields() as $field) {
-            if (Field::BINARY_FORMAT === $field->getFieldType()) {
-                $fieldDb[] = " CONVERT (`" . $field->getDb() . "`, CHAR) as "
-                        . "`" . $field->getDb() . "`";
-            } else {
-                $fieldDb[] = " `" . $field->getDb() . "` ";
-            }
+            $fieldDb[] = " `" . $field->getDbName() . "` ";
         }
 
         return implode(",", $fieldDb);
@@ -143,19 +140,53 @@ abstract class QueryStatementFactory {
     private static function createInsertQuery(QueryBuilder $qb, &$statement) {
         $statement .= QueryString::TYPE_INSERT . " INTO ";
         $statement .= "`" . $qb->getTableName() . "`";
-        
-        
-        
-        
-        var_dump($qb->getValues());die;
-        
 
-//        //-- Fields
-//        $statement .= "(" . self::createFieldList($qb) . ")";
+        //-- Fields
+        $statement .= "(" . self::createFieldList($qb) . ")";
+
+        //-- Values 
+        $statement .= " VALUES ";
+        $statement .= self::createValues($qb);
+//        echo '<pre>';
+
+        var_dump($qb->getValues());
+        die;
 //
 //        //-- Values 
 //        $statement .= " VALUES ";
 //        $statement .= implode(",", $qb->getValues());
+    }
+
+    private static function createValues(QueryBuilder $qb) {
+
+        $rawValues = [];
+        $values = $qb->getValues();
+        $fields = $qb->getFields();
+
+        if (is_array($values)) {
+            $serializer = new Serializer(get_class($values[0]));
+            $rawValues = $serializer->serialize($values);
+            foreach ($rawValues as $rawValue) {
+                $rawValues [] = self::createOneValue($rawValue, $fields);
+            }
+
+//            var_dump($values);die("V");
+        }
+    }
+
+    private static function createOneValue($rawValue, $fields) {
+        $cleanedValues = [];
+        foreach ($fields as $field) {
+            if (isset($rawValue[$field->getDBName()])) {
+                $cleanedValues[$field->getDBName()] = DBValueTransformer::transform($field, $rawValue[$field->getDBName()]);
+//                $cleanedFields[]$values
+//            } else {
+//                var_dump("FAIL", $field->getDBName());
+            }
+        }
+        echo "<pre>";
+        var_dump($cleanedValues, $fields);
+        die;
     }
 
 }

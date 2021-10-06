@@ -8,6 +8,12 @@ namespace Linko\Tools\DB;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 class DBField {
+    const STRING_FORMAT = "string";
+    const INTEGER_FORMAT = "integer";
+    const BOOLEAN_FORMAT = "bool";
+    const BINARY_FORMAT = "binary";
+    const DATETIME_FORMAT = "datetime";
+    const JSON_FORMAT = "json";
 
     /**
      * 

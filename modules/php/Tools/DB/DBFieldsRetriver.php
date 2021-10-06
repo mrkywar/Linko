@@ -1,9 +1,9 @@
 <?php
-
 namespace Linko\Tools\DB;
 
 use ReflectionClass;
 use ReflectionProperty;
+
 
 /**
  * Description of DBFielsRetriver
