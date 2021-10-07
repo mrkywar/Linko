@@ -1,6 +1,8 @@
 <?php
 
-namespace Linko\Tools\DB;
+namespace Linko\Tools\DB\Fields;
+
+use Linko\Tools\DB\Fields\DBField;
 
 /**
  * Description of DBFieldTransposer

@@ -1,6 +1,6 @@
 <?php
 
-namespace Linko\Tools\DB;
+namespace Linko\Tools\DB\Fields;
 
 /**
  * Description of ColumnProperty
@@ -8,6 +8,7 @@ namespace Linko\Tools\DB;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 class DBField {
+
     const STRING_FORMAT = "string";
     const INTEGER_FORMAT = "integer";
     const INT_FORMAT = "int";
@@ -34,6 +35,17 @@ class DBField {
      */
     private $property;
 
+    /**
+     * @var bool
+     */
+    private $isPrimary = false;
+
+    /**
+     * 
+     * @var array|null
+     */
+    private $exclusions;
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 
      * ---------------------------------------------------------------------- */
@@ -46,9 +58,16 @@ class DBField {
         return $this->dbName;
     }
 
-    
     public function getProperty(): string {
         return $this->property;
+    }
+
+    public function getIsPrimary(): bool {
+        return $this->isPrimary;
+    }
+
+    public function getExclusions(): ?array {
+        return $this->exclusions;
     }
 
     public function setType(string $type) {
@@ -61,9 +80,18 @@ class DBField {
         return $this;
     }
 
-    
     public function setProperty(string $property) {
         $this->property = $property;
+        return $this;
+    }
+
+    public function setIsPrimary(bool $isPrimary) {
+        $this->isPrimary = $isPrimary;
+        return $this;
+    }
+
+    public function setExclusions(?array $exclusions) {
+        $this->exclusions = $exclusions;
         return $this;
     }
 

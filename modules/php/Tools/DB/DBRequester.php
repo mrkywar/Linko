@@ -2,6 +2,8 @@
 
 namespace Linko\Tools\DB;
 
+use Exception;
+
 /**
  * Description of DBRequester
  *
@@ -21,14 +23,15 @@ class DBRequester extends \APP_DbObject {
      * @return type
      * @throws DBException
      */
-    public function execute(QueryBuilder $qb) {
+    public function execute(QueryBuilder &$qb) {
 //        $fieldIndex = $qb->getKeyIndex();
         $queryString = QueryStatementFactory::create($qb);
-
+        $qb->reset();
+        
         if ($this->isDebug) {
             Logger::getInstance()->log($queryString, "DBRequest");
         }
-
+        try{
         switch ($qb->getQueryType()) {
             case QueryString::TYPE_SELECT:
                 $results = self::getObjectListFromDB($queryString);
@@ -48,6 +51,9 @@ class DBRequester extends \APP_DbObject {
                 return self::DbAffectedRow();
             default :
                 throw new DBException("DBR : Execute : Not Implemented Yet");
+        }
+        } catch (Exception $e){
+            echo $e->getMessage();
         }
     }
 

@@ -16,6 +16,7 @@ class Player extends Model {
      * 
      * @var int|null
      * @ORM\Column{"type":"integer", "name":"player_id", "default":null}
+     * @ORM\Id
      */
     private $id;
 
@@ -23,6 +24,7 @@ class Player extends Model {
      * 
      * @var int|null
      * @ORM\Column{"type":"integer", "name":"player_no", "default":null}
+     * @ORM\Exclude{"insert":true,"update":true}
      */
     private $no;
 
