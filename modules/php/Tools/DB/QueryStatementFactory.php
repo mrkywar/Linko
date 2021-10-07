@@ -146,10 +146,11 @@ abstract class QueryStatementFactory {
 
         //-- Values 
         $statement .= " VALUES ";
+        
         $statement .= self::createValues($qb);
 //        echo '<pre>';
 
-        var_dump($qb->getValues());
+        var_dump($statement);
         die;
 //
 //        //-- Values 
@@ -169,24 +170,24 @@ abstract class QueryStatementFactory {
             foreach ($rawValues as $rawValue) {
                 $rawValues [] = self::createOneValue($rawValue, $fields);
             }
-
-//            var_dump($values);die("V");
+//            var_dump( array_values($rawValues));die;
+            return implode(",", array_values($rawValues));
+        } else {
+//            return self::createOneValue($rawValues, $fields);
+            throw new Exception("NOT YET IMPLEMENTED");
         }
     }
 
     private static function createOneValue($rawValue, $fields) {
         $cleanedValues = [];
+
         foreach ($fields as $field) {
             if (isset($rawValue[$field->getDBName()])) {
-                $cleanedValues[$field->getDBName()] = DBValueTransformer::transform($field, $rawValue[$field->getDBName()]);
-//                $cleanedFields[]$values
-//            } else {
-//                var_dump("FAIL", $field->getDBName());
+//                $cleanedValues[$field->getDBName()] = DBValueTransformer::transform($field, $rawValue[$field->getDBName()]);
+                $cleanedValues[] = DBValueTransformer::transform($field, $rawValue[$field->getDBName()]);
             }
         }
-        echo "<pre>";
-        var_dump($cleanedValues, $fields);
-        die;
+        return "(" . implode(",", $cleanedValues) . ")";
     }
 
 }

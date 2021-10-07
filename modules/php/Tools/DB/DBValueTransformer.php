@@ -10,10 +10,18 @@ namespace Linko\Tools\DB;
 abstract class DBValueTransformer {
 
     static public function transform(DBField $field, $value) {
-        if (null === $value) {
-            return "null";
-        }
-        var_dump($field->getDbName(), $field->getType());
+//        if($field->getDbName() ==="player_score"){
+//            var_dump($field, $value, DBField::BOOLEAN_FORMAT );
+//        }
+//        echo "<br/>---".$field->getDbName()."---";
+//        echo "---".$field->getType()."---";
+//        echo "---".$value."---";
+//        echo "---".((null === $value)?"Oui":"Non")."---<br/>";
+//        
+//        if (null === $value) {
+//            return "null";
+//        }
+        
         switch ($field->getType()) {
             case DBField::STRING_FORMAT:
                 return "'" . addslashes($value) . "'";

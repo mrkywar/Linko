@@ -10,7 +10,7 @@ namespace Linko\Tools\DB;
 class DBField {
     const STRING_FORMAT = "string";
     const INTEGER_FORMAT = "integer";
-    const BOOLEAN_FORMAT = "bool";
+    const BOOLEAN_FORMAT = "boolean";
     const BINARY_FORMAT = "binary";
     const DATETIME_FORMAT = "datetime";
     const JSON_FORMAT = "json";
