@@ -3,7 +3,10 @@
 namespace Linko\Tools\DB\Fields;
 
 use Linko\Models\Core\Model;
+use Linko\Models\Player;
 use Linko\Tools\DB\Exceptions\DBFieldsRetriverException;
+use ReflectionClass;
+use ReflectionProperty;
 
 abstract class DBFieldsRetriver {
 
@@ -13,11 +16,12 @@ abstract class DBFieldsRetriver {
 
     static public function retrive($item) {
         if (is_array($item)) {
-            return self::retrive($item[0]); //recursive call shoud called with first item in array<Model> parameter
-        } elseif ($item instanceof Model) {
-            
+            return self::retrive($item[array_key_first($item)]); //recursive call shoud called with first item in array<Model> parameter
+        } elseif ($item instanceof Player) {
+            return self::retriveFields($item);
         } else {
-            throw new DBFieldsRetriverException("Unsupported call for : " . get_class($item) . " - ERROR CODE : DBFR-01");
+            var_dump($item,$item instanceof Player);
+            throw new DBFieldsRetriverException("Unsupported call for : " . $item . " - ERROR CODE : DBFR-01");
         }
     }
 

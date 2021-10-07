@@ -2,31 +2,25 @@
 
 namespace Linko\Managers\Core;
 
-use Linko\Models\Core\Model;
 use Linko\Serializers\Serializer;
-use Linko\Tools\DB\DBFieldsRetriver;
 use Linko\Tools\DB\DBRequester;
-use Linko\Tools\DB\DBTableRetriver;
-use Linko\Tools\DB\QueryBuilder;
+use Linko\Tools\DB\Fields\DBFieldsRetriver;
 
 /**
  * Description of SuperManager
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-abstract class SuperManager extends DBRequester{
+abstract class SuperManager extends DBRequester {
 
     /**
      * @return Serializer
      */
     abstract public function getSerializer();
 
-
     protected function create($items) {
-        $tableName = null;
-        
-        
-        
+        $fields = DBFieldsRetriver::retrive($items);
+//        $tableName = null;
 //        $rawItems = $this->getSerializer()->serialize($items);
 //        if ($items instanceof Model) {
 //            $tableName = DBTableRetriver::retrive(get_class($items));

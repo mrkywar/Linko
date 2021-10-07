@@ -4,7 +4,8 @@ namespace Linko\Serializers;
 
 use Linko\Models\Core\Model;
 use Linko\Serializers\Core\SerializerException;
-use Linko\Tools\DB\DBFieldsRetriver;
+use Linko\Tools\DB\Fields\DBFieldsRetriver;
+
 
 /**
  * Description of Serializer
@@ -28,7 +29,7 @@ class Serializer {
      * ---------------------------------------------------------------------- */
 
     public function serialize($items) {
-        $fields = DBFieldsRetriver::retrive($this->classModel);
+        $fields = DBFieldsRetriver::retrive($items);
 
         if (is_array($items)) {
             $results = [];
@@ -55,12 +56,13 @@ class Serializer {
      * ---------------------------------------------------------------------- */
 
     public function unserialize($rawItems) {
-        if (null === $this->classModel) {
+        $classModel = $this->classModel;
+        if (null === $classModel) {
             throw new SerializerException("No class Model defined");
         } elseif (!is_array($rawItems)) {
             throw new SerializerException("Array expected");
         }
-        $fields = DBFieldsRetriver::retrive($this->classModel);
+        $fields = DBFieldsRetriver::retrive(new $classModel());
 
         if ($this->isUniqRaw($rawItems, $fields)) {
             return $this->unserializeOnce($rawItems, $fields);
