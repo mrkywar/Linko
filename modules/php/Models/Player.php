@@ -64,7 +64,7 @@ class Player extends Model {
     /**
      * 
      * @var int
-     * @ORM\Column{"type":"int", "name":"player_score"}
+     * @ORM\Column{"type":"integer", "name":"player_score"}
      */
     private $score;
 
