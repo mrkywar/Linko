@@ -148,14 +148,6 @@ abstract class QueryStatementFactory {
         $statement .= " VALUES ";
         
         $statement .= self::createValues($qb);
-//        echo '<pre>';
-
-        var_dump($statement);
-        die;
-//
-//        //-- Values 
-//        $statement .= " VALUES ";
-//        $statement .= implode(",", $qb->getValues());
     }
 
     private static function createValues(QueryBuilder $qb) {
@@ -166,15 +158,14 @@ abstract class QueryStatementFactory {
 
         if (is_array($values)) {
             $serializer = new Serializer(get_class($values[0]));
-            $rawValues = $serializer->serialize($values);
-            foreach ($rawValues as $rawValue) {
+            $serializedValues = $serializer->serialize($values);
+            foreach ($serializedValues as $rawValue) {
                 $rawValues [] = self::createOneValue($rawValue, $fields);
             }
-//            var_dump( array_values($rawValues));die;
             return implode(",", array_values($rawValues));
         } else {
 //            return self::createOneValue($rawValues, $fields);
-            throw new Exception("NOT YET IMPLEMENTED");
+            throw new Exception("QSF-01 : NOT YET IMPLEMENTED");
         }
     }
 

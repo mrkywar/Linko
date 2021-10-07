@@ -24,7 +24,6 @@ class PlayerManager extends SuperManager {
         $gameinfos = Linko::getInstance()->getGameinfos();
 
         $players = $this->serializer->unserialize($rawPlayers);
-//        var_dump($players);die;
 
         $defaultColors = $gameinfos['player_colors'];
         foreach ($players as &$player) {
@@ -33,31 +32,6 @@ class PlayerManager extends SuperManager {
         }
 
         $this->create($players);
-
-//        $defaultColors = $gameinfos['player_colors'];
-//        foreach ($players as &$player) {
-//            $color = array_shift($defaultColors);
-//            
-//            
-//        }
-//        
-//        var_dump($gameinfos);
-//        $fields = $this->repository->getFields();
-//        $players = $this->getSerializer()->unserialize($rawPlayers, $fields);
-//
-//        $defaultColors = $gameinfos['player_colors'];
-//
-//        foreach ($players as &$player) {
-//            $color = array_shift($defaultColors);
-//            $player->setColor($color);
-//        }
-//
-//        $this->repository->create($players);
-//
-//        Linko::getInstance()->reattributeColorsBasedOnPreferences($rawPlayers, $gameinfos['player_colors']);
-//        Linko::getInstance()->reloadPlayersBasicInfos();
-//
-//        return $this->repository->setDoUnserialization(true)->getAll();
     }
     
     /* -------------------------------------------------------------------------

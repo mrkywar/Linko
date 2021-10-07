@@ -27,21 +27,21 @@ abstract class SuperManager {
         die;
     }
 
-    /**
-     * 
-     * @param Model $model
-     * @param array<Field> $fields
-     */
-    private function getValues(Model $model, array $fields) {
-        $values = [];
-        foreach ($fields as $field) {
-            
-        }
-    }
+//    /**
+//     * 
+//     * @param Model $model
+//     * @param array<Field> $fields
+//     */
+//    private function getValues(Model $model, array $fields) {
+//        $values = [];
+//        foreach ($fields as $field) {
+//            
+//        }
+//    }
 
     protected function create($items) {
         $tableName = null;
-        $rawItems = $this->getSerializer()->serialize($items);
+//        $rawItems = $this->getSerializer()->serialize($items);
         if ($items instanceof Model) {
             $tableName = DBTableRetriver::retrive(get_class($items));
             $fields = DBFieldsRetriver::retrive(get_class($items));
