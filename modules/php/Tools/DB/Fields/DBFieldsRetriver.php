@@ -17,7 +17,7 @@ abstract class DBFieldsRetriver {
     static public function retrive($item, ?string $exclusion = null) {
         if (is_array($item)) {
             return self::retrive($item[array_keys($item)[0]]); //recursive call shoud called with first item in array<Model> parameter
-        } elseif ($item instanceof Player) {
+        } elseif ($item instanceof Model) {
             $allField = self::retriveFields($item);
             if(null !== $exclusion){
                 return DBFiledsFilter::filter($allField, $exclusion);
