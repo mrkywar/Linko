@@ -48,6 +48,7 @@ class DBRequester extends \APP_DbObject {
                 return self::DbGetLastId();
             case QueryString::TYPE_UPDATE:
                 self::DbQuery($queryString);
+                var_dump($queryString);die("DBR");
                 return self::DbAffectedRow();
             default :
                 throw new DBException("DBR : Execute : Not Implemented Yet");

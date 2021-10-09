@@ -73,9 +73,9 @@ class QueryBuilder {
      *                  BEGIN - construct
      * ---------------------------------------------------------------------- */
 
-    public function __construct(DBTable $tableName = null) {
-        if (null !== $tableName) {
-            $this->tableName = $tableName->getName();
+    public function __construct(DBTable $table = null) {
+        if (null !== $table) {
+            $this->tableName = $table->getName();
         }
 
         $this->init();
@@ -175,7 +175,7 @@ class QueryBuilder {
         } elseif (null === $value) {
             $clause .= " IS NULL ";
         } else {
-            $clause .= " = " .  DBFieldTransposer::transpose($field, $value);
+            $clause .= " = " . DBFieldTransposer::transpose($field, $value);
         }
 
         $this->clauses[] = $clause;
@@ -203,7 +203,7 @@ class QueryBuilder {
      */
     public function addSetter(DbField $field, $value) {
         $setter = "`" . $field->getDbName() . "`";
-        $setter .= " = " .  DBFieldTransposer::transpose($field, $value);
+        $setter .= " = " . DBFieldTransposer::transpose($field, $value);
         $this->setters[$field->getDbName()] = $setter;
         return $this;
     }
@@ -214,6 +214,21 @@ class QueryBuilder {
      */
     public function addValue(Model $model) {
         $this->values[] = $model;
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - DBTable Setter & Getter
+     * ---------------------------------------------------------------------- */
+
+    public function setTable(DBTable $table) {
+        $this->tableName = $table->getName();
+        return $this;
+    }
+
+    public function getTable() {
+        $dbTable = new DBTable();
+        $dbTable->setName($this->tableName);
+        return $dbTable;
     }
 
     /* -------------------------------------------------------------------------

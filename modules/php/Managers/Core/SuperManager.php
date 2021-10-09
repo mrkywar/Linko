@@ -6,6 +6,7 @@ use Linko\Serializers\Serializer;
 use Linko\Tools\DB\DBRequester;
 use Linko\Tools\DB\DBTableRetriver;
 use Linko\Tools\DB\Fields\DBFieldsRetriver;
+use Linko\Tools\DB\QueryBuilder;
 use Linko\Tools\DB\QueryString;
 
 /**
@@ -22,10 +23,14 @@ abstract class SuperManager extends DBRequester {
 
     protected function create($items) {
         $fields = DBFieldsRetriver::retrive($items, QueryString::TYPE_INSERT);
-        $tableName = DBTableRetriver::retrive($items);
+        $table = DBTableRetriver::retrive($items);
+ 
+        echo '<pre>';
+        var_dump($fields);die;
         
-        $qb = new QueryBuilder($tableName);
-        $qb->insert()
+        $qb = new QueryBuilder();
+        $qb->setTable($table)
+                ->insert()
                 ->setFields($fields)
                 ->setValues($items);
         

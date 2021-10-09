@@ -2,6 +2,9 @@
 
 namespace Linko\Tools\DB;
 
+use Linko\Tools\DB\Exceptions\DBValueTransformerException;
+use Linko\Tools\DB\Fields\DBField;
+
 /**
  * Description of DBValueTransformer
  *
@@ -24,7 +27,7 @@ abstract class DBValueTransformer {
                 return "'" . self::transposeDateTime($value) . "'";
             default:
                 var_dump($field, $value, DBField::INTEGER_FORMAT );
-                throw new Exception("DBVT-01 : UNIMPLEMENTED Please contact me with full message log");
+                throw new DBValueTransformerException("UNIMPLEMENTED Please contact me with full message log - DBVT-01");
 //                return $value;
         }
     }
