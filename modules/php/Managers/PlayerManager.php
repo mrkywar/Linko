@@ -32,6 +32,9 @@ class PlayerManager extends SuperManager {
         }
 
         $this->create($players);
+        
+        Linko::getInstance()->reattributeColorsBasedOnPreferences($rawPlayers, $gameinfos['player_colors']);
+        Linko::getInstance()->reloadPlayersBasicInfos();
     }
     
     /* -------------------------------------------------------------------------
