@@ -63,6 +63,9 @@ class Linko extends Table {
     protected function setupNewGame($players, $options = array()) {
         $playerManager = new PlayerManager();
         $playerManager->initForNewGame($players, $options);
+        
+        
+        
 //        die('... GAME');
         
         /*         * ********** Start the game initialization **** */
