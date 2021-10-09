@@ -5,6 +5,7 @@ namespace Linko\Managers\Core;
 use Linko\Serializers\Serializer;
 use Linko\Tools\DB\DBRequester;
 use Linko\Tools\DB\Fields\DBFieldsRetriver;
+use Linko\Tools\DB\QueryString;
 
 /**
  * Description of SuperManager
@@ -19,7 +20,13 @@ abstract class SuperManager extends DBRequester {
     abstract public function getSerializer();
 
     protected function create($items) {
-        $fields = DBFieldsRetriver::retrive($items);
+        $fields = DBFieldsRetriver::retrive($items, QueryString::TYPE_INSERT);
+        
+//        $qb = new QueryBuilder($tableName);
+        
+        
+        
+//        var_dump($fields);die('SM');
 //        $tableName = null;
 //        $rawItems = $this->getSerializer()->serialize($items);
 //        if ($items instanceof Model) {

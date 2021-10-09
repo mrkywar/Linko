@@ -14,12 +14,15 @@ abstract class DBFieldsRetriver {
     private const ORM_ID = "@ORM\Id";
     private const EXCLUDE_PROPERTY = "exclude";
 
-
-    static public function retrive($item) {
+    static public function retrive($item, ?string $exclusion = null) {
         if (is_array($item)) {
-            return self::retrive($item[array_key_first($item)]); //recursive call shoud called with first item in array<Model> parameter
+            return self::retrive($item[array_keys($item)[0]]); //recursive call shoud called with first item in array<Model> parameter
         } elseif ($item instanceof Player) {
-            return self::retriveFields($item);
+            $allField = self::retriveFields($item);
+            if(null !== $exclusion){
+                return DBFiledsFilter::filter($allField, $exclusion);
+            }
+            return $allField;
         } else {
             var_dump($item, $item instanceof Player);
             throw new DBFieldsRetriverException("Unsupported call for : " . $item . " - ERROR CODE : DBFR-01");
@@ -38,10 +41,11 @@ abstract class DBFieldsRetriver {
                     ->setProperty($property->getName())
                     ->setIsPrimary(self::isIdDeclaration($property)); //-- Retrive Id status
 
-            if(property_exists($obj, self::EXCLUDE_PROPERTY)){
+            $propertyName = self::EXCLUDE_PROPERTY;
+            if (property_exists($obj, $propertyName)) {
                 $field->setExclusions($obj->$propertyName);
             }
-           
+
             $fields[] = $field;
         }
         return $fields;

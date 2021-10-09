@@ -19,6 +19,9 @@ class DBTableRetriver {
      * @return DBTable
      */
     public static function retrive($classModel) {
+//        if (is_array($classModel)) {
+//            
+//        }
         $reflexion = new ReflectionClass($classModel);
         $strpos = strpos($reflexion->getDocComment(), self::PROPERTY_TABLE);
         if ($strpos < 0) {
