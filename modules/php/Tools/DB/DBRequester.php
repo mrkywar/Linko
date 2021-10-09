@@ -35,20 +35,12 @@ class DBRequester extends \APP_DbObject {
         switch ($qb->getQueryType()) {
             case QueryString::TYPE_SELECT:
                 $results = self::getObjectListFromDB($queryString);
-
-//                if (null === $fieldIndex) {
                 return $results;
-//                } else {
-//                    return $this->initKeys($results, $fieldIndex->getDb());
-//                }
-//                break;
-
             case QueryString::TYPE_INSERT:
                 self::DbQuery($queryString);
                 return self::DbGetLastId();
             case QueryString::TYPE_UPDATE:
                 self::DbQuery($queryString);
-                var_dump($queryString);die("DBR");
                 return self::DbAffectedRow();
             default :
                 throw new DBException("DBR : Execute : Not Implemented Yet");

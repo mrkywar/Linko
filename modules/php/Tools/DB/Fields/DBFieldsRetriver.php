@@ -14,14 +14,11 @@ abstract class DBFieldsRetriver {
     private const ORM_ID = "@ORM\Id";
     private const EXCLUDE_PROPERTY = "exclude";
 
-    static public function retrive($item, ?string $exclusion = null) {
+    static public function retrive($item) {
         if (is_array($item)) {
             return self::retrive($item[array_keys($item)[0]]); //recursive call shoud called with first item in array<Model> parameter
         } elseif ($item instanceof Model) {
             $allField = self::retriveFields($item);
-            if(null !== $exclusion){
-                return DBFiledsFilter::filter($allField, $exclusion);
-            }
             return $allField;
         } else {
             var_dump($item, $item instanceof Player);

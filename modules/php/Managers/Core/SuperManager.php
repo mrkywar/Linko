@@ -6,6 +6,7 @@ use Linko\Serializers\Serializer;
 use Linko\Tools\DB\DBRequester;
 use Linko\Tools\DB\DBTableRetriver;
 use Linko\Tools\DB\Fields\DBFieldsRetriver;
+use Linko\Tools\DB\Fields\DBFiledsFilter;
 use Linko\Tools\DB\QueryBuilder;
 use Linko\Tools\DB\QueryString;
 
@@ -20,13 +21,16 @@ abstract class SuperManager extends DBRequester {
      * @return Serializer
      */
     abstract public function getSerializer();
+    
+    final protected function getInsertFields($items){
+        $fields = DBFieldsRetriver::retrive($items);
+        $filtered = DBFiledsFilter::filter($fields, QueryString::TYPE_INSERT);
+        return $filtered;
+    }
 
     protected function create($items) {
-        $fields = DBFieldsRetriver::retrive($items, QueryString::TYPE_INSERT);
+        $fields = $this->getInsertFields($items);
         $table = DBTableRetriver::retrive($items);
- 
-        echo '<pre>';
-        var_dump($fields);die;
         
         $qb = new QueryBuilder();
         $qb->setTable($table)

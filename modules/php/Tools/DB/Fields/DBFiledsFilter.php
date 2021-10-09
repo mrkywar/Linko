@@ -20,7 +20,10 @@ abstract class DBFiledsFilter {
     }
 
     static private function isExcluded(DBField $field, string $exclusion) {
-        return (in_array($exclusion, $field->getExclusions()));
+        if(null === $field->getExclusions()){
+            return false; //no exclusion for this field
+        }
+        return (in_array(strtolower($exclusion), $field->getExclusions()));
     }
 
 }
