@@ -2,7 +2,6 @@
 
 namespace Linko\Managers;
 
-use Linko;
 use Linko\Managers\Core\SuperManager;
 use Linko\Models\Card;
 use Linko\Serializers\Serializer;
@@ -14,12 +13,6 @@ use Linko\Serializers\Serializer;
  */
 class CardManager extends SuperManager {
 
-    private $serializer;
-
-    public function __construct() {
-        $this->serializer = new Serializer(Card::class);
-    }
-
     public function initForNewGame(array $options = array()) {
 
     }
@@ -28,8 +21,8 @@ class CardManager extends SuperManager {
      *                  BEGIN - Define Abstracts Methods 
      * ---------------------------------------------------------------------- */
 
-    public function getSerializer() {
-        return $this->serializer;
+    protected function initSerializer(): Serializer {
+        return new Serializer(Card::class);
     }
 
 }
