@@ -1,74 +1,43 @@
 {OVERALL_GAME_HEADER}
 
+<!-- 
+--------
+-- BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
+-- linko implementation : © <Your name here> <Your email address here>
+-- 
+-- This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
+-- See http://en.boardgamearena.com/#!doc/Studio for more information.
+-------
 
-<div id="gamepanel">
-    <div class="container">
-        <div id="carddeck" >
-            <div class="">
-                <div id="aviableDraw">
-                </div>
-                <div class="clear"></div>
-            </div>
-            <div class="">
-                <div id="deck">
-                </div>
-                <div class="clear"></div>
-            </div>
-
-        </div>
-        <div id="board">
-
-        </div>
-    </div>
-    <div class="clear"></div>
-
-</div>
+    linko_linko.tpl
+    
+    This is the HTML template of your game.
+    
+    Everything you are writing in this file will be displayed in the HTML page of your game user interface,
+    in the "main game zone" of the screen.
+    
+    You can use in this template:
+    _ variables, with the format {MY_VARIABLE_ELEMENT}.
+    _ HTML block, with the BEGIN/END format
+    
+    See your "view" PHP file to check how to set variables and control blocks
+    
+    Please REMOVE this comment before publishing your game on BGA
+-->
 
 
+This is your game interface. You can edit this HTML in your ".tpl" file.
 
 
 <script type="text/javascript">
-    var jstpl_player_board = `
-            <div  class="playertable whiteblock playertable" id="player_board_\${player_id}" >
-                <div class="playertablename" style="color:#\${player_color}">
-                    \${player_name}
-                </div>
-                <div class="playertablecard" id="playertable_\${player_id}">
-                </div>
-                <div class="clear"></div>
-            </div>
-            `;
-    
-    var jstpl_myhand = `
-            <div id="myhand_wrap" class="whiteblock">
-                <h3>{MY_HAND}</h3>
-                <div id="myhand">
-                </div>
-                <div class="clear"></div>
-            </div>
-    `;
-    
-    var jstpl_card = `
-        <div class="cardontable card_\${card_type}" id="\${card_location}_card_\${card_id}" data-id="\${card_id}">
-        </div>
-    `;
-    
-    var jstpl_deck = `
-        <div class="cardontable card_0">
-            <div class="count-status">\${deck}</div>
-        </div>
-    `;
-    
-    var jstpl_discard = `
-        <div class="cardontable discard card_\${last}" id="discard">
-            <div class="count-status">\${discard}</div>
-        </div>
-    `;
-    
-    var jstpl_collection = `
-        <div class="collection collection_\${collection_index}" id="collection_\${player_id}_\${collection_index}" style="z-index:\${collection_index}0">
-        </div>
-    `;
+
+// Javascript HTML templates
+
+/*
+// Example:
+var jstpl_some_game_item='<div class="my_game_item" id="my_game_item_${MY_ITEM_ID}"></div>';
+
+*/
 
 </script>  
 

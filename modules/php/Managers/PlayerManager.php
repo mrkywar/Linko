@@ -3,51 +3,46 @@
 namespace Linko\Managers;
 
 use Linko;
-use Linko\Managers\Core\Manager;
-use Linko\Managers\Factories\PlayerManagerFactory;
+use Linko\Managers\Core\SuperManager;
+use Linko\Models\Player;
+use Linko\Serializers\Serializer;
 
 /**
- * toolbox to manage players
+ * Description of PlayerManager
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-class PlayerManager extends Manager {
+class PlayerManager extends SuperManager {
 
-    /* -------------------------------------------------------------------------
-     *                  BEGIN - Define Abstract Methods
-     * ---------------------------------------------------------------------- */
+    private $serializer;
 
-    protected function buildInstance(): Manager {
-        return PlayerManagerFactory::create($this); // factory construct !
+    public function __construct() {
+        $this->serializer = new Serializer(Player::class);
     }
 
-    /* -------------------------------------------------------------------------
-     *                  BEGIN - init
-     * ---------------------------------------------------------------------- */
-
-    /**
-     * new game initilaze
-     * @param array $players : List of player array serialized get from table
-     * @param array $options : /!\ Not used at the moment
-     */
     public function initForNewGame(array $rawPlayers = array(), array $options = array()) {
         $gameinfos = Linko::getInstance()->getGameinfos();
-        $fields = $this->repository->getFields();
-        $players = $this->getSerializer()->unserialize($rawPlayers, $fields);
+
+        $players = $this->serializer->unserialize($rawPlayers);
 
         $defaultColors = $gameinfos['player_colors'];
-
         foreach ($players as &$player) {
             $color = array_shift($defaultColors);
             $player->setColor($color);
         }
 
-        $this->repository->create($players);
-
+        $this->create($players);
+        
         Linko::getInstance()->reattributeColorsBasedOnPreferences($rawPlayers, $gameinfos['player_colors']);
         Linko::getInstance()->reloadPlayersBasicInfos();
+    }
+    
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Define Abstracts Methods 
+     * ---------------------------------------------------------------------- */
 
-        return $this->repository->setDoUnserialization(true)->getAll();
+    public function getSerializer() {
+        return $this->serializer;
     }
 
 }

@@ -7,11 +7,9 @@ namespace Linko\Models\Core;
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
-interface Model {
+abstract class Model extends \stdClass {
 
-    /**
-     * Get Id is required for each model
-     * @return int
-     */
-    public function getId();
+    abstract public function getId(): ?int;
+
+    abstract public function setId(int $id);
 }

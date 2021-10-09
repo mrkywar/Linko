@@ -2,66 +2,86 @@
 
 namespace Linko\Models;
 
-use Linko\Models\Core\Model;
-
 /**
- * Model of a playable Card
+ * Description of Card
  *
  * @author Mr_Kywar mr_kywar@gmail.com
+ * @ORM\Table{"name":"card"}
  */
-class Card implements Model {
+class Card extends Core\Model {
 
+    /**
+     * @var int|null
+     * @ORM\Column{"type":"integer", "name":"card_id"}
+     * @ORM\Id
+     */
     private $id;
+
+    /**
+     * 
+     * @var int
+     * @ORM\Column{"type":"int", "name":"card_type"}
+     */
     private $type;
-    private $typeArg;
+
+    /**
+     * 
+     * @var string
+     * @ORM\Column{"type":"string", "name":"card_location"}
+     */
     private $location;
+
+    /**
+     * 
+     * @var int
+     * @ORM\Column{"type":"int", "name":"card_location_arg"}
+     */
     private $locationArg;
-    
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Constructor
+     * ---------------------------------------------------------------------- */
+
+    public function __construct() {
+        $this->locationArg = 0;
+    }
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 
      * ---------------------------------------------------------------------- */
 
-    public function getId() {
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function getType() {
+    public function getType(): int {
         return $this->type;
     }
 
-    public function getTypeArg() {
-        return $this->typeArg;
-    }
-
-    public function getLocation() {
+    public function getLocation(): string {
         return $this->location;
     }
 
-    public function getLocationArg() {
+    public function getLocationArg(): int {
         return $this->locationArg;
     }
 
-    public function setId($id) {
+    public function setId(?int $id) {
         $this->id = $id;
         return $this;
     }
 
-    public function setType($type) {
+    public function setType(int $type) {
         $this->type = $type;
         return $this;
     }
 
-    public function setTypeArg($typeArg) {
-        $this->typeArg = $typeArg;
-        return $this;
-    }
-
-    public function setLocation($location) {
+    public function setLocation(string $location) {
         $this->location = $location;
         return $this;
     }
 
-    public function setLocationArg($locationArg) {
+    public function setLocationArg(int $locationArg) {
         $this->locationArg = $locationArg;
         return $this;
     }
