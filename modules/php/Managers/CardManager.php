@@ -3,6 +3,7 @@
 namespace Linko\Managers;
 
 use Linko\Managers\Core\SuperManager;
+use Linko\Managers\Deck\Deck;
 use Linko\Models\Card;
 use Linko\Serializers\Serializer;
 
@@ -14,6 +15,10 @@ use Linko\Serializers\Serializer;
 class CardManager extends SuperManager {
 
     public function initForNewGame(array $options = array()) {
+        $deck = new Deck();
+        
+        $this->create($deck->getCards());
+       
 
     }
     

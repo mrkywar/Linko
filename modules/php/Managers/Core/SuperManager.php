@@ -31,7 +31,7 @@ abstract class SuperManager extends DBRequester {
      * @return Serializer
      */
     public function getSerializer(): Serializer {
-        if(null === $this->serializer){
+        if (null === $this->serializer) {
             $this->serializer = $this->initSerializer();
         }
         return $this->serializer;
@@ -46,10 +46,32 @@ abstract class SuperManager extends DBRequester {
      *                  BEGIN - Fields Retrive Methods (protected)
      * ---------------------------------------------------------------------- */
 
-    final protected function getInsertFields($items) {
+    final private function getFilteredFields($items, string $filter) {
         $fields = DBFieldsRetriver::retrive($items);
-        $filtered = DBFiledsFilter::filter($fields, QueryString::TYPE_INSERT);
-        return $filtered;
+        return DBFiledsFilter::filter($fields, $filter);
+    }
+
+    final protected function getInsertFields($items) {
+        return $this->getFilteredFields($items, QueryString::TYPE_INSERT);
+    }
+
+    final protected function getSeletFields() {
+        $className = $this->getSerializer()->getClassModel();
+        $items = new $className();
+
+        return $this->getFilteredFields($items, QueryString::TYPE_SELECT);
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Table Retrive Methods (protected)
+     * ---------------------------------------------------------------------- */
+
+    final protected function getTable($items = null) {
+        if (null === $items) {
+            $className = $this->getSerializer()->getClassModel();
+            $items = new $className();
+        }
+        return DBTableRetriver::retrive($items);
     }
 
     /* -------------------------------------------------------------------------
@@ -58,7 +80,7 @@ abstract class SuperManager extends DBRequester {
 
     protected function create($items) {
         $fields = $this->getInsertFields($items);
-        $table = DBTableRetriver::retrive($items);
+        $table = $this->getTable($items);
 
         $qb = new QueryBuilder();
         $qb->setTable($table)
@@ -67,6 +89,23 @@ abstract class SuperManager extends DBRequester {
                 ->setValues($items);
 
         $this->execute($qb);
+    }
+
+    protected function getAll($limit = null) {
+        $fields = $this->getSeletFields();
+        $table = $this->getTable();
+
+        $qb = new QueryBuilder();
+
+        $qb->setTable($table)
+                ->select()
+                ->setFields($fields);
+
+        if (null !== $limit) {
+            $qb->setLimit($limit);
+        }
+
+        return $this->execute($qb);
     }
 
 }
