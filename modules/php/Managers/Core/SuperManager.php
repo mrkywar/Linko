@@ -113,7 +113,8 @@ abstract class SuperManager extends DBRequester {
             $qb->setLimit($limit);
         }
 
-        return $this->execute($qb);
+        $rawResults = $this->execute($qb);
+        return $this->getSerializer()->unserialize($rawResults);
     }
 
 }

@@ -15,16 +15,16 @@ abstract class DBFieldTransposer {
         if (null === $value) {
             return "null";
         }
-        switch ($field->getFieldType()) {
-            case Field::STRING_FORMAT:
+        switch ($field->getType()) {
+            case DBField::STRING_FORMAT:
                 return "'" . addslashes($value) . "'";
-            case Field::JSON_FORMAT:
+            case DBField::JSON_FORMAT:
                 return "'" . json_encode($value) . "'";
-            case Field::BOOLEAN_FORMAT:
+            case DBField::BOOLEAN_FORMAT:
                 return (true === $value) ? 1 : 0;
-            case Field::INTEGER_FORMAT:
+            case DBField::INTEGER_FORMAT:
                 return "'" . (int) $value . "'";
-            case Field::DATETIME_FORMAT:
+            case DBField::DATETIME_FORMAT:
                 return "'" . $value->format("Y-m-d H:i:s") . "'";
             default:
                 return $value;

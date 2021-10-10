@@ -2,6 +2,8 @@
 
 namespace Linko\Tools\DB;
 
+use Linko\Models\Core\Model;
+use Linko\Tools\DB\Exceptions\DBValueRetriverException;
 use Linko\Tools\DB\Fields\DBField;
 
 /**
