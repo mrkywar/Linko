@@ -2,6 +2,7 @@
 
 use Linko\Managers\CardManager;
 use Linko\Managers\PlayerManager;
+use Linko\Tools\Logger\Logger;
 
 $swdNamespaceAutoload = function ($class) {
     $classParts = explode('\\', $class);
@@ -67,6 +68,8 @@ class Linko extends Table {
 
         $cardManager = new CardManager();
         $cardManager->initForNewGame($players, $options);
+
+        Logger::log("INIT OK", "GameSetup");
 
 //        die('... GAME');
 

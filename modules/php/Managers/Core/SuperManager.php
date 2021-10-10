@@ -2,13 +2,12 @@
 
 namespace Linko\Managers\Core;
 
+use Linko\Models\Core\Model;
 use Linko\Serializers\Serializer;
 use Linko\Tools\DB\DBRequester;
 use Linko\Tools\DB\DBTableRetriver;
 use Linko\Tools\DB\Fields\DBFieldsRetriver;
-use Linko\Tools\DB\Fields\DBFiledsFilter;
 use Linko\Tools\DB\QueryBuilder;
-use Linko\Tools\DB\QueryString;
 
 /**
  * Description of SuperManager
@@ -93,10 +92,14 @@ abstract class SuperManager extends DBRequester {
         $qb = new QueryBuilder();
         $qb->setTable($table)
                 ->insert()
-                ->setFields($fields)
-                ->setValues($items);
+                ->setFields($fields);
+        if ($items instanceof Model) {
+            $qb->addValue($items);
+        } else {
+            $qb->setValues($items);
+        }
 
-        $this->execute($qb);
+        return $this->execute($qb);
     }
 
     protected function findBy($clauses = [], $limit = null) {
