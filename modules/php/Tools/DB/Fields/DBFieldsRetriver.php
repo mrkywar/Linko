@@ -15,7 +15,7 @@ abstract class DBFieldsRetriver {
     private const ORM_ID = "@ORM\Id";
     private const EXCLUDE_PROPERTY = "exclude";
 
-    static private function retrive($item) {
+    static public function retrive($item) {
         if (is_array($item)) {
             return self::retrive($item[array_keys($item)[0]]); //recursive call shoud called with first item in array<Model> parameter
         } elseif ($item instanceof Model) {
@@ -63,7 +63,7 @@ abstract class DBFieldsRetriver {
     }
 
     static public function retriveSelectFields($items) {
-        return self::getFilteredFields($items, QueryString::TYPE_SELECT);
+        return self::retriveFilteredFields($items, QueryString::TYPE_SELECT);
     }
 
     static public function retrivePrimaryFields($items) {

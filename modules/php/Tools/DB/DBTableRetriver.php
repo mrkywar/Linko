@@ -3,6 +3,7 @@
 namespace Linko\Tools\DB;
 
 use Linko\Models\Core\Model;
+use Linko\Tools\DB\Exceptions\DBTableRetriverException;
 use ReflectionClass;
 
 /**
