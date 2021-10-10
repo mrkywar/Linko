@@ -22,16 +22,35 @@ class CardManager extends SuperManager {
 
         $this->create($deck->getCards());
 
-        $drawCards = $this->findBy([], Deck::DRAW_VISIBLE_CARDS);
-        $this->moveCards($drawCards, Deck::LOCATION_DRAW);
+        $drawCards = $this->drawCards(Deck::DRAW_VISIBLE_CARDS);
+        $this->moveCards($drawCards, Deck::LOCATION_POOL);
 
         foreach (array_keys($players) as $playerId) {
-            $playerCards = $this->getAll(Deck::DECK_INITIAL_HAND);
+            $playerCards = $this->drawCards(Deck::DECK_INITIAL_HAND);
             $this->moveCards($playerCards, Deck::LOCATION_HAND, $playerId);
-            var_dump($playerId);
         }
 
-        die("??");
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Get Card In Location
+     * ---------------------------------------------------------------------- */
+
+    private function getCardInLocation($location, $locationArg = null, $limit = null) {
+        $clauses = ["location" => $location];
+        if (null !== $locationArg) {
+            $clauses["locationArg"] = $locationArg;
+        }
+
+        return $this->findBy($clauses, $limit);
+    }
+
+    public function getCardInDraw() {
+        return $this->getCardInLocation(Deck::LOCATION_DRAW);
+    }
+
+    public function drawCards($amount = 1) {
+        return $this->getCardInLocation(Deck::LOCATION_DRAW, null, $amount);
     }
 
     /* -------------------------------------------------------------------------
