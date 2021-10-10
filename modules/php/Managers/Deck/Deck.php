@@ -11,8 +11,8 @@ use Linko\Models\Card;
  */
 class Deck {
 
-    CONST LOCATION_DECK = "deck";
-    CONST LOCATION_DRAW = "poule"; // joke name for pool
+    CONST LOCATION_DRAW = "draw";
+    CONST LOCATION_POOL = "poule"; // joke name for pool
     CONST LOCATION_HAND = "hand";
     CONST LOCATION_DISCARD = "discard";
     CONST LOCATION_PLAYER_TABLE = "player_table";
@@ -54,7 +54,7 @@ class Deck {
         $card = new Card();
 
         $card->setId($id)
-                ->setLocation(self::LOCATION_DECK)
+                ->setLocation(self::LOCATION_DRAW)
                 ->setType($type);
 
         return $card;

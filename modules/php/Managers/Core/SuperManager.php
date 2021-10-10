@@ -2,13 +2,12 @@
 
 namespace Linko\Managers\Core;
 
+use Linko\Models\Core\Model;
 use Linko\Serializers\Serializer;
 use Linko\Tools\DB\DBRequester;
 use Linko\Tools\DB\DBTableRetriver;
 use Linko\Tools\DB\Fields\DBFieldsRetriver;
-use Linko\Tools\DB\Fields\DBFiledsFilter;
 use Linko\Tools\DB\QueryBuilder;
-use Linko\Tools\DB\QueryString;
 
 /**
  * Description of SuperManager
@@ -58,7 +57,7 @@ abstract class SuperManager extends DBRequester {
         return DBFieldsRetriver::retriveInsertFields($items);
     }
 
-    final protected function getSeletFields() {
+    final protected function getSelectFields() {
         return DBFieldsRetriver::retriveSelectFields($this->getItems());
     }
 
@@ -93,14 +92,18 @@ abstract class SuperManager extends DBRequester {
         $qb = new QueryBuilder();
         $qb->setTable($table)
                 ->insert()
-                ->setFields($fields)
-                ->setValues($items);
+                ->setFields($fields);
+        if ($items instanceof Model) {
+            $qb->addValue($items);
+        } else {
+            $qb->setValues($items);
+        }
 
-        $this->execute($qb);
+        return $this->execute($qb);
     }
 
-    protected function getAll($limit = null) {
-        $fields = $this->getSeletFields();
+    protected function findBy($clauses = [], $limit = null) {
+        $fields = $this->getSelectFields();
         $table = $this->getTable();
 
         $qb = new QueryBuilder();
@@ -108,7 +111,10 @@ abstract class SuperManager extends DBRequester {
         $qb->setTable($table)
                 ->select()
                 ->setFields($fields);
-
+        foreach ($clauses as $clause => $value) {
+            $field = DBFieldsRetriver::retriveFieldByPropertyName($clause, $this->getItems());
+            $qb->addClause($field, $value);
+        }
         if (null !== $limit) {
             $qb->setLimit($limit);
         }

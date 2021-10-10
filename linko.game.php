@@ -2,6 +2,7 @@
 
 use Linko\Managers\CardManager;
 use Linko\Managers\PlayerManager;
+use Linko\Tools\Logger\Logger;
 
 $swdNamespaceAutoload = function ($class) {
     $classParts = explode('\\', $class);
@@ -35,7 +36,7 @@ class Linko extends Table {
         //  the corresponding ID in gameoptions.inc.php.
         // Note: afterwards, you can get/set the global variables with getGameStateValue/setGameStateInitialValue/setGameStateValue
         parent::__construct();
-        
+
         self::$instance = $this;
 
         self::initGameStateLabels(array(
@@ -64,13 +65,14 @@ class Linko extends Table {
     protected function setupNewGame($players, $options = array()) {
         $playerManager = new PlayerManager();
         $playerManager->initForNewGame($players, $options);
-        
-        $cardManager =new CardManager();
-        $cardManager->initForNewGame($options);
-        
-        
+
+        $cardManager = new CardManager();
+        $cardManager->initForNewGame($players, $options);
+
+        Logger::log("INIT OK", "GameSetup");
+
 //        die('... GAME');
-        
+
         /*         * ********** Start the game initialization **** */
 
         // Init global values with their initial values
