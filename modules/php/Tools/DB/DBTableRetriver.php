@@ -38,7 +38,7 @@ class DBTableRetriver {
             $table->setName($obj->name);
             return $table;
         }else{
-            var_dump($item, $item instanceof Player);
+            var_dump($item);
             throw new DBTableRetriverException("Unsupported call for : " . $item . " - ERROR CODE : DBTR-01");
         }
     }

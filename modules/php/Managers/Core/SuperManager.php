@@ -43,23 +43,31 @@ abstract class SuperManager extends DBRequester {
     abstract protected function initSerializer();
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - Fields Retrive Methods (protected)
+     *                  BEGIN - Fields Retrive Methods (protected/private)
      * ---------------------------------------------------------------------- */
 
-    final private function getFilteredFields($items, string $filter) {
-        $fields = DBFieldsRetriver::retrive($items);
-        return DBFiledsFilter::filter($fields, $filter);
+    final private function getItems($items = null) {
+        if (null === $items) {
+            $className = $this->getSerializer()->getClassModel();
+            $items = new $className();
+        }
+        return $items;
     }
 
     final protected function getInsertFields($items) {
-        return $this->getFilteredFields($items, QueryString::TYPE_INSERT);
+        return DBFieldsRetriver::retriveInsertFields($items);
     }
 
     final protected function getSeletFields() {
-        $className = $this->getSerializer()->getClassModel();
-        $items = new $className();
+        return DBFieldsRetriver::retriveSelectFields($this->getItems());
+    }
 
-        return $this->getFilteredFields($items, QueryString::TYPE_SELECT);
+    final protected function getPrimaryFields($items) {
+        return DBFieldsRetriver::retrivePrimaryFields($items);
+    }
+
+    final protected function getFieldByProperty(string $propertyName, $items = null) {
+        return DBFieldsRetriver::retriveFieldByPropertyName($propertyName, $this->getItems($items));
     }
 
     /* -------------------------------------------------------------------------
