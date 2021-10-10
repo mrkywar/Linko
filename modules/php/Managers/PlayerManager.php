@@ -14,7 +14,7 @@ use Linko\Serializers\Serializer;
  */
 class PlayerManager extends SuperManager {
 
-    public function initForNewGame(array $rawPlayers = array(), array $options = array()) {
+    public function initForNewGame(array $rawPlayers, array $options = []) {
         $gameinfos = Linko::getInstance()->getGameinfos();
 
         $players = $this->getSerializer()->unserialize($rawPlayers);

@@ -58,7 +58,7 @@ abstract class SuperManager extends DBRequester {
         return DBFieldsRetriver::retriveInsertFields($items);
     }
 
-    final protected function getSeletFields() {
+    final protected function getSelectFields() {
         return DBFieldsRetriver::retriveSelectFields($this->getItems());
     }
 
@@ -99,8 +99,8 @@ abstract class SuperManager extends DBRequester {
         $this->execute($qb);
     }
 
-    protected function getAll($limit = null) {
-        $fields = $this->getSeletFields();
+    protected function findBy($clauses = [], $limit = null) {
+        $fields = $this->getSelectFields();
         $table = $this->getTable();
 
         $qb = new QueryBuilder();
@@ -108,7 +108,10 @@ abstract class SuperManager extends DBRequester {
         $qb->setTable($table)
                 ->select()
                 ->setFields($fields);
-
+        foreach ($clauses as $clause => $value) {
+            $field = DBFieldsRetriver::retriveFieldByPropertyName($clause, $this->getItems());
+            $qb->addClause($field, $value);
+        }
         if (null !== $limit) {
             $qb->setLimit($limit);
         }

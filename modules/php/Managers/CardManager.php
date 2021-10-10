@@ -17,13 +17,21 @@ use Linko\Tools\DB\QueryBuilder;
  */
 class CardManager extends SuperManager {
 
-    public function initForNewGame(array $options = array()) {
+    public function initForNewGame($players, array $options = []) {
         $deck = new Deck();
 
         $this->create($deck->getCards());
 
-        $drawCards = $this->getAll(Deck::DRAW_VISIBLE_CARDS);
+        $drawCards = $this->findBy([], Deck::DRAW_VISIBLE_CARDS);
         $this->moveCards($drawCards, Deck::LOCATION_DRAW);
+
+        foreach (array_keys($players) as $playerId) {
+            $playerCards = $this->getAll(Deck::DECK_INITIAL_HAND);
+            $this->moveCards($playerCards, Deck::LOCATION_HAND, $playerId);
+            var_dump($playerId);
+        }
+
+        die("??");
     }
 
     /* -------------------------------------------------------------------------
