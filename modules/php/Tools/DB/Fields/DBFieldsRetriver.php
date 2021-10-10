@@ -5,6 +5,7 @@ namespace Linko\Tools\DB\Fields;
 use Linko\Models\Core\Model;
 use Linko\Models\Player;
 use Linko\Tools\DB\Exceptions\DBFieldsRetriverException;
+use Linko\Tools\DB\QueryString;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -48,6 +49,44 @@ abstract class DBFieldsRetriver {
         return $fields;
     }
 
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Fields Retrive Methods
+     * ---------------------------------------------------------------------- */
+
+    static private function retriveFilteredFields($items, string $filter) {
+        $fields = self::retrive($items);
+        return DBFiledsFilter::filter($fields, $filter);
+    }
+
+    static public function retriveInsertFields($items) {
+        return self::retriveFilteredFields($items, QueryString::TYPE_INSERT);
+    }
+
+    static public function retriveSelectFields($items) {
+        return self::retriveFilteredFields($items, QueryString::TYPE_SELECT);
+    }
+
+    static public function retrivePrimaryFields($items) {
+        $fields = self::retrive($items);
+        $fielteredFields = [];
+        foreach ($fields as $field) {
+            if ($field->getIsPrimary()) {
+                $fielteredFields[] = $field;
+            }
+        }
+        return $fielteredFields;
+    }
+    
+    static public function retriveFieldByPropertyName(string $propertyName, $items) {
+        $fields = self::retrive($items);
+        foreach ($fields as $field){
+            if($field->getProperty() === $propertyName ){
+                return $field;
+            }
+        }
+        
+        throw new DBFieldsRetriverException("Property Name '$propertyName' missing - ERROR CODE : DBFR-02");
+    }
     /* -------------------------------------------------------------------------
      *                  BEGIN - Primary Tools
      * ---------------------------------------------------------------------- */

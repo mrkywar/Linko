@@ -1,8 +1,11 @@
 <?php
-
 namespace Linko\Tools\DB;
 
 use Linko\Models\Core\Model;
+use Linko\Tools\DB\DBTable;
+use Linko\Tools\DB\Fields\DBField;
+use Linko\Tools\DB\Fields\DBFieldTransposer;
+use Linko\Tools\DB\QueryString;
 
 /**
  * Description of QueryBuilder

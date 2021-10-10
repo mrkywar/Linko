@@ -14,16 +14,10 @@ use Linko\Serializers\Serializer;
  */
 class PlayerManager extends SuperManager {
 
-    private $serializer;
-
-    public function __construct() {
-        $this->serializer = new Serializer(Player::class);
-    }
-
     public function initForNewGame(array $rawPlayers = array(), array $options = array()) {
         $gameinfos = Linko::getInstance()->getGameinfos();
 
-        $players = $this->serializer->unserialize($rawPlayers);
+        $players = $this->getSerializer()->unserialize($rawPlayers);
 
         $defaultColors = $gameinfos['player_colors'];
         foreach ($players as &$player) {
@@ -32,17 +26,17 @@ class PlayerManager extends SuperManager {
         }
 
         $this->create($players);
-        
+
         Linko::getInstance()->reattributeColorsBasedOnPreferences($rawPlayers, $gameinfos['player_colors']);
         Linko::getInstance()->reloadPlayersBasicInfos();
     }
-    
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - Define Abstracts Methods 
      * ---------------------------------------------------------------------- */
 
-    public function getSerializer() {
-        return $this->serializer;
+    protected function initSerializer(): Serializer {
+        return new Serializer(Player::class);
     }
 
 }

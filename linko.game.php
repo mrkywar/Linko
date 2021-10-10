@@ -1,5 +1,6 @@
 <?php
 
+use Linko\Managers\CardManager;
 use Linko\Managers\PlayerManager;
 
 $swdNamespaceAutoload = function ($class) {
@@ -64,6 +65,8 @@ class Linko extends Table {
         $playerManager = new PlayerManager();
         $playerManager->initForNewGame($players, $options);
         
+        $cardManager =new CardManager();
+        $cardManager->initForNewGame($options);
         
         
 //        die('... GAME');
