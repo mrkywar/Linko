@@ -38,8 +38,8 @@ abstract class GameDataRetiver {
         self::$playerManager = new PlayerManager();
         self::$playerSerializer = self::$playerManager->getSerializer();
         self::$cardManager = new CardManager();
-        self::$cardSerializer = self::$cardManager->getSerializer();
-
+        self::$cardSerializer = self::$cardManager->getSerializer();        
+        
         return [
             "pool" => self::retrivePool(),
             "deck" => count(self::retriveDeck()),

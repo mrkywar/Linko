@@ -56,7 +56,7 @@ define([
 
                 setup: function (gamedatas)
                 {
-                    this.debug("Starting game setup");
+                    this.debug("Starting game setup", gamedatas);
 
                     // Setting up player boards
                     for (var player_id in gamedatas.players)

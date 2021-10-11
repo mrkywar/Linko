@@ -16,6 +16,10 @@ abstract class Logger {
      */
     static private $manager;
 
+//    static public function getInstance(): LogManager {
+//        return self::getManager();
+//    }
+
     static private function getManager(): LogManager {
         if (null === self::$manager) {
             self::$manager = new LogManager();

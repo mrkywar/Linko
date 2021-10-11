@@ -74,7 +74,7 @@ class Serializer {
         $fields = DBFieldsRetriver::retrive(new $classModel());
 
         if (1 === sizeof($rawItems)) {
-            return $this->unserializeOnce($rawItems, $fields);
+            return $this->unserializeOnce($rawItems[array_keys($rawItems)[0]], $fields);
         } else if (is_array($rawItems)) {
             $items = [];
             foreach ($rawItems as $key => $rawItem) {
