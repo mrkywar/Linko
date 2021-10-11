@@ -39,9 +39,12 @@ abstract class GameDataRetiver {
         self::$playerSerializer = self::$playerManager->getSerializer();
         self::$cardManager = new CardManager();
         self::$cardSerializer = self::$cardManager->getSerializer();
-        
+
         return [
-            "draw" => self::retriveDraw()
+            "pool" => self::retrivePool(),
+            "deck" => count(self::retriveDeck()),
+            "discard" => self::retriveDiscard(),
+            "currentPlayer" => self::$playerSerializer->serialize($player)
         ];
     }
 
@@ -49,9 +52,23 @@ abstract class GameDataRetiver {
      *                  BEGIN - Retrive Tools (private)
      * ---------------------------------------------------------------------- */
 
-    static private function retriveDraw() {
+    static private function retrivePool() {
+        $rawCards = self::$cardManager->getCardInPool();
+        return self::$cardSerializer->unserialize($rawCards);
+    }
+
+    static private function retriveDeck() {
         $rawCards = self::$cardManager->getCardInDraw();
         return self::$cardSerializer->unserialize($rawCards);
     }
 
+    static private function retriveDiscard() {
+        $rawCards = self::$cardManager->getCardInDiscard();
+        return self::$cardSerializer->unserialize($rawCards);
+    }
+
+//    $result['handInfos'] = $cardRepo->getHandsInfos($players);
+//        $result['currentPlayer'] = $playerRepo
+//                ->setDoUnserialization(false)
+//                ->getById(Linko::getInstance()->getCurrentPlayerId())[0];
 }

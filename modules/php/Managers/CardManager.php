@@ -29,7 +29,6 @@ class CardManager extends SuperManager {
             $playerCards = $this->drawCards(Deck::DECK_INITIAL_HAND);
             $this->moveCards($playerCards, Deck::LOCATION_HAND, $playerId);
         }
-
     }
 
     /* -------------------------------------------------------------------------
@@ -47,6 +46,14 @@ class CardManager extends SuperManager {
 
     public function getCardInDraw() {
         return $this->getCardInLocation(Deck::LOCATION_DRAW);
+    }
+
+    public function getCardInPool() {
+        return $this->getCardInLocation(Deck::LOCATION_POOL);
+    }
+
+    public function getCardInDiscard() {
+        return $this->getCardInLocation(Deck::LOCATION_DISCARD);
     }
 
     public function drawCards($amount = 1) {

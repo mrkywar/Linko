@@ -2,6 +2,7 @@
 
 use Linko\Managers\CardManager;
 use Linko\Managers\PlayerManager;
+use Linko\Tools\Game\GameDataRetiver;
 use Linko\Tools\Logger\Logger;
 
 $swdNamespaceAutoload = function ($class) {
@@ -114,9 +115,11 @@ class Linko extends Table {
             "id" => self::getCurrentPlayerId()
         ]);
         
-        var_dump($currentPlayer);die;
+        return GameDataRetiver::retriveForPlayer($currentPlayer);
         
+//        var_dump($currentPlayer);die;
         
+//        
 //        $result = array();
 //
 //        $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
@@ -129,9 +132,9 @@ class Linko extends Table {
         
 //        $draw = $this->cardManager->getCardInDraw();
 
-        return [
-            "draw" => null
-        ];
+//        return [
+//            "draw" => null
+//        ];
     }
 
     /*
