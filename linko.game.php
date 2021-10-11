@@ -28,6 +28,16 @@ class Linko extends Table {
      */
     private static $instance;
 
+    /**
+     * @var CardManager
+     */
+    private $cardManager;
+
+    /**
+     * @var PlayerManager
+     */
+    private $playerManager;
+
     public function __construct() {
         // Your global variables labels:
         //  Here, you can assign labels to global variables you are using for this game.
@@ -36,6 +46,9 @@ class Linko extends Table {
         //  the corresponding ID in gameoptions.inc.php.
         // Note: afterwards, you can get/set the global variables with getGameStateValue/setGameStateInitialValue/setGameStateValue
         parent::__construct();
+
+        $this->cardManager = new CardManager();
+        $this->playerManager = new PlayerManager();
 
         self::$instance = $this;
 
@@ -63,11 +76,9 @@ class Linko extends Table {
      */
 
     protected function setupNewGame($players, $options = array()) {
-        $playerManager = new PlayerManager();
-        $playerManager->initForNewGame($players, $options);
 
-        $cardManager = new CardManager();
-        $cardManager->initForNewGame($players, $options);
+        $this->playerManager->initForNewGame($players, $options);
+        $this->cardManager->initForNewGame($players, $options);
 
         Logger::log("INIT OK", "GameSetup");
 
@@ -99,17 +110,28 @@ class Linko extends Table {
      */
 
     protected function getAllDatas() {
-        $result = array();
+        $currentPlayer = $this->playerManager->findBy([
+            "id" => self::getCurrentPlayerId()
+        ]);
+        
+        var_dump($currentPlayer);die;
+        
+        
+//        $result = array();
+//
+//        $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
+//        // Get information about players
+//        // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
+//        $sql = "SELECT player_id id, player_score score FROM player ";
+//        $result['players'] = self::getCollectionFromDb($sql);
+//
+//        // TODO: Gather all information about current game situation (visible by player $current_player_id).
+        
+//        $draw = $this->cardManager->getCardInDraw();
 
-        $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
-        // Get information about players
-        // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
-        $sql = "SELECT player_id id, player_score score FROM player ";
-        $result['players'] = self::getCollectionFromDb($sql);
-
-        // TODO: Gather all information about current game situation (visible by player $current_player_id).
-
-        return $result;
+        return [
+            "draw" => null
+        ];
     }
 
     /*
