@@ -27,6 +27,11 @@ class Serializer {
      *                  BEGIN - Serialize & Tools
      * ---------------------------------------------------------------------- */
 
+    /**
+     * allow transform Model to Array (DBCompatible)
+     * @param array<Model>|Model $items Model(s) to transform
+     * @return array
+     */
     public function serialize($items) {
         $fields = DBFieldsRetriver::retrive($items);
 
@@ -54,6 +59,11 @@ class Serializer {
      *                  BEGIN - Unserialize & Tools
      * ---------------------------------------------------------------------- */
 
+    /**
+     * allow transform Array (DBCompatible) to Model
+     * @param $rawItems to transform
+     * @return array<Model>|Model 
+     */
     public function unserialize($rawItems) {
         $classModel = $this->classModel;
         if (null === $classModel) {
@@ -76,7 +86,6 @@ class Serializer {
             }
             return $items;
         }
-
         return;
     }
 
