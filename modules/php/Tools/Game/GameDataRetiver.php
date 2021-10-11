@@ -38,33 +38,48 @@ abstract class GameDataRetiver {
         self::$playerManager = new PlayerManager();
         self::$playerSerializer = self::$playerManager->getSerializer();
         self::$cardManager = new CardManager();
-        self::$cardSerializer = self::$cardManager->getSerializer();        
-        
+        self::$cardSerializer = self::$cardManager->getSerializer();
+
         return [
             "pool" => self::retrivePool(),
             "deck" => count(self::retriveDeck()),
             "discard" => self::retriveDiscard(),
-//            "currentPlayer" => self::$playerSerializer->serialize($player)
+            "currentPlayer" => self::$playerSerializer->serialize($player),
+            "players" => self::retrivePlayers()
         ];
     }
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - Retrive Tools (private)
+     *                  BEGIN - Retrive Cards Tools (private)
      * ---------------------------------------------------------------------- */
 
     static private function retrivePool() {
-        $rawCards = self::$cardManager->getCardInPool();
-        return self::$cardSerializer->serialize($rawCards);
+        $cards = self::$cardManager->getCardInPool();
+        return self::$cardSerializer->serialize($cards);
     }
 
     static private function retriveDeck() {
-        $rawCards = self::$cardManager->getCardInDraw();
-        return self::$cardSerializer->serialize($rawCards);
+        $cards = self::$cardManager->getCardInDraw();
+        return self::$cardSerializer->serialize($cards);
     }
 
     static private function retriveDiscard() {
-        $rawCards = self::$cardManager->getCardInDiscard();
-        return self::$cardSerializer->serialize($rawCards);
+        $cards = self::$cardManager->getCardInDiscard();
+        return self::$cardSerializer->serialize($cards);
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Retrive Players Tools (private)
+     * ---------------------------------------------------------------------- */
+
+    static private function retrivePlayers() {
+        $players = self::$playerManager->findBy();
+        $rawPlayers = [];
+        foreach ($players as $player) {
+            $rawPlayers[$player->getId()] = self::$playerSerializer->serialize($player);
+        }
+
+        return $rawPlayers;
     }
 
 //    $result['handInfos'] = $cardRepo->getHandsInfos($players);

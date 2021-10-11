@@ -20,8 +20,8 @@ define([
     "ebg/core/gamegui",
     "ebg/counter",
 
-    g_gamethemeurl + 'modules/js/Core/ToolsTrait.js'//,
-//    g_gamethemeurl + 'modules/js/Game/SetupTrait.js',
+    g_gamethemeurl + 'modules/js/Core/ToolsTrait.js',
+    g_gamethemeurl + 'modules/js/Game/SetupTrait.js'//,
 //    g_gamethemeurl + 'modules/js/Game/PlayTrait.js',
 //    g_gamethemeurl + 'modules/js/Game/TakeCollectionTrait.js',
 ], function (dojo, declare) {
@@ -29,7 +29,9 @@ define([
             "bgagame.linko",
 //            ebg.core.gamegui,
             [
-                common.ToolsTrait
+                common.ToolsTrait,
+                
+                linko.SetupTrait
             ],
             {
                 constructor: function () {
@@ -39,41 +41,7 @@ define([
                     // Example:
                     // this.myGlobalValue = 0;
 
-                },
-
-                /*
-                 setup:
-                 
-                 This method must set up the game user interface according to current game situation specified
-                 in parameters.
-                 
-                 The method is called each time the game interface is displayed to a player, ie:
-                 _ when the game starts
-                 _ when a player refreshes the game page (F5)
-                 
-                 "gamedatas" argument contains all datas retrieved by your "getAllDatas" PHP method.
-                 */
-
-                setup: function (gamedatas)
-                {
-                    this.debug("Starting game setup", gamedatas);
-
-                    // Setting up player boards
-                    for (var player_id in gamedatas.players)
-                    {
-                        var player = gamedatas.players[player_id];
-
-                        // TODO: Setting up players boards if needed
-                    }
-
-                    // TODO: Set up your game interface here, according to "gamedatas"
-
-
-                    // Setup game notifications to handle (see "setupNotifications" method below)
-                    this.setupNotifications();
-
-                    this.debug("Ending game setup");
-                },
+                },                
 
                 ///////////////////////////////////////////////////
                 //// Game & client states
