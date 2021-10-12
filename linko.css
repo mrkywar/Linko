@@ -1,7 +1,7 @@
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * linko implementation : © <Your name here> <Your email address here>
+ * Linko implementation : © <Your name here> <Your email address here>
  *
  * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
  * See http://en.boardgamearena.com/#!doc/Studio for more information.
@@ -9,7 +9,7 @@
  *
  * linko.css
  *
- * linko stylesheet
+ * Linko stylesheet
  *
  */
 
@@ -24,7 +24,6 @@
     
     1°) define the overall layout of your game
         (ex: place the board on the top left, place player's hand beside, place the deck on the right, ...).
-
     2°) create your CSS-sprites:
         All images of your games should be gathered into a small number of image files. Then, using
         background-image and background-position CSS properties, you create HTML blocks that can 
@@ -48,25 +47,142 @@
 
 /********* You can start writing your CSS below this line: **********/
 
+.container{
+    width: 100%;
+}
+#carddeck,#board{
+    float: left;
+}
+#carddeck{
+    width: 13%;
+    margin-right: 2%;
+    min-height: 340px;
+}
+#board{
+    width: 85%;
+    min-height: 340px;
+}
+.playertable{
+    font-weight: bold;
+}
+.clear{
+    clear: both;
+}
 
-/*
-    Example of CSS sprites (a black token and a white token, 20x20px each, embedded in the same "tokens.png" 40x20px image):
+/*-----------------------------------------------------------------------------
+            BEGIN - cards on table 
+------------------------------------------------------------------------------*/
 
-    .white_token {
-        background-image: url('img/tokens.png');
-        background-position: 0px 0px;
-    }
-    .black_token {
-        background-image: url('img/tokens.png');
-        background-position: -20px 0px;
-    }
-    .token {
-        width: 20px;
-        height: 20px;
-        background-repeat: none;
-    }
-*/
+.cardontable {
+    position: relative;
+    display: block;
+    width: 60px;
+    height: 92px;
+    background-image: url('img/linko_cards.png');
+    float: left;
+    margin-bottom: 5px; 
+    margin-right: 5px;
+}
+.card_1{
+    background-position-y: -92px;
+}
+.card_2{
+    background-position-y: -184px;
+}
+.card_3{
+    background-position-y: -275px;
+}
+.card_4{
+    background-position-y: -367px;
+}
+.card_5{
+    background-position-y: -459px;
+}
+.card_6{
+    background-position-y: -550px;
+}
+.card_7{
+    background-position-y: -642px;
+}
+.card_8{
+    background-position-y: -734px;
+}
+.card_9{
+    background-position-y: -825px;
+}
+.card_10{
+    background-position-y: -917px;
+}
+.card_11{
+    background-position-y: -1009px;
+}
+.card_12{
+    background-position-y: -1101px;
+}
+.card_13{
+    background-position-y: -1192px;
+}
+.card_14{
+    background-position-y: -1284px;
+}
+.card_empty{
+    /*background-position-y: -1375px;*/
+    background: none;
+    border: solid black 1px;
+}
+/*-----------------------------------------------------------------------------
+            BEGIN - cards collection
+------------------------------------------------------------------------------*/
+.collection{
+    position: relative;
+    width: 60px;
+    float: left;
+    margin-right: 5px;
+}
+.collection .cardontable{
+    height: 20px;
+    margin-bottom: 0;
+}
+
+/*-----------------------------------------------------------------------------
+            BEGIN - Selection
+------------------------------------------------------------------------------*/
+.selectable{
+    border : 1px solid gray;
+    cursor: pointer;
+}
+.selected {
+    border: 2px solid #C70039;
+}
+/*-----------------------------------------------------------------------------
+            BEGIN - Draw & Discard count
+------------------------------------------------------------------------------*/
+.count-status{
+    margin: auto;
+    text-align: center;
+    margin-top: 50%;
+    font-size: 23px;
+    font-weight: bold;
+    color: #ffc85e;
+    text-shadow: 1px 1px 1px black, -1px -1px 1px black, -1px 1px 1px black, 1px -1px 1px black;
+    /* UNSELECTABLE TEXT */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                          supported by Chrome, Edge, Opera and Firefox */
+}
 
 
 
-
+/*-----------------------------------------------------------------------------
+            BEGIN - Debug
+------------------------------------------------------------------------------*/
+.debug{
+    min-height: 30px;
+    min-width: 30px;
+    background: greenyellow;
+    border: 3px black solid;
+}

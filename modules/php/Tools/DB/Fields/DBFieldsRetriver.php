@@ -17,6 +17,9 @@ abstract class DBFieldsRetriver {
 
     static public function retrive($item) {
         if (is_array($item)) {
+            if(empty($item)){
+                return;
+            }
             return self::retrive($item[array_keys($item)[0]]); //recursive call shoud called with first item in array<Model> parameter
         } elseif ($item instanceof Model) {
             $allField = self::retriveFields($item);

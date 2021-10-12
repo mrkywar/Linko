@@ -102,7 +102,7 @@ abstract class SuperManager extends DBRequester {
         return $this->execute($qb);
     }
 
-    protected function findBy($clauses = [], $limit = null) {
+    protected function prepareFindBy($clauses = [], $limit = null) {
         $fields = $this->getSelectFields();
         $table = $this->getTable();
 
@@ -119,6 +119,11 @@ abstract class SuperManager extends DBRequester {
             $qb->setLimit($limit);
         }
 
+        return $qb;
+    }
+
+    public function findBy($clauses = [], $limit = null) {
+        $qb = $this->setIsDebug(true)->prepareFindBy($clauses, $limit);
         $rawResults = $this->execute($qb);
         return $this->getSerializer()->unserialize($rawResults);
     }

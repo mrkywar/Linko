@@ -6,7 +6,6 @@ use Linko\Models\Core\Model;
 use Linko\Serializers\Core\SerializerException;
 use Linko\Tools\DB\Fields\DBFieldsRetriver;
 
-
 /**
  * Description of Serializer
  *
@@ -28,6 +27,11 @@ class Serializer {
      *                  BEGIN - Serialize & Tools
      * ---------------------------------------------------------------------- */
 
+    /**
+     * allow transform Model to Array (DBCompatible)
+     * @param array<Model>|Model $items Model(s) to transform
+     * @return array
+     */
     public function serialize($items) {
         $fields = DBFieldsRetriver::retrive($items);
 
@@ -55,6 +59,11 @@ class Serializer {
      *                  BEGIN - Unserialize & Tools
      * ---------------------------------------------------------------------- */
 
+    /**
+     * allow transform Array (DBCompatible) to Model
+     * @param $rawItems to transform
+     * @return array<Model>|Model 
+     */
     public function unserialize($rawItems) {
         $classModel = $this->classModel;
         if (null === $classModel) {
@@ -64,8 +73,8 @@ class Serializer {
         }
         $fields = DBFieldsRetriver::retrive(new $classModel());
 
-        if ($this->isUniqRaw($rawItems, $fields)) {
-            return $this->unserializeOnce($rawItems, $fields);
+        if (1 === sizeof($rawItems)) {
+            return $this->unserializeOnce($rawItems[array_keys($rawItems)[0]], $fields);
         } else if (is_array($rawItems)) {
             $items = [];
             foreach ($rawItems as $key => $rawItem) {
@@ -77,6 +86,7 @@ class Serializer {
             }
             return $items;
         }
+        return;
     }
 
     /**
@@ -97,21 +107,6 @@ class Serializer {
         }
 
         return $model;
-    }
-
-    /**
-     * Determine if a dataset is an unique raw or not
-     * @param array $rawItems : dataset used for test
-     * @param array<DBField>  $fields : Field list to check
-     * @return boolean true if only one Row false otherwise
-     */
-    private function isUniqRaw($rawItems, $fields) {
-        foreach ($fields as $field) {
-            if (isset($rawItems[$field->getDbName()])) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /* -------------------------------------------------------------------------
