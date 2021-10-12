@@ -1,6 +1,6 @@
 <?php
 
-namespace Linko\Models;
+namespace Linko\Models\Factories;
 
 use Linko\Models\State;
 
