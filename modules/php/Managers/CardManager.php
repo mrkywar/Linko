@@ -22,7 +22,7 @@ class CardManager extends SuperManager {
     public function initForNewGame($players, array $options = []) {
         $deck = new Deck();
 
-        $this->setIsDebug(true)->create($deck->getCards());
+        $this->create($deck->getCards());
 
         $drawCards = $this->drawCards(Deck::DRAW_VISIBLE_CARDS);
         $this->moveCards($drawCards, Deck::LOCATION_POOL);

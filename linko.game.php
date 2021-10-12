@@ -111,7 +111,7 @@ class Linko extends Table {
      */
 
     protected function getAllDatas() {
-        $currentPlayer = $this->playerManager->setIsDebug(true)->findBy([
+        $currentPlayer = $this->playerManager->findBy([
             "id" => self::getCurrentPlayerId()
         ]);
         
