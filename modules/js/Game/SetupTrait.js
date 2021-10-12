@@ -50,6 +50,25 @@ define([
                     //-- setup deck & discard
                     this.setupDeck(gamedatas);
 
+                    //-- setup player hand
+                    dojo.place(this.format_block('jstpl_myhand', gamedatas.currentPlayer), 'board');
+
+                    for (var cardId in gamedatas.hand) {
+                        var card = gamedatas.hand[cardId];
+                        var div = dojo.place(this.format_block('jstpl_card', card), 'myhand');
+
+
+//                        var card = gamedatas.hand[cardId];
+//                        this.handCards[card.card_id] = card;
+//                        var div = dojo.place(this.format_block('jstpl_card', card), 'myhand');
+//                        dojo.connect(div, 'onclick', (evt) => {
+//                            evt.preventDefault();
+//                            evt.stopPropagation();
+//                            this.onClickCard(evt);
+//                        });
+
+                    }
+
 //                    // Setting up player boards
 //                    for (var player_id in gamedatas.players)
 //                    {
@@ -105,7 +124,7 @@ define([
                         last: (0 === gamedatas.discard.length) ? 'empty' : gamedatas.discard[gamedatas.discard.length - 1]["card_type"],
                         discard: gamedatas.discard.length
                     };
-                    
+
                     dojo.place(this.format_block('jstpl_discard', discard), 'deck');
                 },
 

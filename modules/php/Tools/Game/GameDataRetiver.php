@@ -46,7 +46,8 @@ abstract class GameDataRetiver {
             "discard" => self::retriveDiscard(),
             "currentPlayer" => self::$playerSerializer->serialize($player),
             "players" => self::retrivePlayers(),
-            "tableInfos" => self::retriveTableInfos()
+            "tableInfos" => self::retriveTableInfos(),
+            "hand" => self::retrivePlayerHand($player)
         ];
     }
 
@@ -93,6 +94,11 @@ abstract class GameDataRetiver {
         }
 
         return $tableInfos;
+    }
+
+    static private function retrivePlayerHand(Player $player) {
+        $cards = self::$cardManager->getCardInHandByPlayer($player);
+        return self::$cardSerializer->serialize($cards);
     }
 
 //    $result['handInfos'] = $cardRepo->getHandsInfos($players);
