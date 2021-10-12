@@ -35,7 +35,7 @@ define([
                 setup: function (gamedatas)
                 {
                     this.debug("Setup in trait", gamedatas);
-                    
+
                     //-- create players boards
                     for (var playerId in gamedatas.players) {
                         var player = gamedatas.players[playerId];
@@ -44,10 +44,11 @@ define([
                         //-- setup player tables
 //                        this.setupTables(gamedatas, playerId);
                     }
-                    
+
                     //-- setup pool
                     this.setupPool(gamedatas);
-                    
+                    //-- setup deck & discard
+                    this.setupDeck(gamedatas);
 
 //                    // Setting up player boards
 //                    for (var player_id in gamedatas.players)
@@ -84,8 +85,30 @@ define([
                         });
                     }
                 },
-                
-                
+
+                /**
+                 *  SetupDraw : This method must set up the Deck and Discard 
+                 *  
+                 * @param gamedatas contains all datas retrieved by 
+                 * your "getAllDatas" PHP method.        
+                 */
+                setupDeck: function (gamedatas) {
+                    //-- setup deck
+                    var deck = {
+                        deck: gamedatas.deck
+                    };
+                    dojo.place(this.format_block('jstpl_deck', deck), 'deck');
+
+                    //-- setup discard
+                    this.debug("discard : ", gamedatas.discard);
+                    var discard = {
+                        last: (0 === gamedatas.discard.length) ? 'empty' : gamedatas.discard[gamedatas.discard.length - 1]["card_type"],
+                        discard: gamedatas.discard.length
+                    };
+                    
+                    dojo.place(this.format_block('jstpl_discard', discard), 'deck');
+                },
+
                 /**
                  *  setupTables : This method must set up the table of each player
                  *  
