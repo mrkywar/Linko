@@ -56,16 +56,11 @@ define([
                     for (var cardId in gamedatas.hand) {
                         var card = gamedatas.hand[cardId];
                         var div = dojo.place(this.format_block('jstpl_card', card), 'myhand');
-
-
-//                        var card = gamedatas.hand[cardId];
-//                        this.handCards[card.card_id] = card;
-//                        var div = dojo.place(this.format_block('jstpl_card', card), 'myhand');
-//                        dojo.connect(div, 'onclick', (evt) => {
-//                            evt.preventDefault();
-//                            evt.stopPropagation();
-//                            this.onClickCard(evt);
-//                        });
+                        dojo.connect(div, 'onclick', (evt) => {
+                            evt.preventDefault();
+                            evt.stopPropagation();
+                            this.onClickCard(evt);
+                        });
 
                     }
 
@@ -85,13 +80,13 @@ define([
 //
 //                    this.debug("Ending game setup");
                 },
+
                 /**
                  *  SetupDraw : This method must set up the Draw 
                  *  
                  * @param gamedatas contains all datas retrieved by 
                  * your "getAllDatas" PHP method.        
                  */
-
                 setupPool: function (gamedatas) {
                     this.debug(gamedatas.pool);
                     for (var cardId in gamedatas.pool) {
