@@ -36,6 +36,18 @@ CREATE TABLE IF NOT EXISTS `log` (
     PRIMARY KEY(`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
+CREATE TABLE IF NOT EXISTS `state` (
+    `state_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `state_type` int(10) NOT NULL,
+    `state_created_date` varchar(50) NOT NULL,
+    `state_played_date` varchar(50) NULL,
+    `state_order` int(10) NOT NULL,
+    `state_player_id` int(10) UNSIGNED NULL,
+    `state_params` text NULL,
+    PRIMARY KEY(`state_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+
 -- Example 2: add a custom field to the standard "player" table
 -- ALTER TABLE `player` ADD `player_my_custom_field` INT UNSIGNED NOT NULL DEFAULT '0';
 
