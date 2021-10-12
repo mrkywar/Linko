@@ -24,8 +24,14 @@ class StateManager extends SuperManager {
 //        
 //        
 //    }
+    
+    
+    
 
-
+    public function initNewTurn() {
+        $states = [];
+        $order = $this->getNextOrder();
+    }
 
     public function getNextOrder() {
         $qb = new QueryBuilder();
