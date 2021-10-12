@@ -5,6 +5,7 @@ namespace Linko\Managers;
 use Linko\Managers\Core\SuperManager;
 use Linko\Managers\Deck\Deck;
 use Linko\Models\Card;
+use Linko\Models\Player;
 use Linko\Serializers\Serializer;
 use Linko\Tools\DB\DBValueRetriver;
 use Linko\Tools\DB\Fields\DBFieldsRetriver;
@@ -54,6 +55,10 @@ class CardManager extends SuperManager {
 
     public function getCardInDiscard() {
         return $this->getCardInLocation(Deck::LOCATION_DISCARD);
+    }
+
+    public function getCardPlayedByPlayer(Player $player) {
+        return $this->getCardInLocation(Deck::LOCATION_PLAYER_TABLE + "_" + $player->getId());
     }
 
     public function drawCards($amount = 1) {

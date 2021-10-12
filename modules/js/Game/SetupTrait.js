@@ -63,6 +63,33 @@ define([
 //
 //                    this.debug("Ending game setup");
                 },
+                
+                
+                
+                /**
+                 *  setupTables : This method must set up the table of each player
+                 *  
+                 * @param gamedatas contains all datas retrieved by 
+                 * your "getAllDatas" PHP method.        
+                 */
+                setupTables: function (gamedatas, playerId) {
+                    this.debug("setup tables for player " + playerId, gamedatas.tableInfos[playerId]);
+                    for (var collectionId in gamedatas.tableInfos[playerId]) {
+                        var collection = {
+                            collection_index: collectionId,
+                            player_id: playerId,
+                        };
+                        var div = dojo.place(this.format_block('jstpl_collection', collection), 'playertable_' + playerId);
+
+                        for (var cardId in gamedatas.tableInfos[playerId][collectionId]) {
+                            var card = gamedatas.tableInfos[playerId][collectionId][cardId];
+                            dojo.place(this.format_block('jstpl_card', card), div);
+                        }
+                    }
+
+
+
+                }
 
             });
 
