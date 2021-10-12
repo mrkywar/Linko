@@ -40,15 +40,13 @@ abstract class GameDataRetiver {
         self::$cardManager = new CardManager();
         self::$cardSerializer = self::$cardManager->getSerializer();
 
-        $players = self::retrivePlayers();
-
         return [
             "pool" => self::retrivePool(),
             "deck" => count(self::retriveDeck()),
             "discard" => self::retriveDiscard(),
             "currentPlayer" => self::$playerSerializer->serialize($player),
-            "players" => $players,
-            "tableInfos" => self::retriveTableInfos($players)
+            "players" => self::retrivePlayers(),
+            "tableInfos" => self::retriveTableInfos()
         ];
     }
 
@@ -85,7 +83,8 @@ abstract class GameDataRetiver {
         return $rawPlayers;
     }
 
-    static private function retriveTableInfos(array $players) {
+    static private function retriveTableInfos() {
+        $players = self::$playerManager->findBy();
         $tableInfos = [];
 
         foreach ($players as $player) {

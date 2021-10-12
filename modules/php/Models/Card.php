@@ -12,7 +12,7 @@ class Card extends Core\Model {
 
     /**
      * @var int|null
-     * @ORM\Column{"type":"integer", "name":"card_id"}
+     * @ORM\Column{"type":"integer", "name":"card_id", "exclude":["insert"]}
      * @ORM\Id
      */
     private $id;

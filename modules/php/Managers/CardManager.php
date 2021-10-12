@@ -21,7 +21,7 @@ class CardManager extends SuperManager {
     public function initForNewGame($players, array $options = []) {
         $deck = new Deck();
 
-        $this->create($deck->getCards());
+        $this->setIsDebug(true)->create($deck->getCards());
 
         $drawCards = $this->drawCards(Deck::DRAW_VISIBLE_CARDS);
         $this->moveCards($drawCards, Deck::LOCATION_POOL);
@@ -58,7 +58,7 @@ class CardManager extends SuperManager {
     }
 
     public function getCardPlayedByPlayer(Player $player) {
-        return $this->getCardInLocation(Deck::LOCATION_PLAYER_TABLE + "_" + $player->getId());
+        return $this->getCardInLocation(Deck::LOCATION_PLAYER_TABLE . "_" . $player->getId());
     }
 
     public function drawCards($amount = 1) {

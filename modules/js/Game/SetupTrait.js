@@ -44,7 +44,9 @@ define([
                         //-- setup player tables
 //                        this.setupTables(gamedatas, playerId);
                     }
-
+                    
+                    //-- setup pool
+                    this.setupPool(gamedatas);
                     
 
 //                    // Setting up player boards
@@ -63,7 +65,25 @@ define([
 //
 //                    this.debug("Ending game setup");
                 },
-                
+                /**
+                 *  SetupDraw : This method must set up the Draw 
+                 *  
+                 * @param gamedatas contains all datas retrieved by 
+                 * your "getAllDatas" PHP method.        
+                 */
+
+                setupPool: function (gamedatas) {
+                    this.debug(gamedatas.pool);
+                    for (var cardId in gamedatas.pool) {
+                        var card = gamedatas.pool[cardId];
+                        var div = dojo.place(this.format_block('jstpl_card', card), 'aviableDraw');
+                        dojo.connect(div, 'onclick', (evt) => {
+                            evt.preventDefault();
+                            evt.stopPropagation();
+                            this.onClickCard(card);
+                        });
+                    }
+                },
                 
                 
                 /**
@@ -72,24 +92,24 @@ define([
                  * @param gamedatas contains all datas retrieved by 
                  * your "getAllDatas" PHP method.        
                  */
-                setupTables: function (gamedatas, playerId) {
-                    this.debug("setup tables for player " + playerId, gamedatas.tableInfos[playerId]);
-                    for (var collectionId in gamedatas.tableInfos[playerId]) {
-                        var collection = {
-                            collection_index: collectionId,
-                            player_id: playerId,
-                        };
-                        var div = dojo.place(this.format_block('jstpl_collection', collection), 'playertable_' + playerId);
-
-                        for (var cardId in gamedatas.tableInfos[playerId][collectionId]) {
-                            var card = gamedatas.tableInfos[playerId][collectionId][cardId];
-                            dojo.place(this.format_block('jstpl_card', card), div);
-                        }
-                    }
-
-
-
-                }
+//                setupTables: function (gamedatas, playerId) {
+//                    this.debug("setup tables for player " + playerId, gamedatas.tableInfos[playerId]);
+//                    for (var collectionId in gamedatas.tableInfos[playerId]) {
+//                        var collection = {
+//                            collection_index: collectionId,
+//                            player_id: playerId,
+//                        };
+//                        var div = dojo.place(this.format_block('jstpl_collection', collection), 'playertable_' + playerId);
+//
+//                        for (var cardId in gamedatas.tableInfos[playerId][collectionId]) {
+//                            var card = gamedatas.tableInfos[playerId][collectionId][cardId];
+//                            dojo.place(this.format_block('jstpl_card', card), div);
+//                        }
+//                    }
+//
+//
+//
+//                }
 
             });
 
