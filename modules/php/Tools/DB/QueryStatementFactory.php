@@ -51,8 +51,9 @@ abstract class QueryStatementFactory {
         $statement .= QueryString::TYPE_SELECT;
 
         //-- Fields (list or *)
-        if (!empty($qb->getFields())) {
+        if (!empty($qb->getFields()) || !empty($qb->getFunctionFields())) {
             $statement .= self::createFieldList($qb);
+            $statement .= self::createFunctionFieldList($qb);
         } else {
             $statement .= " * ";
         }
@@ -82,6 +83,20 @@ abstract class QueryStatementFactory {
         $fieldDb = [];
         foreach ($qb->getFields() as $field) {
             $fieldDb[] = " `" . $field->getDbName() . "` ";
+        }
+
+        return implode(",", $fieldDb);
+    }
+
+    /**
+     * Create field list (select <FieldList> From ...)
+     * @param QueryBuilder $qb
+     * @return type
+     */
+    private static function createFunctionFieldList(QueryBuilder $qb) {
+        $fieldDb = [];
+        foreach ($qb->getFunctionFields() as $functionField) {
+            $fieldDb[] = " " . $functionField . " ";
         }
 
         return implode(",", $fieldDb);
@@ -146,7 +161,7 @@ abstract class QueryStatementFactory {
 
         //-- Values 
         $statement .= " VALUES ";
-        
+
         $statement .= self::createValues($qb);
     }
 

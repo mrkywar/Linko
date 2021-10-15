@@ -123,7 +123,7 @@ abstract class SuperManager extends DBRequester {
     }
 
     public function findBy($clauses = [], $limit = null) {
-        $qb = $this->setIsDebug(true)->prepareFindBy($clauses, $limit);
+        $qb = $this->prepareFindBy($clauses, $limit);
         $rawResults = $this->execute($qb);
         return $this->getSerializer()->unserialize($rawResults);
     }

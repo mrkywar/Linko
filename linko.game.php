@@ -2,6 +2,8 @@
 
 use Linko\Managers\CardManager;
 use Linko\Managers\PlayerManager;
+use Linko\Managers\StateManager;
+use Linko\States\Traits\TurnTrait;
 use Linko\Tools\Game\GameDataRetiver;
 use Linko\Tools\Logger\Logger;
 
@@ -22,6 +24,8 @@ spl_autoload_register($swdNamespaceAutoload, true, true);
 require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 
 class Linko extends Table {
+    
+    use TurnTrait;
 
     /**
      * 
@@ -111,9 +115,12 @@ class Linko extends Table {
      */
 
     protected function getAllDatas() {
-        $currentPlayer = $this->playerManager->setIsDebug(true)->findBy([
+        $currentPlayer = $this->playerManager->findBy([
             "id" => self::getCurrentPlayerId()
         ]);
+        $stateManager = new StateManager();
+        $stateManager->getNextOrder();
+        
         
         return GameDataRetiver::retriveForPlayer($currentPlayer);
         
