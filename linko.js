@@ -37,6 +37,8 @@ define([
             {
                 constructor: function () {
                     this.debug('linko constructor');
+                    
+                    this.handCards = [];
 
                     // Here, you can init the global variables of your user interface
                     // Example:

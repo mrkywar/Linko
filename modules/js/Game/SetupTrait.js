@@ -55,6 +55,7 @@ define([
 
                     for (var cardId in gamedatas.hand) {
                         var card = gamedatas.hand[cardId];
+                        this.handCards[card.card_id] = card;
                         var div = dojo.place(this.format_block('jstpl_card', card), 'myhand');
                         dojo.connect(div, 'onclick', (evt) => {
                             evt.preventDefault();
