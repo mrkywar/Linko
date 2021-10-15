@@ -8,13 +8,28 @@
 
 namespace Linko\States\Traits;
 
+use Linko\Managers\CardManager;
+use Linko\Managers\PlayerManager;
+use Linko\Tools\Game\PlayCardChecker;
+
 /**
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 trait PlayTrait {
+
     public function actionPlayCards($rawCardIds) {
-//        self::checkAction('playCards');
+        self::checkAction('playCards');
+
+        $cardId = explode(",", $rawCardIds);
+        $playerManager = new PlayerManager(); //$this->getPlayerManager();
+        $cardManager = new CardManager(); //$this->getCardManager();
+        $player = $playerManager->findBy(["id" => self::getActivePlayerId()]);
+        $cards = $cardManager->findBy(["id" => $cardId]);
+
+        PlayCardChecker::check($player, $cards);
+
+//        Logger::log($player->getName()." play " " card ".$cards[0]->getType());
 //        Logger::log("Action Play Card " . $rawCardIds, "PCT-APC");
 //        $this->cardIds = explode(",", $rawCardIds);
 //
@@ -52,7 +67,7 @@ trait PlayTrait {
      *            BEGIN - Play Cards Actions - TOOLS
      * ---------------------------------------------------------------------- */
 
-   
+
     /* -------------------------------------------------------------------------
      *            BEGIN - Display
      * ---------------------------------------------------------------------- */
@@ -78,4 +93,5 @@ trait PlayTrait {
     public function stPlayCards() {
         
     }
+
 }

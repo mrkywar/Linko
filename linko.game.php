@@ -3,6 +3,7 @@
 use Linko\Managers\CardManager;
 use Linko\Managers\PlayerManager;
 use Linko\Managers\StateManager;
+use Linko\States\Traits\PlayTrait;
 use Linko\States\Traits\TurnTrait;
 use Linko\Tools\Game\GameDataRetiver;
 use Linko\Tools\Logger\Logger;
@@ -26,6 +27,7 @@ require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 class Linko extends Table {
     
     use TurnTrait;
+    use PlayTrait;
 
     /**
      * 

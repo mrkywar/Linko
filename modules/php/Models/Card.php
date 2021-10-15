@@ -2,13 +2,16 @@
 
 namespace Linko\Models;
 
+use Linko\Managers\Deck\Deck;
+use Linko\Models\Core\Model;
+
 /**
  * Description of Card
  *
  * @author Mr_Kywar mr_kywar@gmail.com
  * @ORM\Table{"name":"card"}
  */
-class Card extends Core\Model {
+class Card extends Model {
 
     /**
      * @var int|null
@@ -44,6 +47,17 @@ class Card extends Core\Model {
 
     public function __construct() {
         $this->locationArg = 0;
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Check 
+     * ---------------------------------------------------------------------- */
+
+    public function isInHand(Player $player) {
+        return (
+                (Deck::LOCATION_HAND === $this->getLocation()) &&
+                $player->getId() === intval($this->getLocationArg())
+        );
     }
 
     /* -------------------------------------------------------------------------
