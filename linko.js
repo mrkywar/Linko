@@ -21,8 +21,8 @@ define([
     "ebg/counter",
 
     g_gamethemeurl + 'modules/js/Core/ToolsTrait.js',
-    g_gamethemeurl + 'modules/js/Game/SetupTrait.js'//,
-//    g_gamethemeurl + 'modules/js/Game/PlayTrait.js',
+    g_gamethemeurl + 'modules/js/Game/SetupTrait.js',
+    g_gamethemeurl + 'modules/js/Game/PlayTrait.js'//,
 //    g_gamethemeurl + 'modules/js/Game/TakeCollectionTrait.js',
 ], function (dojo, declare) {
     return declare(
@@ -31,6 +31,7 @@ define([
             [
                 common.ToolsTrait,
                 
+                linko.PlayTrait,
                 linko.SetupTrait
             ],
             {
@@ -41,7 +42,7 @@ define([
                     // Example:
                     // this.myGlobalValue = 0;
 
-                },                
+                },
 
                 ///////////////////////////////////////////////////
                 //// Game & client states
@@ -55,20 +56,25 @@ define([
 
                     switch (stateName)
                     {
-
-                        /* Example:
-                         
-                         case 'myGameState':
-                         
-                         // Show some HTML block at this game state
-                         dojo.style( 'my_html_block_id', 'display', 'block' );
-                         
-                         break;
-                         */
-
-
-                        case 'dummmy':
+                        case "playNumber":
+                            if (this.isCurrentPlayerActive()) {
+                                this.initalizePlayNumber();
+                            }
                             break;
+
+                            /* Example:
+                             
+                             case 'myGameState':
+                             
+                             // Show some HTML block at this game state
+                             dojo.style( 'my_html_block_id', 'display', 'block' );
+                             
+                             break;
+                             */
+
+
+//                        case 'dummmy':
+//                            break;
                     }
                 },
 
