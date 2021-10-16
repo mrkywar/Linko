@@ -14,6 +14,9 @@ define([
 
                 constructor: function () {
                     this.debug('linko.playTrait constructor');
+                    
+                    this.handCards = [];
+                    this.selectedJokers = [];
                 },
 
                 initalizePlayNumber: function () {
@@ -69,8 +72,7 @@ define([
                     if (targetedCard.target.attributes['class'].value.indexOf("selectable") < 0) {
                         return; //ignore when not selectable
                     }
-
-                    if ("14" === cardType) {
+                    if (14 === cardType) {
                         var pos = this.selectedJokers.indexOf(card.card_id);
                         if (pos >= 0) {
                             dojo.query('#hand_card_' + card.card_id).removeClass("selected");
