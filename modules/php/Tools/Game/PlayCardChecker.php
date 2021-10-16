@@ -5,6 +5,7 @@ namespace Linko\Tools\Game;
 use Linko\Models\Card;
 use Linko\Models\Player;
 use Linko\Tools\Game\Exceptions\PlayCardException;
+use Linko\Tools\Game\Exceptions\PlayerCheatException;
 use Linko\Tools\Logger\Logger;
 
 /**
@@ -18,64 +19,55 @@ abstract class PlayCardChecker {
         try {
             if ($cards instanceof Card) {
                 self::checkCardInHand($cards, $player);
+
+                $log = $player->getName() . " play one card : "
+                        . $cards->getType() . " (id : " . $cards->getId() . " )";
+
+                Logger::log($log, "PlayCard");
+
                 return true;
-            }else{
+            } else {
                 $cardTypes = [];
-                foreach ($cards as $card){
-                    self::checkCardInHand($card, $player);
-                    $cardTypes[$card->getType()] ++;
+                foreach ($cards as $card) {
+                    if (!self::checkCardInHand($card, $player)) {
+                        throw new PlayerCheatException("Invalid Player Selection");
+                    }
+                    if (isset($cardTypes[$card->getType()])) {
+                        $cardTypes[$card->getType()]++;
+                    } else {
+                        $cardTypes[$card->getType()] = 1;
+                    }
                 }
-                var_dump($cardTypes);die;
-                
+
+                if (!self::checkCardTypes($cardTypes)) {
+                    throw new PlayCardException("Invalid Card Selection");
+                }
+
+                $log = $player->getName() . " play " . sizeof($cards)
+                        . " cards : " . self::getLogType($cardTypes) . " (ids : "
+                        . self::getCardsIds($cards) . ")";
+                Logger::log($log, "PlayCard");
+
+                return true;
             }
-        } catch (Exceptions\PlayerCheatException $ex) {
+        } catch (PlayerCheatException $ex) {
             Logger::log("Player Cheat with ids : " . self::getCardsIds($cards));
             throw new PlayCardException("Impossible to play this card(s)", 0, $ex);
         }
-
-
-
-//        if ($cards instanceof Card) {
-//
-//            if (!$cards->isInHand($player)) {
-//                $log = $player->getName() . " play fail to play one card  : "
-//                        . $cards->getType() . " (id : " . $cards->getId() . " )";
-//                Logger::log($log, "CHEAT-PC01");
-//                throw new PlayCardException("Card isn't in your hand");
-//            }
-//            $log = $player->getName() . " play one card : " . $cards->getType()
-//                    . " (id : " . $cards->getId() . " )";
-//
-//            Logger::log($log, "PlayCard");
-//            return true;
-//        } else {
-//            $cardTypes = [];
-//            $checkHand = true;
-//
-//            foreach ($cards as $card){
-//               if (!$card->isInHand($player)) {
-//                    $log = $player->getName() . " play fail to play "
-//                            . count($cards)." cards  : "
-//                        . $cards->getType() . " (id : " . $cards->getId() . " )";
-//                    Logger::log($log, "CHEAT-PC02");
-//                    throw new PlayCardException("Some Cards isn't in your hand");
-//               }
-//            }
-//        }
-//
-//        var_dump($cards);
-//        die;
     }
 
-    private static function checkCardInHand(Card $card, Player $player) {
+    static private function checkCardInHand(Card $card, Player $player) {
         if (!$card->isInHand($player)) {
             $log = $player->getName() . " play fail to play one card  : "
                     . $card->getType() . " (id : " . $card->getId() . " )";
             Logger::log($log, "CHEAT-PC");
+
+            return false;
         }
+        return true;
     }
 
-    private static function getCardsIds($cards) {
+    static private function getCardsIds($cards) {
         if ($cards instanceof Card) {
             return $cards->getId();
         } elseif (is_array($cards)) {
@@ -87,6 +79,26 @@ abstract class PlayCardChecker {
         } else {
             throw new PlayCardException("Cards arg fail - PCC 02");
         }
+    }
+
+    static private function checkCardTypes(array $cardTypes) {
+        switch (sizeof($cardTypes)) {
+            case 1:// One Type is OK !
+                return true;
+            case 2:// 2 type = 1 (or more) joker or invalid!
+                return isset($cardTypes[14]);
+            default ://More or Less is not a valid selection
+        }
+    }
+
+    static private function getLogType(array $cardTypes) {
+        $line = [];
+
+        foreach ($cardTypes as $type => $count) {
+            $line [] = $count . " x " . $type;
+        }
+
+        return implode("and", $line);
     }
 
 }
