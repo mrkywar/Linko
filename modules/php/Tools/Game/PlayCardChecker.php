@@ -98,7 +98,7 @@ abstract class PlayCardChecker {
             $line [] = $count . " x " . $type;
         }
 
-        return implode("and", $line);
+        return implode(" and ", $line);
     }
 
 }

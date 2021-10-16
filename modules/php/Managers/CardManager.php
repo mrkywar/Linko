@@ -93,7 +93,7 @@ class CardManager extends SuperManager {
      *                  BEGIN - Move Methods
      * ---------------------------------------------------------------------- */
 
-    private function moveCards($cards, $destination, $destinationArg = null) {
+    public function moveCards($cards, $destination, $destinationArg = null) {
         $table = $this->getTable($cards);
         $primaries = $this->getPrimaryFields($cards);
 
@@ -114,6 +114,26 @@ class CardManager extends SuperManager {
         }
 
         $this->execute($qb);
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Collection Methods
+     * ---------------------------------------------------------------------- */
+
+    public function getNextCollectionIndexFor(Player $player) {
+        $qb = new QueryBuilder();
+        $table = $this->getTable();
+
+        $qb->select()
+                ->setTable($table)
+                ->addFunctionField("max", $this->getFieldByProperty("locationArg"))
+                ->addClause($this->getFieldByProperty("location"), Deck::LOCATION_PLAYER_TABLE . "_" . $player->getId())
+        ;
+
+        $rawResults = $this->execute($qb);
+        $card = $this->getSerializer()->unserialize($rawResults);
+
+        return intval($card->getLocationArg()) + 1;
     }
 
     /* -------------------------------------------------------------------------

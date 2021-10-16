@@ -9,7 +9,9 @@
 namespace Linko\States\Traits;
 
 use Linko\Managers\CardManager;
+use Linko\Managers\Deck\Deck;
 use Linko\Managers\PlayerManager;
+use Linko\Tools\Game\Exceptions\PlayCardException;
 use Linko\Tools\Game\PlayCardChecker;
 
 /**
@@ -27,8 +29,17 @@ trait PlayTrait {
         $player = $playerManager->findBy(["id" => self::getActivePlayerId()]);
         $cards = $cardManager->findBy(["id" => $cardId]);
 
-        PlayCardChecker::check($player, $cards);
-        die("checked");
+        if (PlayCardChecker::check($player, $cards)) {
+            $collectionIndex = $cardManager->getNextCollectionIndexFor($player);
+//            var_dump($collectionIndex);
+            $cardManager->moveCards($cards, Deck::LOCATION_PLAYER_TABLE . "_" . $player->getId(), $collectionIndex);
+        } else {
+            throw new PlayCardException("Invalid selection try again");
+        }
+        
+        
+        $this->gamestate->nextState();
+//        die("checked");
 
 //        Logger::log($player->getName()." play " " card ".$cards[0]->getType());
 //        Logger::log("Action Play Card " . $rawCardIds, "PCT-APC");

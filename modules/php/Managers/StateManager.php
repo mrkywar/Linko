@@ -41,7 +41,7 @@ class StateManager extends SuperManager {
                 ->setTable($table)
                 ->addFunctionField("max", $this->getFieldByProperty("order"));
 
-        $rawResults = $this->setIsDebug(true)->execute($qb);
+        $rawResults = $this->execute($qb);
         $state = $this->getSerializer()->unserialize($rawResults);
 
         return $state->getOrder() + 1;
