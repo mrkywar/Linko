@@ -28,6 +28,7 @@ trait PlayTrait {
         $cards = $cardManager->findBy(["id" => $cardId]);
 
         PlayCardChecker::check($player, $cards);
+        die("checked");
 
 //        Logger::log($player->getName()." play " " card ".$cards[0]->getType());
 //        Logger::log("Action Play Card " . $rawCardIds, "PCT-APC");
