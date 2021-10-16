@@ -18,6 +18,15 @@ abstract class PlayCardChecker {
         try {
             if ($cards instanceof Card) {
                 self::checkCardInHand($cards, $player);
+                return true;
+            }else{
+                $cardTypes = [];
+                foreach ($cards as $card){
+                    self::checkCardInHand($card, $player);
+                    $cardTypes[$card->getType()] ++;
+                }
+                var_dump($cardTypes);die;
+                
             }
         } catch (Exceptions\PlayerCheatException $ex) {
             Logger::log("Player Cheat with ids : " . self::getCardsIds($cards));
