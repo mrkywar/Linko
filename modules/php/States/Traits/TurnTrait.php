@@ -54,6 +54,8 @@ trait TurnTrait {
 //        if (null !== $actualState->getPlayerId()) {
 //            $this->gamestate->changeActivePlayer($actualState->getPlayerId());
 //        }
+        $this->activeNextPlayer();
+        $this->gamestate->jumpToState(ST_PLAYER_PLAY_NUMBER);
     }
 
 }
