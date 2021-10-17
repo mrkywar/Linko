@@ -16,6 +16,8 @@ class DBField {
     const BINARY_FORMAT = "binary";
     const DATETIME_FORMAT = "datetime";
     const JSON_FORMAT = "json";
+    
+    const DATETIME_STRING_FORMAT = "Y-m-d H:i:s";
 
     /**
      * 
@@ -46,6 +48,12 @@ class DBField {
      */
     private $exclusions;
 
+    /**
+     * 
+     * @var string|null
+     */
+    private $default;
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 
      * ---------------------------------------------------------------------- */
@@ -70,6 +78,10 @@ class DBField {
         return $this->exclusions;
     }
 
+    public function getDefault(): ?string {
+        return $this->default;
+    }
+
     public function setType(string $type) {
         $this->type = $type;
         return $this;
@@ -92,6 +104,11 @@ class DBField {
 
     public function setExclusions(?array $exclusions) {
         $this->exclusions = $exclusions;
+        return $this;
+    }
+
+    public function setDefault(?string $default) {
+        $this->default = $default;
         return $this;
     }
 

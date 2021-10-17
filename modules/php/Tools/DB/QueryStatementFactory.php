@@ -191,6 +191,8 @@ abstract class QueryStatementFactory {
             if (isset($rawValue[$field->getDBName()])) {
 //                $cleanedValues[$field->getDBName()] = DBValueTransformer::transform($field, $rawValue[$field->getDBName()]);
                 $cleanedValues[] = DBValueTransformer::transform($field, $rawValue[$field->getDBName()]);
+            } else {
+                $cleanedValues[] = $field->getDefault();
             }
         }
         return "(" . implode(",", $cleanedValues) . ")";

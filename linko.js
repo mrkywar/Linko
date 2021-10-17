@@ -30,15 +30,16 @@ define([
 //            ebg.core.gamegui,
             [
                 common.ToolsTrait,
-                
+
                 linko.PlayTrait,
                 linko.SetupTrait
             ],
             {
                 constructor: function () {
                     this.debug('linko constructor');
-                    
-                    this.handCards = [];
+
+//                    this.handCards = [];
+//                    this.selectedJokers = [];
 
                     // Here, you can init the global variables of your user interface
                     // Example:

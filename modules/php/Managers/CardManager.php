@@ -78,7 +78,7 @@ class CardManager extends SuperManager {
     }
 
     public function getCardPlayedByPlayer(Player $player) {
-        return $this->getCardInLocation(Deck::LOCATION_PLAYER_TABLE . "_" . $player->getId());
+        return $this->getCardInLocationOrderByType(Deck::LOCATION_PLAYER_TABLE . "_" . $player->getId());
     }
 
     public function getCardInPool() {
@@ -93,17 +93,8 @@ class CardManager extends SuperManager {
      *                  BEGIN - Move Methods
      * ---------------------------------------------------------------------- */
 
-    private function moveCards($cards, $destination, $destinationArg = null) {
-        $table = $this->getTable($cards);
-        $primaries = $this->getPrimaryFields($cards);
-
-        $qb = new QueryBuilder();
-        $qb->update()
-                ->setTable($table);
-
-        foreach ($primaries as $primary) {
-            $qb->addClause($primary, DBValueRetriver::retrive($primary, $cards));
-        }
+    public function moveCards($cards, $destination, $destinationArg = null) {
+        $qb = $this->prepareUpdate($cards);
 
         $fieldLoc = DBFieldsRetriver::retriveFieldByPropertyName("location", $cards);
         $qb->addSetter($fieldLoc, $destination);
@@ -114,6 +105,26 @@ class CardManager extends SuperManager {
         }
 
         $this->execute($qb);
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Collection Methods
+     * ---------------------------------------------------------------------- */
+
+    public function getNextCollectionIndexFor(Player $player) {
+        $qb = new QueryBuilder();
+        $table = $this->getTable();
+
+        $qb->select()
+                ->setTable($table)
+                ->addFunctionField("max", $this->getFieldByProperty("locationArg"))
+                ->addClause($this->getFieldByProperty("location"), Deck::LOCATION_PLAYER_TABLE . "_" . $player->getId())
+        ;
+
+        $rawResults = $this->execute($qb);
+        $card = $this->getSerializer()->unserialize($rawResults);
+
+        return intval($card->getLocationArg()) + 1;
     }
 
     /* -------------------------------------------------------------------------

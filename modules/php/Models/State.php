@@ -2,6 +2,7 @@
 
 namespace Linko\Models;
 
+use DateTime;
 use Linko\Models\Core\Model;
 
 /**
@@ -36,7 +37,7 @@ class State extends Model {
     /**
      * 
      * @var DateTime|null
-     * @ORM\Column{"type":"datetime", "name":"state_played_date"}
+     * @ORM\Column{"type":"datetime", "name":"state_played_date", "exclude":["insert"]}
      */
     private $playedAt;
 
@@ -50,14 +51,14 @@ class State extends Model {
     /**
      * 
      * @var int|null
-     * @ORM\Column{"type":"int", "name":"state_player"}
+     * @ORM\Column{"type":"int", "name":"state_player_id"}
      */
     private $playerId;
 
     /**
      * 
      * @var string|null
-     * @ORM\Column{"type":"json", "name":"state_params"}
+     * @ORM\Column{"type":"json", "name":"state_params", "default":"null"}
      */
     private $params;
 
@@ -66,7 +67,8 @@ class State extends Model {
      * ---------------------------------------------------------------------- */
 
     public function __construct() {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
+        $this->params = "";
     }
 
     /* -------------------------------------------------------------------------

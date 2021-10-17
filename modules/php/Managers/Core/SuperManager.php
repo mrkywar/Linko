@@ -6,6 +6,7 @@ use Linko\Models\Core\Model;
 use Linko\Serializers\Serializer;
 use Linko\Tools\DB\DBRequester;
 use Linko\Tools\DB\DBTableRetriver;
+use Linko\Tools\DB\DBValueRetriver;
 use Linko\Tools\DB\Fields\DBFieldsRetriver;
 use Linko\Tools\DB\QueryBuilder;
 
@@ -102,6 +103,12 @@ abstract class SuperManager extends DBRequester {
         return $this->execute($qb);
     }
 
+    /**
+     * 
+     * @param type $clauses
+     * @param type $limit
+     * @return QueryBuilder
+     */
     protected function prepareFindBy($clauses = [], $limit = null) {
         $fields = $this->getSelectFields();
         $table = $this->getTable();
@@ -119,6 +126,21 @@ abstract class SuperManager extends DBRequester {
             $qb->setLimit($limit);
         }
 
+        return $qb;
+    }
+    
+    protected function prepareUpdate($items=null){
+        $table = $this->getTable($items);
+        $primaries = $this->getPrimaryFields($items);
+
+        $qb = new QueryBuilder();
+        $qb->update()
+                ->setTable($table);
+
+        foreach ($primaries as $primary) {
+            $qb->addClause($primary, DBValueRetriver::retrive($primary, $items));
+        }
+        
         return $qb;
     }
 

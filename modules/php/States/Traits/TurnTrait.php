@@ -2,6 +2,7 @@
 
 namespace Linko\States\Traits;
 
+use Linko\Managers\StateManager;
 use Linko\Tools\Logger\Logger;
 
 /**
@@ -17,24 +18,15 @@ trait TurnTrait {
      */
     public function stStartOfTurn() {
         Logger::log("Begin Start of A Player Turn", "SSOT");
-//        $activePlayer = $this->activeNextPlayer();
-//        Logger::log("Active Player : " . $activePlayer, "SSOT");
-//        self::giveExtraTime($activePlayer);
-//
-//        $stateManager = $this->getStateManager();
-//        $stateRepo = $stateManager->getRepository();
-//        $stateOrder = $stateRepo->setDoUnserialization(true)->getNextOrder();
-//
-//        $states = [];
-//        $states[] = StateFactory::create(ST_PLAYER_PLAY_NUMBER, $stateOrder, $activePlayer);
-//        $states[] = StateFactory::create(ST_END_OF_TURN, $stateOrder);
-//
-//        GlobalVarManager::setVar(GlobalVar::ACTIVE_PLAYER, $activePlayer);
-//
-//        $stateRepo->create($states);
-//        $stateManager->closeActualState();
-//
-//        Logger::log("Player Turn is created", "SSOT");
+        
+        $player = $this->getPlayerManager()->findBy([
+            "id" => $this->getActivePlayerId()
+        ]);
+
+        $stateManager = new StateManager();
+        $stateManager->initNewTurn($player);
+        $stateManager->closeActualState();
+        
         $this->gamestate->nextState();
     }
 
@@ -54,6 +46,8 @@ trait TurnTrait {
 //        if (null !== $actualState->getPlayerId()) {
 //            $this->gamestate->changeActivePlayer($actualState->getPlayerId());
 //        }
+        $this->activeNextPlayer();
+        $this->gamestate->jumpToState(ST_PLAYER_PLAY_NUMBER);
     }
 
 }
