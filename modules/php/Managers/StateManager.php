@@ -30,8 +30,13 @@ class StateManager extends SuperManager {
         return $states;
     }
 
+    /**
+     * 
+     * @return State
+     */
     public function getActualState() {
         $qb = $this->prepareFindBy()
+                ->addClause($this->getFieldByProperty("playedAt"), null)
                 ->addOrderBy($this->getFieldByProperty("order"), QueryString::ORDER_ASC)
                 ->setLimit(1);
         return $this->getSerializer()->unserialize($this->execute($qb));
@@ -39,8 +44,14 @@ class StateManager extends SuperManager {
 
     public function closeActualState() {
         $state = $this->getActualState();
-
-        $qb = new QueryBuilder();
+        $state->setPlayedAt(new \DateTime());
+ 
+        $qb = $this->prepareUpdate($state);
+        $qb->addSetter($this->getFieldByProperty("playedAt"), $state->getPlayedAt());
+                
+        $this->execute($qb);
+        
+        return $this->getActualState();
     }
 
     public function getNextOrder() {

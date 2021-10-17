@@ -25,7 +25,7 @@ spl_autoload_register($swdNamespaceAutoload, true, true);
 require_once( APP_GAMEMODULE_PATH . 'module/table/table.game.php' );
 
 class Linko extends Table {
-    
+
     use TurnTrait;
     use PlayTrait;
 
@@ -123,11 +123,13 @@ class Linko extends Table {
         $stateManager = new StateManager();
         $stateManager->getNextOrder();
         
-        
+////        $stateManager = new StateManager();
+//        $stateManager->initNewTurn($currentPlayer);
+////        $stateManager->closeActualState();
+
         return GameDataRetiver::retriveForPlayer($currentPlayer);
-        
+
 //        var_dump($currentPlayer);die;
-        
 //        
 //        $result = array();
 //
@@ -138,9 +140,7 @@ class Linko extends Table {
 //        $result['players'] = self::getCollectionFromDb($sql);
 //
 //        // TODO: Gather all information about current game situation (visible by player $current_player_id).
-        
 //        $draw = $this->cardManager->getCardInDraw();
-
 //        return [
 //            "draw" => null
 //        ];
@@ -339,6 +339,14 @@ class Linko extends Table {
 
     public static function getInstance(): Linko {
         return self::$instance;
+    }
+
+    public function getCardManager(): CardManager {
+        return $this->cardManager;
+    }
+
+    public function getPlayerManager(): PlayerManager {
+        return $this->playerManager;
     }
 
 }

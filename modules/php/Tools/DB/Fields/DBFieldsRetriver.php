@@ -14,6 +14,7 @@ abstract class DBFieldsRetriver {
     private const ORM_PROPERTY = "@ORM\Column";
     private const ORM_ID = "@ORM\Id";
     private const EXCLUDE_PROPERTY = "exclude";
+    private const DEFAULT_PROPERTY = "default";
 
     static public function retrive($item) {
         if (is_array($item)) {
@@ -42,11 +43,14 @@ abstract class DBFieldsRetriver {
                     ->setProperty($property->getName())
                     ->setIsPrimary(self::isIdDeclaration($property)); //-- Retrive Id status
 
-            $propertyName = self::EXCLUDE_PROPERTY;
-            if (property_exists($obj, $propertyName)) {
-                $field->setExclusions($obj->$propertyName);
+            $excludeProperty = self::EXCLUDE_PROPERTY;
+            if (property_exists($obj, $excludeProperty)) {
+                $field->setExclusions($obj->$excludeProperty);
             }
-
+            $defaultProperty = self::DEFAULT_PROPERTY;
+            if (property_exists($obj, $defaultProperty)) {
+                $field->setDefault($obj->$defaultProperty);
+            }
             $fields[] = $field;
         }
         return $fields;

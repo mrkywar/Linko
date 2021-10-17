@@ -19,34 +19,14 @@ trait TurnTrait {
     public function stStartOfTurn() {
         Logger::log("Begin Start of A Player Turn", "SSOT");
         
-        $player = $this->getPlayerManager()->findBy([
-            "id" => self::getCurrentPlayerId()
-        ]);
-        
-        $stateManager = new StateManager();
-        $stateManager->initNewTurn($player);
-        
-//        $this->getStateManager()->
-        
-        
-//        $activePlayer = $this->activeNextPlayer();
-//        Logger::log("Active Player : " . $activePlayer, "SSOT");
-//        self::giveExtraTime($activePlayer);
-//
-//        $stateManager = $this->getStateManager();
-//        $stateRepo = $stateManager->getRepository();
-//        $stateOrder = $stateRepo->setDoUnserialization(true)->getNextOrder();
-//
-//        $states = [];
-//        $states[] = StateFactory::create(ST_PLAYER_PLAY_NUMBER, $stateOrder, $activePlayer);
-//        $states[] = StateFactory::create(ST_END_OF_TURN, $stateOrder);
-//
-//        GlobalVarManager::setVar(GlobalVar::ACTIVE_PLAYER, $activePlayer);
-//
-//        $stateRepo->create($states);
+//        $player = $this->getPlayerManager()->findBy([
+//            "id" => self::getCurrentPlayerId()
+//        ]);
+
+//        $stateManager = new StateManager();
+//        $stateManager->initNewTurn($player);
 //        $stateManager->closeActualState();
-//
-//        Logger::log("Player Turn is created", "SSOT");
+//        
         $this->gamestate->nextState();
     }
 

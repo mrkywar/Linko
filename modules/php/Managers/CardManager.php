@@ -94,16 +94,7 @@ class CardManager extends SuperManager {
      * ---------------------------------------------------------------------- */
 
     public function moveCards($cards, $destination, $destinationArg = null) {
-        $table = $this->getTable($cards);
-        $primaries = $this->getPrimaryFields($cards);
-
-        $qb = new QueryBuilder();
-        $qb->update()
-                ->setTable($table);
-
-        foreach ($primaries as $primary) {
-            $qb->addClause($primary, DBValueRetriver::retrive($primary, $cards));
-        }
+        $qb = $this->prepareUpdate($cards);
 
         $fieldLoc = DBFieldsRetriver::retriveFieldByPropertyName("location", $cards);
         $qb->addSetter($fieldLoc, $destination);
