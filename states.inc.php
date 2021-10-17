@@ -20,6 +20,15 @@ $machinestates = [
             "nextPlayer" => ST_PLAYER_PLAY_NUMBER
         ]
     ],
+    ST_END_OF_TURN => [
+        "name" => "finishedTurn",
+        "description" => "",
+        "type" => "game",
+        "action" => "stEndOfTurn",
+        "transitions" => [
+            "nextPlayer" => ST_START_OF_TURN
+        ]
+    ],
     ST_PLAYER_PLAY_NUMBER => [
         "name" => "playNumber",
         "description" => clienttranslate('${actplayer} can play card(s)'),
