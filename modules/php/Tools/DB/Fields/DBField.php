@@ -16,6 +16,8 @@ class DBField {
     const BINARY_FORMAT = "binary";
     const DATETIME_FORMAT = "datetime";
     const JSON_FORMAT = "json";
+    
+    const DATETIME_STRING_FORMAT = "Y-m-d H:i:s";
 
     /**
      * 

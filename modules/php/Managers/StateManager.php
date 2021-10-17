@@ -25,7 +25,7 @@ class StateManager extends SuperManager {
         $states[] = StateFactory::create(ST_PLAYER_PLAY_NUMBER, $player->getId(), $order);
         $states[] = StateFactory::create(ST_END_OF_TURN, $player->getId(), $order);
 
-        $this->create($states);
+        $this->setIsDebug(true)->create($states);
 
         return $states;
     }

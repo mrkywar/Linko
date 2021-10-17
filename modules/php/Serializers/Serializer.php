@@ -4,6 +4,7 @@ namespace Linko\Serializers;
 
 use Linko\Models\Core\Model;
 use Linko\Serializers\Core\SerializerException;
+use Linko\Tools\DB\Fields\DBField;
 use Linko\Tools\DB\Fields\DBFieldsRetriver;
 
 /**
@@ -102,11 +103,24 @@ class Serializer {
         foreach ($fields as $field) {
             if (isset($rawItem[$field->getDbName()])) {
                 $setter = "set" . ucfirst($field->getProperty());
-                $model->$setter($rawItem[$field->getDbName()]);
+                $model->$setter($this->parseRawValue($field, $rawItem[$field->getDbName()]));
             }
         }
 
         return $model;
+    }
+    
+    
+    private function parseRawValue(DBField $field, $value){
+        //switch ($field->getT)
+        switch ($field->getType()){
+            case DBField::DATETIME_FORMAT:
+                return \DateTime::createFromFormat(DBField::DATETIME_STRING_FORMAT, $value);
+            case DBField::BOOLEAN_FORMAT:
+                return 1 === $value;
+            default:
+                return $value;
+        }
     }
 
     /* -------------------------------------------------------------------------

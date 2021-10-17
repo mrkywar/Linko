@@ -25,7 +25,7 @@ abstract class DBFieldTransposer {
             case DBField::INTEGER_FORMAT:
                 return "'" . (int) $value . "'";
             case DBField::DATETIME_FORMAT:
-                return "'" . $value->format("Y-m-d H:i:s") . "'";
+                return "'" . $value->format(DBField::DATETIME_STRING_FORMAT) . "'";
             default:
                 return $value;
         }

@@ -101,7 +101,8 @@ class Linko extends Table {
         //self::initStat( 'player', 'player_teststat1', 0 );  // Init a player statistics (for all players)
         // TODO: setup the initial game situation here
         // Activate first player (which is in general a good idea :) )
-        $this->activeNextPlayer();
+        $playerId = $this->activeNextPlayer();
+//        Logger::log("PID ",$playerId);
 
         /*         * ********** End of the game initialization **** */
     }
