@@ -78,7 +78,7 @@ class CardManager extends SuperManager {
     }
 
     public function getCardPlayedByPlayer(Player $player) {
-        return $this->getCardInLocation(Deck::LOCATION_PLAYER_TABLE . "_" . $player->getId());
+        return $this->getCardInLocationOrderByType(Deck::LOCATION_PLAYER_TABLE . "_" . $player->getId());
     }
 
     public function getCardInPool() {
