@@ -90,7 +90,8 @@ abstract class GameDataRetiver {
 
         foreach ($players as $player) {
             $cards = self::$cardManager->getCardPlayedByPlayer($player);
-            $tableInfos[$player->getId()] = self::$cardSerializer->serialize($cards);
+            $collectionParser = new CollectionParser();
+            $tableInfos[$player->getId()] = $collectionParser->parse($cards);
         }
 
         return $tableInfos;
