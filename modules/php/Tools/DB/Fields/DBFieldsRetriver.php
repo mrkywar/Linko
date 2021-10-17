@@ -104,8 +104,7 @@ abstract class DBFieldsRetriver {
      * @return type
      */
     static private function isIdDeclaration(ReflectionProperty $property) {
-        $strpos = strpos($property->getDocComment(), self::ORM_ID);
-        return ($strpos >= 0);
+        return false !== strpos($property->getDocComment(), self::ORM_ID);
     }
 
     /* -------------------------------------------------------------------------

@@ -126,7 +126,7 @@ class Linko extends Table {
         
 ////        $stateManager = new StateManager();
 //        $stateManager->initNewTurn($currentPlayer);
-////        $stateManager->closeActualState();
+        $stateManager->closeActualState();
 
         return GameDataRetiver::retriveForPlayer($currentPlayer);
 
