@@ -3,9 +3,12 @@
 namespace Linko\Managers;
 
 use Linko\Managers\Core\SuperManager;
+use Linko\Models\Factories\StateFactory;
+use Linko\Models\Player;
 use Linko\Models\State;
 use Linko\Serializers\Serializer;
 use Linko\Tools\DB\QueryBuilder;
+use Linko\Tools\DB\QueryString;
 
 /**
  * Description of StateManager
@@ -14,23 +17,30 @@ use Linko\Tools\DB\QueryBuilder;
  */
 class StateManager extends SuperManager {
 
-//    public function initNewTurn(){
-//        $states = [];
-//        
-//        $states = new State();
-//        $states->setState(ST_PLAYER_PLAY_NUMBER)
-//                ->set;
-//        
-//        
-//        
-//    }
-    
-    
-    
-
-    public function initNewTurn() {
+    public function initNewTurn(Player $player) {
         $states = [];
         $order = $this->getNextOrder();
+
+        $states[] = StateFactory::create(ST_START_OF_TURN, $player->getId(), $order);
+        $states[] = StateFactory::create(ST_PLAYER_PLAY_NUMBER, $player->getId(), $order);
+        $states[] = StateFactory::create(ST_END_OF_TURN, $player->getId(), $order);
+
+        $this->create($states);
+
+        return $states;
+    }
+
+    public function getActualState() {
+        $qb = $this->prepareFindBy()
+                ->addOrderBy($this->getFieldByProperty("order"), QueryString::ORDER_ASC)
+                ->setLimit(1);
+        return $this->getSerializer()->unserialize($this->execute($qb));
+    }
+
+    public function closeActualState() {
+        $state = $this->getActualState();
+
+        $qb = new QueryBuilder();
     }
 
     public function getNextOrder() {

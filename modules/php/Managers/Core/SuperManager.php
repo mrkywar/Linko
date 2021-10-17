@@ -102,6 +102,12 @@ abstract class SuperManager extends DBRequester {
         return $this->execute($qb);
     }
 
+    /**
+     * 
+     * @param type $clauses
+     * @param type $limit
+     * @return QueryBuilder
+     */
     protected function prepareFindBy($clauses = [], $limit = null) {
         $fields = $this->getSelectFields();
         $table = $this->getTable();

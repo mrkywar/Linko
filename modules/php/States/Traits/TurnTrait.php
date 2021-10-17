@@ -2,6 +2,7 @@
 
 namespace Linko\States\Traits;
 
+use Linko\Managers\StateManager;
 use Linko\Tools\Logger\Logger;
 
 /**
@@ -17,6 +18,17 @@ trait TurnTrait {
      */
     public function stStartOfTurn() {
         Logger::log("Begin Start of A Player Turn", "SSOT");
+        
+        $player = $this->getPlayerManager()->findBy([
+            "id" => self::getCurrentPlayerId()
+        ]);
+        
+        $stateManager = new StateManager();
+        $stateManager->initNewTurn($player);
+        
+//        $this->getStateManager()->
+        
+        
 //        $activePlayer = $this->activeNextPlayer();
 //        Logger::log("Active Player : " . $activePlayer, "SSOT");
 //        self::giveExtraTime($activePlayer);
