@@ -3,6 +3,7 @@
 use Linko\Managers\CardManager;
 use Linko\Managers\PlayerManager;
 use Linko\Managers\StateManager;
+use Linko\States\Traits\EndOfGameTrait;
 use Linko\States\Traits\PlayTrait;
 use Linko\States\Traits\TurnTrait;
 use Linko\Tools\Game\GameDataRetiver;
@@ -28,6 +29,7 @@ class Linko extends Table {
 
     use TurnTrait;
     use PlayTrait;
+    use EndOfGameTrait;
 
     /**
      * 
