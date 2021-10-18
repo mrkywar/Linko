@@ -2,7 +2,7 @@
 
 namespace Linko\States\Traits;
 
-use Linko\Managers\StateManager;
+use Linko\Tools\Game\Exceptions\EndOfGameChecker;
 use Linko\Tools\Logger\Logger;
 
 /**
@@ -47,8 +47,15 @@ trait TurnTrait {
         $player = $this->getPlayerManager()->findBy([
             "id" => $playerId
         ]);
-        $stateManager->initEndOfTurn($player);
 
+        //-- Detect End Of Game
+        $endOfGameChecker = new EndOfGameChecker();
+//        $endOfGame = $checker->check();
+        if ($endOfGameChecker->check()) {
+            $stateManager->initEndOfGame();
+        } else {
+            $stateManager->initEndOfTurn($player);
+        }
         $this->gamestate->jumpToState(ST_RESOLVE_STATE);
     }
 

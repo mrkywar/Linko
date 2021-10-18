@@ -22,7 +22,7 @@ class StateManager extends SuperManager {
         $order = $this->getNextOrder();
 
         $states[] = StateFactory::create(ST_START_OF_TURN, $player->getId(), $order);
-        
+
         $this->create($states);
 
         return $states;
@@ -39,15 +39,19 @@ class StateManager extends SuperManager {
 
         return $states;
     }
-    
+
     public function initEndOfTurn(Player $player) {
         $this->initNewGame($player);
     }
 
-//    public function initEndOfTurn(Player $player) {
-////        $states = [];
-////        $order = $this->getNextOrder();
-//    }
+    public function initEndOfGame(Player $player) {
+        $states = [];
+        $order = $this->getNextOrder();
+        
+        $this->create($states);
+
+        return $states;
+    }
 
     /**
      * 
