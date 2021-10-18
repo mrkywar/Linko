@@ -44,9 +44,12 @@ class StateManager extends SuperManager {
         $this->initNewGame($player);
     }
 
-    public function initEndOfGame(Player $player) {
+    public function initEndOfGame() {
         $states = [];
         $order = $this->getNextOrder();
+        
+        $states[] = StateFactory::create(ST_SCORE_COMPUTE, null, $order);
+        $states[] = StateFactory::create(ST_END_GAME, null, $order);
         
         $this->create($states);
 

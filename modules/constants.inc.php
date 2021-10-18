@@ -16,5 +16,6 @@ define("ST_PLAYER_TAKE_COLLECTION", 11);
 define("ST_PLAYER_DRAW", 12);
 
 //-- STATE RESOLVER
+define("ST_SCORE_COMPUTE",88);
 define("ST_RESOLVE_STATE", 90);
 

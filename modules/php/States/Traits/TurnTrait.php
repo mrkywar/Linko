@@ -2,7 +2,7 @@
 
 namespace Linko\States\Traits;
 
-use Linko\Tools\Game\Exceptions\EndOfGameChecker;
+use Linko\Tools\Game\EndOfGameChecker;
 use Linko\Tools\Logger\Logger;
 
 /**

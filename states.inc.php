@@ -73,6 +73,15 @@ $machinestates = [
         'transitions' => [],
     ],
     // BGA framework final state. Do not modify.
+    ST_SCORE_COMPUTE => [
+        "name" => "comptue score",
+        "description" => "",
+        "type" => "game",
+        "action" => "stComupteScore",
+        "transitions" => [
+            "" => ST_END_GAME
+        ]
+    ],
     ST_END_GAME => [
         'name' => 'gameEnd',
         'description' => clienttranslate('End of game'),
