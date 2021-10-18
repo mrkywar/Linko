@@ -1,11 +1,11 @@
 <?php
 
+namespace Linko\Tools\Game;
+
 use Linko\Managers\CardManager;
 use Linko\Managers\PlayerManager;
 use Linko\Models\Player;
 use Linko\Tools\Logger\Logger;
-
-namespace Linko\Tools\Game;
 
 /**
  * Description of EndOfGameChecker

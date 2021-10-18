@@ -18,6 +18,10 @@ use Linko\Tools\DB\QueryString;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 class CardManager extends SuperManager {
+    
+    public function __construct() {
+        $this->getSerializer()->setIsForcedArray(true);
+    }
 
     public function initForNewGame($players, array $options = []) {
         $deck = new Deck();
@@ -122,7 +126,8 @@ class CardManager extends SuperManager {
         ;
 
         $rawResults = $this->execute($qb);
-        $card = $this->getSerializer()->unserialize($rawResults);
+        $card = $this->getSerializer()->setIsForcedArray(false)->unserialize($rawResults);
+        $this->getSerializer()->setIsForcedArray(true);
 
         return intval($card->getLocationArg()) + 1;
     }
