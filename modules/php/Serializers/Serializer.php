@@ -15,10 +15,14 @@ use Linko\Tools\DB\Fields\DBFieldsRetriver;
 class Serializer {
 
     /**
-     * 
      * @var string
      */
     private $classModel;
+
+    /**
+     * @var bool
+     */
+    private $isForcedArray = false;
 
     public function __construct(string $classModel = null) {
         $this->classModel = $classModel;
@@ -74,7 +78,7 @@ class Serializer {
         }
         $fields = DBFieldsRetriver::retrive(new $classModel());
 
-        if (1 === sizeof($rawItems)) {
+        if (1 === sizeof($rawItems) && !$this->isForcedArray) {
             return $this->unserializeOnce($rawItems[array_keys($rawItems)[0]], $fields);
         } else if (is_array($rawItems)) {
             $items = [];
@@ -109,11 +113,10 @@ class Serializer {
 
         return $model;
     }
-    
-    
-    private function parseRawValue(DBField $field, $value){
+
+    private function parseRawValue(DBField $field, $value) {
         //switch ($field->getT)
-        switch ($field->getType()){
+        switch ($field->getType()) {
             case DBField::DATETIME_FORMAT:
                 return \DateTime::createFromFormat(DBField::DATETIME_STRING_FORMAT, $value);
             case DBField::BOOLEAN_FORMAT:
@@ -133,6 +136,15 @@ class Serializer {
 
     public function setClassModel(string $classModel) {
         $this->classModel = $classModel;
+        return $this;
+    }
+
+    public function getIsForcedArray(): bool {
+        return $this->isForcedArray;
+    }
+
+    public function setIsForcedArray(bool $isForcedArray) {
+        $this->isForcedArray = $isForcedArray;
         return $this;
     }
 

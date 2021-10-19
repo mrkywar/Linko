@@ -17,15 +17,41 @@ use Linko\Tools\DB\QueryString;
  */
 class StateManager extends SuperManager {
 
-    public function initNewTurn(Player $player) {
+    public function initNewGame(Player $player) {
         $states = [];
         $order = $this->getNextOrder();
 
         $states[] = StateFactory::create(ST_START_OF_TURN, $player->getId(), $order);
+
+        $this->create($states);
+
+        return $states;
+    }
+
+    public function initNewTurn(Player $player) {
+        $states = [];
+        $order = $this->getNextOrder();
+
         $states[] = StateFactory::create(ST_PLAYER_PLAY_NUMBER, $player->getId(), $order);
         $states[] = StateFactory::create(ST_END_OF_TURN, $player->getId(), $order);
 
-        $this->setIsDebug(true)->create($states);
+        $this->create($states);
+
+        return $states;
+    }
+
+    public function initEndOfTurn(Player $player) {
+        $this->initNewGame($player);
+    }
+
+    public function initEndOfGame() {
+        $states = [];
+        $order = $this->getNextOrder();
+        
+        $states[] = StateFactory::create(ST_SCORE_COMPUTE, null, $order);
+        $states[] = StateFactory::create(ST_END_GAME, null, $order);
+        
+        $this->create($states);
 
         return $states;
     }
@@ -45,12 +71,12 @@ class StateManager extends SuperManager {
     public function closeActualState() {
         $state = $this->getActualState();
         $state->setPlayedAt(new \DateTime());
- 
+
         $qb = $this->prepareUpdate($state);
         $qb->addSetter($this->getFieldByProperty("playedAt"), $state->getPlayedAt());
-                
+
         $this->execute($qb);
-        
+
         return $this->getActualState();
     }
 

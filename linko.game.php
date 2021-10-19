@@ -3,6 +3,7 @@
 use Linko\Managers\CardManager;
 use Linko\Managers\PlayerManager;
 use Linko\Managers\StateManager;
+use Linko\States\Traits\EndOfGameTrait;
 use Linko\States\Traits\PlayTrait;
 use Linko\States\Traits\TurnTrait;
 use Linko\Tools\Game\GameDataRetiver;
@@ -28,6 +29,7 @@ class Linko extends Table {
 
     use TurnTrait;
     use PlayTrait;
+    use EndOfGameTrait;
 
     /**
      * 
@@ -45,6 +47,11 @@ class Linko extends Table {
      */
     private $playerManager;
 
+    /**
+     * @var StateManager
+     */
+    private $stateManager;
+
     public function __construct() {
         // Your global variables labels:
         //  Here, you can assign labels to global variables you are using for this game.
@@ -56,6 +63,7 @@ class Linko extends Table {
 
         $this->cardManager = new CardManager();
         $this->playerManager = new PlayerManager();
+        $this->stateManager = new StateManager();
 
         self::$instance = $this;
 
@@ -101,7 +109,7 @@ class Linko extends Table {
         //self::initStat( 'player', 'player_teststat1', 0 );  // Init a player statistics (for all players)
         // TODO: setup the initial game situation here
         // Activate first player (which is in general a good idea :) )
-        $playerId = $this->activeNextPlayer();
+        $this->activeNextPlayer();
 //        Logger::log("PID ",$playerId);
 
         /*         * ********** End of the game initialization **** */
@@ -121,30 +129,10 @@ class Linko extends Table {
         $currentPlayer = $this->playerManager->findBy([
             "id" => self::getCurrentPlayerId()
         ]);
-        $stateManager = new StateManager();
-        $stateManager->getNextOrder();
-        
-////        $stateManager = new StateManager();
-//        $stateManager->initNewTurn($currentPlayer);
-        $stateManager->closeActualState();
+
+        $this->stateManager->getNextOrder();
 
         return GameDataRetiver::retriveForPlayer($currentPlayer);
-
-//        var_dump($currentPlayer);die;
-//        
-//        $result = array();
-//
-//        $current_player_id = self::getCurrentPlayerId();    // !! We must only return informations visible by this player !!
-//        // Get information about players
-//        // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
-//        $sql = "SELECT player_id id, player_score score FROM player ";
-//        $result['players'] = self::getCollectionFromDb($sql);
-//
-//        // TODO: Gather all information about current game situation (visible by player $current_player_id).
-//        $draw = $this->cardManager->getCardInDraw();
-//        return [
-//            "draw" => null
-//        ];
     }
 
     /*
@@ -348,6 +336,10 @@ class Linko extends Table {
 
     public function getPlayerManager(): PlayerManager {
         return $this->playerManager;
+    }
+
+    public function getStateManager(): StateManager {
+        return $this->stateManager;
     }
 
 }

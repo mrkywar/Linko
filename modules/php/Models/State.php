@@ -51,7 +51,7 @@ class State extends Model {
     /**
      * 
      * @var int|null
-     * @ORM\Column{"type":"int", "name":"state_player_id"}
+     * @ORM\Column{"type":"int", "name":"state_player_id", "default":"null"}
      */
     private $playerId;
 

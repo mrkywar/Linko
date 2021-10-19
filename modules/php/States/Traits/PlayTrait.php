@@ -19,13 +19,16 @@ use Linko\Tools\Game\PlayCardChecker;
  * @author Mr_Kywar mr_kywar@gmail.com
  */
 trait PlayTrait {
+    /* -------------------------------------------------------------------------
+     *            BEGIN - Play Cards Actions
+     * ---------------------------------------------------------------------- */
 
     public function actionPlayCards($rawCardIds) {
         self::checkAction('playCards');
 
         $cardId = explode(",", $rawCardIds);
-        $playerManager = new PlayerManager(); //$this->getPlayerManager();
-        $cardManager = new CardManager(); //$this->getCardManager();
+        $playerManager = $this->getPlayerManager();
+        $cardManager = $this->getCardManager();
         $player = $playerManager->findBy(["id" => self::getActivePlayerId()]);
         $cards = $cardManager->findBy(["id" => $cardId]);
 
@@ -36,49 +39,14 @@ trait PlayTrait {
         } else {
             throw new PlayCardException("Invalid selection try again");
         }
-        
-        
-        $this->gamestate->nextState();
-//        die("checked");
+       
+//        var_dump($this->gamestate);die;
 
-//        Logger::log($player->getName()." play " " card ".$cards[0]->getType());
-//        Logger::log("Action Play Card " . $rawCardIds, "PCT-APC");
-//        $this->cardIds = explode(",", $rawCardIds);
-//
-//        $cardManager = $this->getCardManager();
-//        $cardRepo = $cardManager->getRepository();
-//        $playerId = self::getActivePlayerId();
-//        $player = $this->getPlayerManager()
-//                ->getRepository()
-//                ->setDoUnserialization(true)
-//                ->getById($playerId);
-//        $cards = $cardRepo
-//                ->setDoUnserialization(true)
-//                ->getById($this->cardIds);
-//
-//        $this->collection = CardsToCollectionTransformer::adapt($cards);
-//        if (!$this->collection->isPlayableFor($player)) {
-//            throw new \BgaUserException(self::_("Invalid Selection"));
-//        }
-//        $this->collection->setPlayer($player)
-//                ->setDestination(Deck::TABLE_NAME . "_" . $playerId)
-//                ->setCollectionIndex($cardRepo->getNextCollectionIndex($playerId));
-//
-//        $cardRepo->moveCardsToLocation(
-//                $this->collection->getCards(),
-//                $this->collection->getDestination(),
-//                $this->collection->getCollectionIndex()
-//        );
-//
-////        $this
-//        $this->sendPlayNotification();
-//        $this->afterActionPlayCards();
+        $this->getStateManager()->closeActualState();
+        $this->gamestate->jumpToState(ST_RESOLVE_STATE);
+
+//        $this->gamestate->nextState();
     }
-
-    /* -------------------------------------------------------------------------
-     *            BEGIN - Play Cards Actions - TOOLS
-     * ---------------------------------------------------------------------- */
-
 
     /* -------------------------------------------------------------------------
      *            BEGIN - Display

@@ -20,6 +20,15 @@ $machinestates = [
             "nextPlayer" => ST_PLAYER_PLAY_NUMBER
         ]
     ],
+    ST_END_OF_TURN => [
+        "name" => "finishedTurn",
+        "description" => "",
+        "type" => "game",
+        "action" => "stEndOfTurn",
+        "transitions" => [
+            "nextPlayer" => ST_START_OF_TURN
+        ]
+    ],
     ST_PLAYER_PLAY_NUMBER => [
         "name" => "playNumber",
         "description" => clienttranslate('${actplayer} can play card(s)'),
@@ -64,6 +73,15 @@ $machinestates = [
         'transitions' => [],
     ],
     // BGA framework final state. Do not modify.
+    ST_SCORE_COMPUTE => [
+        "name" => "comptue score",
+        "description" => "",
+        "type" => "game",
+        "action" => "stComupteScore",
+        "transitions" => [
+            "" => ST_END_GAME
+        ]
+    ],
     ST_END_GAME => [
         'name' => 'gameEnd',
         'description' => clienttranslate('End of game'),

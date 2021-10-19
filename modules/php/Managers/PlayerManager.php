@@ -6,6 +6,7 @@ use Linko;
 use Linko\Managers\Core\SuperManager;
 use Linko\Models\Player;
 use Linko\Serializers\Serializer;
+use Linko\Tools\DB\Fields\DBFieldsRetriver;
 
 /**
  * Description of PlayerManager
@@ -29,6 +30,19 @@ class PlayerManager extends SuperManager {
 
         Linko::getInstance()->reattributeColorsBasedOnPreferences($rawPlayers, $gameinfos['player_colors']);
         Linko::getInstance()->reloadPlayersBasicInfos();
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Score Methods
+     * ---------------------------------------------------------------------- */
+
+    public function updateScore(Player $player){
+        $qb = $this->prepareUpdate($player);
+
+        $fieldScore = DBFieldsRetriver::retriveFieldByPropertyName("score", $player);
+        $qb->addSetter($fieldScore, $player->getScore());
+
+        $this->execute($qb);
     }
 
     /* -------------------------------------------------------------------------
