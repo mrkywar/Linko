@@ -6,6 +6,7 @@ use Linko;
 use Linko\Managers\Core\SuperManager;
 use Linko\Models\Player;
 use Linko\Serializers\Serializer;
+use Linko\Tools\DB\Fields\DBFieldsRetriver;
 
 /**
  * Description of PlayerManager

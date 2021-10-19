@@ -27,7 +27,9 @@ trait EndOfGameTrait {
             $cardPlayed = $cardManager->getCardPlayedByPlayer($player);
             $player->setScore(count($cardPlayed) - count($cardInHand));
             
-//            $playerManager->
+            $playerManager->updateScore($player);
         }
+        
+        $this->gamestate->nextState();
     }
 }
