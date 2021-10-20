@@ -22,34 +22,50 @@ class CollectionTakeableIdentifier {
      * @var CardManager
      */
     private $cardManager;
-    
+
+    /**
+     * @var CollectionParser
+     */
+    private $collectionParser;
     private $takeableCollection = [];
 
     public function __construct() {
         $this->playerManager = new PlayerManager();
         $this->cardManager = new CardManager();
+        $this->collectionParser = new CollectionParser();
+        $this->collectionParser->setDoSerialization(false);
     }
 
-    public function identify($cards, Player $activePlayer) {
+    public function identify(array $cards, Player $activePlayer) {
         $players = $this->playerManager->findBy();
         $this->takeableCollection = [];
         foreach ($players as $player) {
-//            var_dump()
             if ($activePlayer->getId() !== $player->getId()) {
-                $cards = $this->cardManager->getCardPlayedByPlayer($player);
-                $collectionParser = new CollectionParser();
-                $collections = $collectionParser->parse($cards);
+                $playedCards = $this->cardManager->getCardPlayedByPlayer($player);
+                $collections = $this->collectionParser->parse($playedCards);
                 $this->addTakeableCollection($cards, $collections);
+            }
+        }
+        return $this->takeableCollection;
+    }
+
+    private function addTakeableCollection(array $cards, array $targetCollections) {
+        if (sizeof($targetCollections) > 0) {
+            $keys = array_keys($targetCollections);
+            //yeah strange last collection is in first key (but last index)
+            $lastCollectionCards = $targetCollections[$keys[0]];
+
+            if($this->isCollectionTakeable($cards, $lastCollectionCards)){
+                $this->takeableCollection[] = $lastCollectionCards;
             }
         }
     }
 
-    private function addTakeableCollection($cards, $targetCollections) {
-        if (sizeof($targetCollections) > 0) {
-            echo '<pre>';
-            var_dump($targetCollections);
-            die;
-        }
+    private function isCollectionTakeable(array $cards, array $targetCollection) {
+        return(
+                (count($cards) === count($targetCollection)) &&
+                ($cards[0]->getType() > $targetCollection[0]->getType())
+        );
     }
 
 }

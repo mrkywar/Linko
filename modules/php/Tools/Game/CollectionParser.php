@@ -14,11 +14,15 @@ use Linko\Serializers\Serializer;
 class CollectionParser {
 
     /**
-     * 
      * @var Serializer
      */
     private $cardSerializer;
     private $collection = [];
+
+    /**
+     * @var bool
+     */
+    private $doSerialization = true;
 
     public function __construct() {
         $cardManager = new CardManager();
@@ -29,14 +33,33 @@ class CollectionParser {
     public function parse($cards) {
 
         if ($cards instanceof Card) {
-            $this->collection[$cards->getLocationArg()][] = $this->cardSerializer->serialize($cards);
+            if ($this->doSerialization) {
+                $this->collection[$cards->getLocationArg()][] = $this->cardSerializer->serialize($cards);
+            } else {
+                $this->collection[$cards->getLocationArg()][] = $cards;
+            }
         } else {
             foreach ($cards as $card) {
                 $this->parse($card);
             }
         }
-        
+
         return $this->collection;
     }
+    
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Getters & Setters 
+     * ---------------------------------------------------------------------- */
+    
+    public function getDoSerialization(): bool {
+        return $this->doSerialization;
+    }
+
+    public function setDoSerialization(bool $doSerialization) {
+        $this->doSerialization = $doSerialization;
+        return $this;
+    }
+
+
 
 }
