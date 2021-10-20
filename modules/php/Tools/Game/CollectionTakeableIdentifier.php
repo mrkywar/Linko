@@ -45,7 +45,7 @@ class CollectionTakeableIdentifier {
     }
 
     private function addTakeableCollection($cards, $targetCollections) {
-        if (sizeof($targetCollections) > 1) {
+        if (sizeof($targetCollections) > 0) {
             echo '<pre>';
             var_dump($targetCollections);
             die;
