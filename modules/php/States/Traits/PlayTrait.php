@@ -8,11 +8,11 @@
 
 namespace Linko\States\Traits;
 
-use Linko\Managers\CardManager;
 use Linko\Managers\Deck\Deck;
-use Linko\Managers\PlayerManager;
+use Linko\Tools\Game\CollectionTakeableIdentifier;
 use Linko\Tools\Game\Exceptions\PlayCardException;
 use Linko\Tools\Game\PlayCardChecker;
+use const ST_RESOLVE_STATE;
 
 /**
  *
@@ -27,6 +27,7 @@ trait PlayTrait {
         self::checkAction('playCards');
         
         $playCardChecker = new PlayCardChecker();
+        $takeableCollectionIdentifier = new CollectionTakeableIdentifier();
 
         $cardId = explode(",", $rawCardIds);
         $playerManager = $this->getPlayerManager();
