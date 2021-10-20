@@ -41,6 +41,7 @@ trait PlayTrait {
         } else {
             throw new PlayCardException("Invalid selection try again");
         }
+        $collections = $takeableCollectionIdentifier->identify($cards, $player);
 
         $this->getStateManager()->closeActualState();
         $this->gamestate->jumpToState(ST_RESOLVE_STATE);
