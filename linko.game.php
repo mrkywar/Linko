@@ -91,28 +91,17 @@ class Linko extends Table {
      */
 
     protected function setupNewGame($players, $options = array()) {
-
         $this->playerManager->initForNewGame($players, $options);
         $this->cardManager->initForNewGame($players, $options);
 
-        Logger::log("INIT OK", "GameSetup");
-
-//        die('... GAME');
-
-        /*         * ********** Start the game initialization **** */
-
-        // Init global values with their initial values
-        //self::setGameStateInitialValue( 'my_first_global_variable', 0 );
-        // Init game statistics
-        // (note: statistics used in this file must be defined in your stats.inc.php file)
-        //self::initStat( 'table', 'table_teststat1', 0 );    // Init a table statistics
-        //self::initStat( 'player', 'player_teststat1', 0 );  // Init a player statistics (for all players)
-        // TODO: setup the initial game situation here
-        // Activate first player (which is in general a good idea :) )
         $this->activeNextPlayer();
-//        Logger::log("PID ",$playerId);
+        $player = $this->getPlayerManager()->findBy([
+            "id" => $this->getActivePlayerId()
+        ]);
 
-        /*         * ********** End of the game initialization **** */
+        $this->stateManager->initNewGame($player);
+
+        Logger::log("INIT OK", "GameSetup");
     }
 
     /*

@@ -31,11 +31,14 @@ class CollectionTakeableIdentifier {
     public function identify($cards, Player $activePlayer) {
         $players = $this->playerManager->findBy();
         foreach ($players as $player) {
+//            var_dump()
             if ($activePlayer->getId() !== $player->getId()) {
                 $cards = $this->cardManager->getCardPlayedByPlayer($player);
                 $collectionParser = new CollectionParser();
                 $collections = $collectionParser->parse($cards);
-                
+                echo '<pre>';
+                var_dump($collections);
+                die;
             }
         }
     }

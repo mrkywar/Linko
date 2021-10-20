@@ -32,6 +32,8 @@ trait TurnTrait {
     public function stResolveState() {
         Logger::log("Begin Resolve State", "SRS");
         $stateManager = $this->getStateManager();
+        $stateManager->setIsDebug(true);
+        
         $actualState = $stateManager->getActualState();
 
         if (null !== $actualState->getPlayerId()) {

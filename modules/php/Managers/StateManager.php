@@ -65,6 +65,7 @@ class StateManager extends SuperManager {
                 ->addClause($this->getFieldByProperty("playedAt"), null)
                 ->addOrderBy($this->getFieldByProperty("order"), QueryString::ORDER_ASC)
                 ->setLimit(1);
+        
         return $this->getSerializer()->unserialize($this->execute($qb));
     }
 
