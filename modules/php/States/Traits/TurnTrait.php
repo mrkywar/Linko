@@ -50,7 +50,6 @@ trait TurnTrait {
 
         //-- Detect End Of Game
         $endOfGameChecker = new EndOfGameChecker();
-//        $endOfGame = $checker->check();
         if ($endOfGameChecker->check()) {
             $stateManager->initEndOfGame();
         } else {

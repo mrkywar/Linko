@@ -25,6 +25,8 @@ trait PlayTrait {
 
     public function actionPlayCards($rawCardIds) {
         self::checkAction('playCards');
+        
+        $playCardChecker = new PlayCardChecker();
 
         $cardId = explode(",", $rawCardIds);
         $playerManager = $this->getPlayerManager();
@@ -32,20 +34,15 @@ trait PlayTrait {
         $player = $playerManager->findBy(["id" => self::getActivePlayerId()]);
         $cards = $cardManager->findBy(["id" => $cardId]);
 
-        if (PlayCardChecker::check($player, $cards)) {
+        if ($playCardChecker->check($player, $cards)) {
             $collectionIndex = $cardManager->getNextCollectionIndexFor($player);
-//            var_dump($collectionIndex);
             $cardManager->moveCards($cards, Deck::LOCATION_PLAYER_TABLE . "_" . $player->getId(), $collectionIndex);
         } else {
             throw new PlayCardException("Invalid selection try again");
         }
-       
-//        var_dump($this->gamestate);die;
 
         $this->getStateManager()->closeActualState();
         $this->gamestate->jumpToState(ST_RESOLVE_STATE);
-
-//        $this->gamestate->nextState();
     }
 
     /* -------------------------------------------------------------------------
