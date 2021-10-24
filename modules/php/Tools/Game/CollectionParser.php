@@ -3,7 +3,10 @@
 namespace Linko\Tools\Game;
 
 use Linko\Managers\CardManager;
+use Linko\Managers\Deck\Deck;
+use Linko\Managers\PlayerManager;
 use Linko\Models\Card;
+use Linko\Models\CardCollection;
 use Linko\Serializers\Serializer;
 
 /**
@@ -17,6 +20,10 @@ class CollectionParser {
      * @var Serializer
      */
     private $cardSerializer;
+    /**
+     * @var PlayerManager
+     */
+    private $playerManager;
     private $collection = [];
 
     /**
@@ -36,6 +43,12 @@ class CollectionParser {
             if ($this->doSerialization) {
                 $this->collection[$cards->getLocationArg()][] = $this->cardSerializer->serialize($cards);
             } else {
+                $collection = new CardCollection();
+                var_dump($cards);die;
+                $collection->setCards($cards);
+                $player = $this->getPlayerOwner($cards[0]);
+                var_dump($player);
+                
                 $this->collection[$cards->getLocationArg()][] = $cards;
             }
         } else {
@@ -47,6 +60,12 @@ class CollectionParser {
         return $this->collection;
     }
     
+    private function getPlayerOwner(Card $card) {
+        $pId = substr($card->getLocation(), strrpos($card->getLocation(), "_")+1);
+        var_dump($pId);die;
+    }
+
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 
      * ---------------------------------------------------------------------- */

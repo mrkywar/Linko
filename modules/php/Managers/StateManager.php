@@ -57,6 +57,7 @@ class StateManager extends SuperManager {
     }
 
     public function initNewCollectionTakeable($collection, Player $player, &$order) {
+        
 //        $states = [];
 //        
 //        $states[] = StateFactory::create(ST_PLAYER_TAKE_COLLECTION, $player->getId())
