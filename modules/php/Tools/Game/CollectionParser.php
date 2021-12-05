@@ -20,23 +20,42 @@ class CollectionParser {
     private $cardSerializer;
     private $collection = [];
 
+    /**
+     * 
+     * @var bool
+     */
+    private $doSerialization;
+
     public function __construct() {
         $cardManager = new CardManager();
+        $this->doSerialization = true;
 
         $this->cardSerializer = $cardManager->getSerializer();
+    }
+
+    public function setDoSerialization(bool $doSerialization) {
+        $this->doSerialization = $doSerialization;
+        return $this;
     }
 
     public function parse($cards) {
 
         if ($cards instanceof Card) {
-            $this->collection[$cards->getLocationArg()][] = $this->cardSerializer->serialize($cards);
+            if ($this->doSerialization) {
+                $this->collection[$cards->getLocationArg()][] = $this->cardSerializer->serialize($cards);
+            } else {
+                $this->collection[] = $cards;
+            }
         } else {
             foreach ($cards as $card) {
                 $this->parse($card);
             }
         }
-        
-        return $this->collection;
+        if($this->doSerialization){
+            return $this->collection;
+        }else{
+            return $this;
+        }
     }
 
 }

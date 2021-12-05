@@ -36,7 +36,7 @@ trait PlayTrait {
 
         if ($playCardChecker->check($player, $cards)) {
             $collectionIndex = $cardManager->getNextCollectionIndexFor($player);
-            var_dump($collectionIndex);die;
+//            var_dump($collectionIndex);die;
             $cardManager->moveCards($cards, Deck::LOCATION_PLAYER_TABLE . "_" . $player->getId(), $collectionIndex);
         } else {
             throw new PlayCardException("Invalid selection try again");
