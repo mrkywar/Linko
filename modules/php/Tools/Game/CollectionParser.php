@@ -20,11 +20,18 @@ class CollectionParser {
      * @var Serializer
      */
     private $cardSerializer;
+
     /**
      * @var PlayerManager
      */
     private $playerManager;
     private $collection = [];
+
+    /**
+     * 
+     * @var CardCollection
+     */
+    private $cardCollection;
 
     /**
      * @var bool
@@ -43,15 +50,17 @@ class CollectionParser {
             if ($this->doSerialization) {
                 $this->collection[$cards->getLocationArg()][] = $this->cardSerializer->serialize($cards);
             } else {
-                $collection = new CardCollection();
-                var_dump($cards);die;
-                $collection->setCards($cards);
+                $this->cardCollection = new CardCollection();
+//                var_dump($cards);
+//                die;
+                $this->collection->setCards($cards);
                 $player = $this->getPlayerOwner($cards[0]);
                 var_dump($player);
-                
+
                 $this->collection[$cards->getLocationArg()][] = $cards;
             }
         } else {
+            $this->cardCollection = new CardCollection();
             foreach ($cards as $card) {
                 $this->parse($card);
             }
@@ -59,17 +68,17 @@ class CollectionParser {
 
         return $this->collection;
     }
-    
-    private function getPlayerOwner(Card $card) {
-        $pId = substr($card->getLocation(), strrpos($card->getLocation(), "_")+1);
-        var_dump($pId);die;
-    }
 
+    private function getPlayerOwner(Card $card) {
+        $pId = substr($card->getLocation(), strrpos($card->getLocation(), "_") + 1);
+        var_dump($pId);
+        die;
+    }
 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 
      * ---------------------------------------------------------------------- */
-    
+
     public function getDoSerialization(): bool {
         return $this->doSerialization;
     }
@@ -78,7 +87,5 @@ class CollectionParser {
         $this->doSerialization = $doSerialization;
         return $this;
     }
-
-
 
 }
