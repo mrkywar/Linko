@@ -51,11 +51,8 @@ class CollectionParser {
                 $this->parse($card);
             }
         }
-        if($this->doSerialization){
-            return $this->collection;
-        }else{
-            return $this;
-        }
+
+        return $this->collection;
     }
 
 }

@@ -30,22 +30,17 @@ class PlayCardChecker {
         $collection = $this->collectionParser->parse($cards);
 
         try {
-            $this->checkCollection($collection, $player);
+            return $this->checkCollection($collection, $player);
         } catch (PlayerCheatException $ex) {
             Logger::log("Player Cheat with ids : " . $this->getCardsIds($cards));
             throw new PlayCardException("Impossible to play this card(s)", 0, $ex);
         }
-
-
-//        echo "<pre>";
-//        var_dump($collection);
-//        die;
     }
 
-    private function checkCollection(Collection $collection, Player $player) {
+    private function checkCollection($cardCollection, Player $player) {
         $cardTypes = [];
 
-        foreach ($collection as $card) {
+        foreach ($cardCollection as $card) {
             if (!$this->checkCardInHand($card, $player)) {
                 throw new PlayerCheatException("Invalid Player Selection");
                 // return false;
@@ -63,9 +58,9 @@ class PlayCardChecker {
             throw new PlayCardException("Invalid Card Selection");
         }
 
-        $log = $player->getName() . " play " . sizeof($cards)
+        $log = $player->getName() . " play " . sizeof($cardCollection)
                 . " cards : " . $this->getLogType($cardTypes) . " (ids : "
-                . $this->getCardsIds($cards) . ")";
+                . $this->getCardsIds($cardCollection) . ")";
         Logger::log($log, "PlayCard");
 
         return true;
@@ -94,6 +89,26 @@ class PlayCardChecker {
         } else {
             throw new PlayCardException("Cards arg fail - PCC 02");
         }
+    }
+
+    private function checkCardTypes(array $cardTypes) {
+        switch (sizeof($cardTypes)) {
+            case 1:// One Type is OK !
+                return true;
+            case 2:// 2 type = 1 (or more) joker or invalid!
+                return isset($cardTypes[14]);
+            default ://More or Less is not a valid selection
+        }
+    }
+
+    private function getLogType(array $cardTypes) {
+        $line = [];
+
+        foreach ($cardTypes as $type => $count) {
+            $line [] = $count . " x " . $type;
+        }
+
+        return implode(" and ", $line);
     }
 
     /**
@@ -139,23 +154,6 @@ class PlayCardChecker {
 //    }
 //
 //
-//    private function checkCardTypes(array $cardTypes) {
-//        switch (sizeof($cardTypes)) {
-//            case 1:// One Type is OK !
-//                return true;
-//            case 2:// 2 type = 1 (or more) joker or invalid!
-//                return isset($cardTypes[14]);
-//            default ://More or Less is not a valid selection
-//        }
-//    }
 //
-//    static private function getLogType(array $cardTypes) {
-//        $line = [];
-//
-//        foreach ($cardTypes as $type => $count) {
-//            $line [] = $count . " x " . $type;
-//        }
-//
-//        return implode(" and ", $line);
-//    }
+//    static 
 }
