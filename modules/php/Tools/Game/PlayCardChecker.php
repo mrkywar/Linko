@@ -110,50 +110,5 @@ class PlayCardChecker {
 
         return implode(" and ", $line);
     }
-
-    /**
-     * -------------------------------------------------------------------------
-     *              Version 1 
-     * -------------------------------------------------------------------------
-     */
-//    public function check(Player $player, $cards) {
-//        try {
-//            if ($cards instanceof Card) {
-//                $this->checkCardInHand($cards, $player);
-//
-//                $log = $player->getName() . " play one card : "
-//                        . $cards->getType() . " (id : " . $cards->getId() . " )";
-//
-//                Logger::log($log, "PlayCard");
-//
-//                return true;
-//            } else {
-//                $cardTypes = [];
-//                foreach ($cards as $card) {
-//                    if (!$this->checkCardInHand($card, $player)) {
-//                        throw new PlayerCheatException("Invalid Player Selection");
-//                    }
-//                   
-//                }
-//
-//                if (!$this->checkCardTypes($cardTypes)) {
-//                    throw new PlayCardException("Invalid Card Selection");
-//                }
-//
-//                $log = $player->getName() . " play " . sizeof($cards)
-//                        . " cards : " . $this->getLogType($cardTypes) . " (ids : "
-//                        . $this->getCardsIds($cards) . ")";
-//                Logger::log($log, "PlayCard");
-//
-//                return true;
-//            }
-//        } catch (PlayerCheatException $ex) {
-//            Logger::log("Player Cheat with ids : " . $this->getCardsIds($cards));
-//            throw new PlayCardException("Impossible to play this card(s)", 0, $ex);
-//        }
-//    }
-//
-//
-//
-//    static 
+ 
 }

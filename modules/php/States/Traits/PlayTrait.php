@@ -8,9 +8,8 @@
 
 namespace Linko\States\Traits;
 
-use Linko\Managers\CardManager;
 use Linko\Managers\Deck\Deck;
-use Linko\Managers\PlayerManager;
+use Linko\Tools\Game\CollectionTakeableIdentifier;
 use Linko\Tools\Game\Exceptions\PlayCardException;
 use Linko\Tools\Game\PlayCardChecker;
 
@@ -27,10 +26,12 @@ trait PlayTrait {
         self::checkAction('playCards');
 
         $playCardChecker = new PlayCardChecker();
-
-        $cardId = explode(",", $rawCardIds);
         $playerManager = $this->getPlayerManager();
         $cardManager = $this->getCardManager();
+        $takeableCollectionIdentifier = new CollectionTakeableIdentifier();
+
+        $cardId = explode(",", $rawCardIds);
+
         $player = $playerManager->findBy(["id" => self::getActivePlayerId()]);
         $cards = $cardManager->findBy(["id" => $cardId]);
 
@@ -38,6 +39,12 @@ trait PlayTrait {
             $collectionIndex = $cardManager->getNextCollectionIndexFor($player);
 //            var_dump($collectionIndex);die;
             $cardManager->moveCards($cards, Deck::LOCATION_PLAYER_TABLE . "_" . $player->getId(), $collectionIndex);
+
+            $collections = $takeableCollectionIdentifier->identify($cards, $player);
+            if (!empty($collections)) {
+                var_dump($collections);
+                die;
+            }
         } else {
             throw new PlayCardException("Invalid selection try again");
         }
