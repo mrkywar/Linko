@@ -22,6 +22,12 @@ class CollectionParser {
 
     /**
      * 
+     * @var Card
+     */
+    private $firstCard;
+
+    /**
+     * 
      * @var bool
      */
     private $doSerialization;
@@ -39,8 +45,10 @@ class CollectionParser {
     }
 
     public function parse($cards) {
-
         if ($cards instanceof Card) {
+            if (null === $this->firstCard) {
+                $this->firstCard = $cards;
+            }
             if ($this->doSerialization) {
                 $this->collection[$cards->getLocationArg()][] = $this->cardSerializer->serialize($cards);
             } else {
@@ -52,7 +60,50 @@ class CollectionParser {
             }
         }
 
+        if ($this->doSerialization) {
+            return $this->collection;
+        } else {
+            return $this;
+        }
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Fake getter
+     * ---------------------------------------------------------------------- */
+
+    public function getCardsNumber() {
+        return count($this->collection);
+    }
+
+    /* -------------------------------------------------------------------------
+     *                  BEGIN - Getters & Setters 
+     * ---------------------------------------------------------------------- */
+
+    public function getCardSerializer(): Serializer {
+        return $this->cardSerializer;
+    }
+
+    public function getCollection() {
         return $this->collection;
+    }
+
+    public function getFirstCard(): Card {
+        return $this->firstCard;
+    }
+
+    public function setCardSerializer(Serializer $cardSerializer) {
+        $this->cardSerializer = $cardSerializer;
+        return $this;
+    }
+
+    public function setCollection($collection) {
+        $this->collection = $collection;
+        return $this;
+    }
+
+    public function setFirstCard(Card $firstCard) {
+        $this->firstCard = $firstCard;
+        return $this;
     }
 
 }
