@@ -1,6 +1,6 @@
 <?php
 
-namespace Linko\Tools\Game;
+namespace Linko\Collection;
 
 use Linko\Managers\CardManager;
 use Linko\Models\Card;
