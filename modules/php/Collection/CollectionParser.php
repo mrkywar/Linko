@@ -44,6 +44,11 @@ class CollectionParser {
         return $this;
     }
 
+    /**
+     * 
+     * @param Card $cards
+     * @return Colle
+     */
     public function parse($cards) {
         if ($cards instanceof Card) {
             if (null === $this->firstCard) {

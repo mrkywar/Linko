@@ -2,6 +2,7 @@
 
 namespace Linko\Tools\Game;
 
+use Linko\Collection\CollectionDataRetriver;
 use Linko\Managers\CardManager;
 use Linko\Managers\PlayerManager;
 use Linko\Models\Player;
@@ -89,9 +90,9 @@ abstract class GameDataRetiver {
         $tableInfos = [];
 
         foreach ($players as $player) {
-            $cards = self::$cardManager->getCardPlayedByPlayer($player);
-            $collectionParser = new CollectionParser();
-            $tableInfos[$player->getId()] = $collectionParser->parse($cards);
+            //$cards = self::$cardManager->getCardPlayedByPlayer($player);
+            $collectionDataRetriver = new CollectionDataRetriver();
+            $tableInfos[$player->getId()] = $collectionDataRetriver->parse($player);
         }
 
         return $tableInfos;

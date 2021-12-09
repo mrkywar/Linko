@@ -47,6 +47,9 @@ class CollectionTakeableIdentifier {
                 $cards = $this->cardManager->getCardPlayedByPlayer($player);
 
                 $collection = $this->collectionParser->parse($cards);
+                if($collection->getCardPlayedByPlayer($player);)
+                
+                
             }
         }
 

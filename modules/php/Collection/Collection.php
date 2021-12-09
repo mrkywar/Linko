@@ -2,6 +2,8 @@
 
 namespace Linko\Collection;
 
+use Linko\Models\Card;
+
 /**
  * Description of CollectionRetriver
  *
@@ -29,13 +31,26 @@ class Collection {
 
     /**
      * 
-     * @return Card|null
+     * @return Card
      */
     public function getFirstCard() {
         if (!empty($this->cards)) {
             return $this->cards[0];
         }
         return;
+    }
+
+    /**
+     * 
+     * @param Collection $attackerCollection collection of attaker (who want take collection
+     * @return bool
+     */
+    public function isTakeable(Collection $attackerCollection) {
+        return (
+                $attackerCollection->getCardsNumber() === $this->getCardsNumber() &&
+                $attackerCollection->getFirstCard()->getType() > $this->getFirstCard()->getType()
+
+                );
     }
 
     /* -------------------------------------------------------------------------
