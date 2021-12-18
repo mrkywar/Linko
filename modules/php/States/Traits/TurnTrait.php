@@ -33,6 +33,8 @@ trait TurnTrait {
         Logger::log("Begin Resolve State", "SRS");
         $stateManager = $this->getStateManager();
         $actualState = $stateManager->getActualState();
+        
+//        if(null === $actualState)
 
         if (null !== $actualState->getPlayerId()) {
             $this->gamestate->changeActivePlayer($actualState->getPlayerId());

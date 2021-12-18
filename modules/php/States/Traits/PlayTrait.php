@@ -29,6 +29,7 @@ trait PlayTrait {
         $playerManager = $this->getPlayerManager();
         $cardManager = $this->getCardManager();
         $takeableCollectionIdentifier = new CollectionTakeableIdentifier();
+        $stateManager = $this->getStateManager();
 
         $cardId = explode(",", $rawCardIds);
 
@@ -44,17 +45,20 @@ trait PlayTrait {
             if (!empty($collections)) {
                 var_dump($collections);
                 die;
+            } else {
+//                $stateManager->closeActualState();
+
+                //$this->gamestate->nextState();
             }
         } else {
             throw new PlayCardException("Invalid selection try again");
         }
 
 //        var_dump($this->gamestate);die;
-
         $this->getStateManager()->closeActualState();
-        $this->gamestate->jumpToState(ST_RESOLVE_STATE);
+//        $this->gamestate->jumpToState(ST_RESOLVE_STATE);
 
-//        $this->gamestate->nextState();
+        $this->gamestate->nextState();
     }
 
     /* -------------------------------------------------------------------------
