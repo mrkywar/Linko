@@ -15,26 +15,14 @@ class CollectionParser {
 
     /**
      * 
-     * @var Serializer
-     */
-    private $cardSerializer;
-    private $collection = [];
-
-    /**
-     * 
      * @var Card
      */
     private $firstCard;
 
-    /**
-     * 
-     * @var bool
-     */
-    private $doSerialization;
-
     public function __construct() {
         $cardManager = new CardManager();
-        $this->doSerialization = true;
+        $this->collection = new Collection();
+//        $this->doSerialization = true;
 
         $this->cardSerializer = $cardManager->getSerializer();
     }
@@ -47,29 +35,41 @@ class CollectionParser {
     /**
      * 
      * @param Card $cards
-     * @return Colle
+     * @return Collection
      */
     public function parse($cards) {
+        $collection = new Collection();
+
         if ($cards instanceof Card) {
-            if (null === $this->firstCard) {
-                $this->firstCard = $cards;
-            }
-            if ($this->doSerialization) {
-                $this->collection[$cards->getLocationArg()][] = $this->cardSerializer->serialize($cards);
-            } else {
-                $this->collection[] = $cards;
-            }
+            $collection->addCard($cards);
         } else {
-            foreach ($cards as $card) {
-                $this->parse($card);
-            }
+            $collection->setCards($cards);
         }
 
-        if ($this->doSerialization) {
-            return $this->collection;
-        } else {
-            return $this;
-        }
+        return $collection;
+
+//        if ($cards instanceof Card) {
+//            if (null === $this->firstCard) {
+//                $this->firstCard = $cards;
+//            }
+//            if ($this->doSerialization) {
+//                $this->collection[$cards->getLocationArg()][] = $this->cardSerializer->serialize($cards);
+//            } else {
+//                $this->collection[] = $cards;
+//            }
+//        } else {
+//            $collection = new Collection()
+//            
+//            foreach ($cards as $card) {
+//                $this->parse($card);
+//            }
+//        }
+//
+//        if ($this->doSerialization) {
+//            return $this->collection;
+//        } else {
+//            return $this;
+//        }
     }
 
     /* -------------------------------------------------------------------------

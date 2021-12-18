@@ -47,21 +47,14 @@ class CollectionTakeableIdentifier {
                 $cards = $this->cardManager->getCardPlayedByPlayer($player);
 
                 $collection = $this->collectionParser->parse($cards);
-                if($collection->getCardPlayedByPlayer($player);)
-                
-                
+
+                if ($collection->isTakeable($playerCollection)) {
+                    $collections[] = $collection;
+                }
             }
         }
 
         return $collections;
     }
-
-//    private function isCollectionTakeable(Collection $playedCollection, Collection $targetCollection) {
-//        
-//        return (
-//                $playedCollection->
-//        );
-//        
-//    }
 
 }

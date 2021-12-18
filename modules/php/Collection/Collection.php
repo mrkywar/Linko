@@ -54,7 +54,7 @@ class Collection {
     }
 
     /* -------------------------------------------------------------------------
-     *                  BEGIN - adder
+     *                  BEGIN - adder & fake setter 
      * ---------------------------------------------------------------------- */
 
     public function addCard(Card $card) {
@@ -62,6 +62,12 @@ class Collection {
         return $this;
     }
 
+    public function setCards(array $cards) {
+        foreach ($cards as $card){
+            $this->addCard($card);
+        }
+        return $this;
+    } 
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 
      * ---------------------------------------------------------------------- */
@@ -69,5 +75,9 @@ class Collection {
     public function getCards() {
         return $this->cards;
     }
+    
+    
+
+
 
 }
