@@ -92,7 +92,7 @@ abstract class GameDataRetiver {
         foreach ($players as $player) {
             //$cards = self::$cardManager->getCardPlayedByPlayer($player);
             $collectionDataRetriver = new CollectionDataRetriver();
-            $tableInfos[$player->getId()] = $collectionDataRetriver->parse($player);
+            $tableInfos[$player->getId()] = $collectionDataRetriver->retrive($player);
         }
 
         return $tableInfos;

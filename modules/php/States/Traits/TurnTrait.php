@@ -33,7 +33,7 @@ trait TurnTrait {
         Logger::log("Begin Resolve State", "SRS");
         $stateManager = $this->getStateManager();
         $actualState = $stateManager->getActualState();
-        
+
 //        if(null === $actualState)
 
         if (null !== $actualState->getPlayerId()) {
@@ -44,11 +44,8 @@ trait TurnTrait {
 
     public function stEndOfTurn() {
         $stateManager = $this->getStateManager();
+        $actualState = $stateManager->getActualState();
         $stateManager->closeActualState();
-        $playerId = $this->activeNextPlayer();
-        $player = $this->getPlayerManager()->findBy([
-            "id" => $playerId
-        ]);
 
         //-- Detect End Of Game
         $endOfGameChecker = new EndOfGameChecker();
@@ -56,6 +53,16 @@ trait TurnTrait {
         if ($endOfGameChecker->check()) {
             $stateManager->initEndOfGame();
         } else {
+            $activePlayer = $this->getPlayerManager()->findBy([
+                "id" => $this->getActivePlayerId()
+            ]);
+            $playerId = $this->activeNextPlayer();
+            $player = $this->getPlayerManager()->findBy([
+                "id" => $playerId
+            ]);
+            
+            var_dump($player,$activePlayer);die;
+            
             $stateManager->initEndOfTurn($player);
         }
         $this->gamestate->jumpToState(ST_RESOLVE_STATE);
