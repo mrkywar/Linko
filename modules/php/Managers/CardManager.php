@@ -23,7 +23,7 @@ class CardManager extends SuperManager {
         $this->getSerializer()->setIsForcedArray(true);
     }
 
-    public function initForNewGame($players, array $options = []) {
+    public function initNewGame($players, array $options = []) {
         $deck = new Deck();
 
         $this->create($deck->getCards());

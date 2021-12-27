@@ -32,30 +32,25 @@ trait PlayTrait {
         $stateManager = $this->getStateManager();
 
         $cardId = explode(",", $rawCardIds);
-
-        $player = $playerManager->findBy(["id" => self::getActivePlayerId()]);
+        $activePlayer = $playerManager->findBy(["id" => self::getActivePlayerId()]);
         $cards = $cardManager->findBy(["id" => $cardId]);
 
-        if ($playCardChecker->check($player, $cards)) {
-            $collectionIndex = $cardManager->getNextCollectionIndexFor($player);
-//            var_dump($collectionIndex);die;
-            $cardManager->moveCards($cards, Deck::LOCATION_PLAYER_TABLE . "_" . $player->getId(), $collectionIndex);
-
-            $collections = $takeableCollectionIdentifier->identify($cards, $player);
+        if ($playCardChecker->check($activePlayer, $cards)) {
+            $collectionIndex = $cardManager->getNextCollectionIndexFor($activePlayer);
+            $cardManager->moveCards($cards, Deck::LOCATION_PLAYER_TABLE . "_" . $activePlayer->getId(), $collectionIndex);
+            
+            $collections = $takeableCollectionIdentifier->identify($cards, $activePlayer);
+           
             if (!empty($collections)) {
                 var_dump($collections);
-                die;
-            } else {
-//                $stateManager->closeActualState();
-
-                //$this->gamestate->nextState();
-            }
+                die('CFPT');
+            } 
         } else {
             throw new PlayCardException("Invalid selection try again");
         }
 
-//        var_dump($this->gamestate);die;
-        $this->getStateManager()->closeActualState();
+//        die("WIP");
+        $stateManager->closeActualState();
 //        $this->gamestate->jumpToState(ST_RESOLVE_STATE);
 
         $this->gamestate->nextState();

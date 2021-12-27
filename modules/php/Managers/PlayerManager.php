@@ -15,7 +15,7 @@ use Linko\Tools\DB\Fields\DBFieldsRetriver;
  */
 class PlayerManager extends SuperManager {
 
-    public function initForNewGame(array $rawPlayers, array $options = []) {
+    public function initNewGame(array $rawPlayers, array $options = []) {
         $gameinfos = Linko::getInstance()->getGameinfos();
 
         $players = $this->getSerializer()->unserialize($rawPlayers);

@@ -17,11 +17,11 @@ use Linko\Tools\DB\QueryString;
  */
 class StateManager extends SuperManager {
 
-    public function initNewGame(Player $player) {
+    public function initNewGame() {
         $states = [];
         $order = $this->getNextOrder();
 
-        $states[] = StateFactory::create(ST_START_OF_TURN, $player->getId(), $order);
+        $states[] = StateFactory::create(ST_BEGIN_GAME, null, $order);
 
         $this->create($states);
 
