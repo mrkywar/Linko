@@ -3,6 +3,7 @@
 namespace Linko\Collection;
 
 use Linko\Managers\CardManager;
+use Linko\Models\Card;
 use Linko\Models\Player;
 use Linko\Serializers\Serializer;
 
@@ -43,7 +44,8 @@ class CollectionDataRetriver {
         $cards = $this->cardManager->getCardPlayedByPlayer($player);
 
         if ($cards instanceof Card) {
-            $this->collection[$cards->getLocationArg()][] = $this->cardSerializer->serialize($cards);
+            $this->parse($cards);
+            //$this->collection[$cards->getLocationArg()][] = $this->cardSerializer->serialize($cards);
         } else {
             foreach ($cards as $card) {
                 $this->parse($card);
@@ -51,6 +53,12 @@ class CollectionDataRetriver {
         }
 
         return $this->collection;
+    }
+    
+    
+    protected function parse(Card $card) {
+        $this->collection[$card->getLocationArg()][] = $this->cardSerializer->serialize($card);
+        
     }
 
 }
