@@ -5,7 +5,7 @@ namespace Linko\Managers\Core;
 use Linko\Repository\Core\Repository;
 use Linko\Serializers\Core\Serializer;
 
-/**
+/** 
  * Description of Manager abstract class for Model Management (Player/Card for
  * Exemple )
  *
