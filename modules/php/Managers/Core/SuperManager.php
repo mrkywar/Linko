@@ -1,9 +1,7 @@
 <?php
-
 namespace Linko\Managers\Core;
 
 use Linko\Models\Core\Model;
-use Linko\Tools\DB\Fields;
 use Linko\Serializers\Serializer;
 use Linko\Tools\DB\DBRequester;
 use Linko\Tools\DB\DBTableRetriver;

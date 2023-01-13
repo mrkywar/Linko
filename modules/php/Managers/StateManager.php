@@ -10,6 +10,7 @@ use Linko\Models\State;
 use Linko\Serializers\Serializer;
 use Linko\Tools\DB\QueryBuilder;
 use Linko\Tools\DB\QueryString;
+use Linko\Tools\Logger\Logger;
 
 /**
  * Description of StateManager
@@ -89,14 +90,16 @@ class StateManager extends SuperManager {
         unset($results[0]); //remove actual state
 
         $i = $actualState->getOrder() + 1;
-        foreach ($collections as $collection) {
+        foreach ($collections as $collection) {   
+            $states[] = StateFactory::create(ST_PLAYER_CHOOSE, $player->getId(), $i);
+            $i++;
             $states[] = StateFactory::create(ST_PLAYER_ATTACK, $player->getId(), $i);
             $i++;
-            $states[] = StateFactory::create(ST_PLAYER_DRAW, $player->getId(), $i);
-            $i++;
         }
-        
+        $this->setIsDebug(true);
         $this->create($states);
+        $this->setIsDebug(false);
+        Logger::log($player->getName()." can attack ".sizeof($collections)." new collection(s)", "SSOT");
 
         foreach ($results as &$state) {
             $state->setOrder($state->getOrder()+ sizeof($collections));

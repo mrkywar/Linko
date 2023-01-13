@@ -41,18 +41,31 @@ $machinestates = [
 
     // array(/*, "takeCollection" => STATE_TAKE_COLLECTION, "getFinalScores" => STATE_FINAL_SCORE*/)
     ],
-    ST_PLAYER_TAKE_COLLECTION => [
+    ST_PLAYER_CHOOSE => [
         "name" => "takeCollection",
-        "description" => clienttranslate('${actplayer} can steal cards or have ${tarplayer} discard'),
-        "descriptionmyturn" => clienttranslate('${you} can steal cards or have ${tarplayer} discard'),
+        "description" => clienttranslate('${actplayer} can steal cards or have discard '),
+        "descriptionmyturn" => clienttranslate('${you} can steal cards or have discard'),
         "type" => "activeplayer",
-        "args" => "argStealCollection",
-        "action" => "stStealCollection",
-        "possibleactions" => ["actionStealCards"],
+        "possibleactions" => ["takeCollection","discardCollection"],
         "transitions" => [
-            "" => ST_PLAYER_DRAW
+            "" => ST_RESOLVE_STATE
         ]
     ],
+    ST_PLAYER_ATTACK => [
+        'name' => 'playerAttack',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stPlayerAttack',
+        'transitions' => [],
+    ],
+    ST_PLAYER_DISCARD => [
+        'name' => 'playerDiscard',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stPlayerDiscard',
+        'transitions' => [],
+    ],
+    
     ST_PLAYER_DRAW => [
         "name" => "playerDraw",
         "description" => clienttranslate('${actplayer} should draw ${numberOfCard} card(s)'),
