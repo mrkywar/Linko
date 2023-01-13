@@ -44,7 +44,7 @@ trait TurnTrait {
 
     public function stEndOfTurn() {
         $stateManager = $this->getStateManager();
-        $actualState = $stateManager->getActualState();
+        //$actualState = $stateManager->getActualState();
         $stateManager->closeActualState();
 
         //-- Detect End Of Game
@@ -53,17 +53,12 @@ trait TurnTrait {
         if ($endOfGameChecker->check()) {
             $stateManager->initEndOfGame();
         } else {
-            $activePlayer = $this->getPlayerManager()->findBy([
-                "id" => $this->getActivePlayerId()
-            ]);
             $playerId = $this->activeNextPlayer();
             $player = $this->getPlayerManager()->findBy([
                 "id" => $playerId
             ]);
             
-            var_dump($player,$activePlayer);die;
-            
-            $stateManager->initEndOfTurn($player);
+            $stateManager->initNewTurn($player);
         }
         $this->gamestate->jumpToState(ST_RESOLVE_STATE);
     }

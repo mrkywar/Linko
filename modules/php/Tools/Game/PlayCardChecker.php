@@ -2,6 +2,8 @@
 
 namespace Linko\Tools\Game;
 
+use Linko\Collection\Collection;
+use Linko\Collection\CollectionParser;
 use Linko\Models\Card;
 use Linko\Models\Player;
 use Linko\Tools\Game\Exceptions\PlayCardException;
@@ -28,7 +30,7 @@ class PlayCardChecker {
 
     public function check(Player $player, $cards) {
         $collection = $this->collectionParser->parse($cards);
-
+        
         try {
             return $this->checkCollection($collection, $player);
         } catch (PlayerCheatException $ex) {
@@ -37,12 +39,12 @@ class PlayCardChecker {
         }
     }
 
-    private function checkCollection($cardCollection, Player $player) {
+    private function checkCollection(Collection $cardCollection, Player $player) {
         $cardTypes = [];
 
-        foreach ($cardCollection as $card) {
+        foreach ($cardCollection->getCards() as $card) {
             if (!$this->checkCardInHand($card, $player)) {
-                throw new PlayerCheatException("Invalid Player Selection");
+                throw new PlayerCheatException("Invalid Player Selection - PCC-01");
                 // return false;
             }
 
@@ -53,12 +55,11 @@ class PlayCardChecker {
             }
         }
 
-
         if (!$this->checkCardTypes($cardTypes)) {
-            throw new PlayCardException("Invalid Card Selection");
+            throw new PlayCardException("Invalid Card Selection - PCC-02");
         }
 
-        $log = $player->getName() . " play " . sizeof($cardCollection)
+        $log = $player->getName() . " play " . $cardCollection->getCardsCount()
                 . " cards : " . $this->getLogType($cardTypes) . " (ids : "
                 . $this->getCardsIds($cardCollection) . ")";
         Logger::log($log, "PlayCard");
@@ -80,14 +81,22 @@ class PlayCardChecker {
     private function getCardsIds($cards) {
         if ($cards instanceof Card) {
             return $cards->getId();
-        } elseif (is_array($cards)) {
-            $ids = [];
+        } elseif($cards instanceof Collection){
+            $ids = array();
+            foreach ($cards->getCards() as $card){
+               $ids [] = $card->getId();
+            }
+            return implode(",", $ids);
+        }
+        /*elseif (is_array($cards)) { //may deprecated
+            $ids = "";
             foreach ($cards as $card) {
                 $ids[] = $this->getCardsIds($card);
             }
             return implode(",", $ids);
-        } else {
-            throw new PlayCardException("Cards arg fail - PCC 02");
+        }*/ 
+        else {
+            throw new PlayCardException("Cards arg fail - PCC 03");
         }
     }
 

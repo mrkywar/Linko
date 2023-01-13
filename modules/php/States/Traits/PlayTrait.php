@@ -8,8 +8,8 @@
 
 namespace Linko\States\Traits;
 
+use Linko\Collection\CollectionTakeableIdentifier;
 use Linko\Managers\Deck\Deck;
-use Linko\Tools\Game\CollectionTakeableIdentifier;
 use Linko\Tools\Game\Exceptions\PlayCardException;
 use Linko\Tools\Game\PlayCardChecker;
 
@@ -34,25 +34,31 @@ trait PlayTrait {
         $cardId = explode(",", $rawCardIds);
         $activePlayer = $playerManager->findBy(["id" => self::getActivePlayerId()]);
         $cards = $cardManager->findBy(["id" => $cardId]);
+        //var_dump($cards);die;
 
         if ($playCardChecker->check($activePlayer, $cards)) {
             $collectionIndex = $cardManager->getNextCollectionIndexFor($activePlayer);
             $cardManager->moveCards($cards, Deck::LOCATION_PLAYER_TABLE . "_" . $activePlayer->getId(), $collectionIndex);
             
             $collections = $takeableCollectionIdentifier->identify($cards, $activePlayer);
-           
-            if (!empty($collections)) {
-                var_dump($collections);
-                die('CFPT');
-            } 
+            //var_dump($collections);
+            
+            foreach ($collections as $coll){
+                echo $coll->getCardsCount()."x".$coll->getCardsValue()." - ";
+            }
+//            if (!empty($collections)) {
+//                var_dump($collections);
+//                die('CFPT');
+//            }
+            die('WIP');
         } else {
             throw new PlayCardException("Invalid selection try again");
         }
-
+        die('OK');
 //        die("WIP");
         $stateManager->closeActualState();
 //        $this->gamestate->jumpToState(ST_RESOLVE_STATE);
-
+        
         $this->gamestate->nextState();
     }
 

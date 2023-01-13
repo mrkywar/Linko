@@ -22,11 +22,19 @@ class Collection {
      * ---------------------------------------------------------------------- */
 
     /**
-     * 
+     * count card in the collection
      * @return int
      */
-    public function getCardsNumber() {
+    public function getCardsCount() {
         return count($this->cards);
+    }
+
+    /**
+     * get associated card value for collection
+     * @return int
+     */
+    public function getCardsValue() {
+        return $this->getFirstCard()->getType();
     }
 
     /**
@@ -47,9 +55,8 @@ class Collection {
      */
     public function isTakeable(Collection $attackerCollection) {
         return (
-                $attackerCollection->getCardsNumber() === $this->getCardsNumber() &&
-                $attackerCollection->getFirstCard()->getType() > $this->getFirstCard()->getType()
-
+                $attackerCollection->getCardsCount() === $this->getCardsCount() &&
+                $attackerCollection->getCardsValue() > $this->getCardsValue()
                 );
     }
 
@@ -63,11 +70,12 @@ class Collection {
     }
 
     public function setCards(array $cards) {
-        foreach ($cards as $card){
+        foreach ($cards as $card) {
             $this->addCard($card);
         }
         return $this;
-    } 
+    }
+
     /* -------------------------------------------------------------------------
      *                  BEGIN - Getters & Setters 
      * ---------------------------------------------------------------------- */
@@ -75,9 +83,5 @@ class Collection {
     public function getCards() {
         return $this->cards;
     }
-    
-    
-
-
 
 }
