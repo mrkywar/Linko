@@ -84,6 +84,17 @@ abstract class DBFieldsRetriver {
         return $fielteredFields;
     }
     
+    static public function retriveUpdatableFields($items) {
+        $fields = self::retrive($items);
+        $fielteredFields = [];
+        foreach ($fields as $field) {
+            if (!$field->getIsPrimary()) {
+                $fielteredFields[] = $field;
+            }
+        }
+        return $fielteredFields;
+    }
+    
     static public function retriveFieldByPropertyName(string $propertyName, $items) {
         $fields = self::retrive($items);
         foreach ($fields as $field){

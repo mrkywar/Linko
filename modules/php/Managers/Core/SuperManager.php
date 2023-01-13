@@ -3,6 +3,7 @@
 namespace Linko\Managers\Core;
 
 use Linko\Models\Core\Model;
+use Linko\Tools\DB\Fields;
 use Linko\Serializers\Serializer;
 use Linko\Tools\DB\DBRequester;
 use Linko\Tools\DB\DBTableRetriver;
@@ -65,6 +66,10 @@ abstract class SuperManager extends DBRequester {
     final protected function getPrimaryFields($items) {
         return DBFieldsRetriver::retrivePrimaryFields($items);
     }
+    
+    final protected function getUpdateFields() {
+        return DBFieldsRetriver::retriveUpdatableFields($this->getItems());
+    }
 
     final protected function getFieldByProperty(string $propertyName, $items = null) {
         return DBFieldsRetriver::retriveFieldByPropertyName($propertyName, $this->getItems($items));
@@ -103,6 +108,14 @@ abstract class SuperManager extends DBRequester {
         return $this->execute($qb);
     }
 
+    protected function update($items) {
+        $qb = $this->prepareUpdate($items);
+        
+        
+        
+        
+    }
+
     /**
      * 
      * @param type $clauses
@@ -128,8 +141,11 @@ abstract class SuperManager extends DBRequester {
 
         return $qb;
     }
-    
-    protected function prepareUpdate($items=null){
+
+    /**
+     * @return QueryBuilder
+     */
+    protected function prepareUpdate($items = null) {
         $table = $this->getTable($items);
         $primaries = $this->getPrimaryFields($items);
 

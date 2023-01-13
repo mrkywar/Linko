@@ -42,22 +42,16 @@ trait PlayTrait {
             
             $collections = $takeableCollectionIdentifier->identify($cards, $activePlayer);
             //var_dump($collections);
-            
-            foreach ($collections as $coll){
-                echo $coll->getCardsCount()."x".$coll->getCardsValue()." - ";
+                        
+            if (!empty($collections)) {
+                $stateManager->initCollectionAttack($activePlayer,$collections);
             }
-//            if (!empty($collections)) {
-//                var_dump($collections);
-//                die('CFPT');
-//            }
-            die('WIP');
+            
         } else {
             throw new PlayCardException("Invalid selection try again");
         }
-        die('OK');
-//        die("WIP");
+
         $stateManager->closeActualState();
-//        $this->gamestate->jumpToState(ST_RESOLVE_STATE);
         
         $this->gamestate->nextState();
     }

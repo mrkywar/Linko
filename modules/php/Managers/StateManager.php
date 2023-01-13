@@ -2,6 +2,7 @@
 
 namespace Linko\Managers;
 
+use Linko\Tools\DB\Fields\DBFieldsRetriver;
 use Linko\Managers\Core\SuperManager;
 use Linko\Models\Factories\StateFactory;
 use Linko\Models\Player;
@@ -72,6 +73,42 @@ class StateManager extends SuperManager {
             return $this->getSerializer()->unserialize($results);
         }
         return;
+    }
+
+    public function initCollectionAttack(Player $player, $collections) {
+        $actualState = $this->getActualState();
+        $nextOrder = $this->getNextOrder();
+        $states = [];
+        
+        $qb = $this->prepareFindBy()
+                ->addClause($this->getFieldByProperty("playedAt"), null)
+                ->addOrderBy($this->getFieldByProperty("order"), QueryString::ORDER_ASC);
+//        
+        $rawResults = $this->execute($qb);
+        $results = $this->getSerializer()->unserialize($rawResults);
+        unset($results[0]); //remove actual state
+
+        $i = $actualState->getOrder() + 1;
+        foreach ($collections as $collection) {
+            $states[] = StateFactory::create(ST_PLAYER_ATTACK, $player->getId(), $i);
+            $i++;
+            $states[] = StateFactory::create(ST_PLAYER_DRAW, $player->getId(), $i);
+            $i++;
+        }
+        
+        $this->create($states);
+
+        foreach ($results as &$state) {
+            $state->setOrder($state->getOrder()+ sizeof($collections));
+            $fieldOrder = DBFieldsRetriver::retriveFieldByPropertyName("order", $state);
+            $qb = $this->prepareUpdate($state);
+            $qb->addSetter($fieldOrder, $state->getOrder());
+            $this->execute($qb);
+        }
+
+        //var_dump($actualState, $nextOrder, $states, $collections);
+//        var_dump($states);
+//        die("SM 110");
     }
 
     public function closeActualState() {
