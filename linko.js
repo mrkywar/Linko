@@ -197,31 +197,7 @@ define([
                 ///////////////////////////////////////////////////
                 //// Reaction to cometD notifications
 
-                /*
-                 setupNotifications:
-                 
-                 In this method, you associate each of your game notifications with your local method to handle it.
-                 
-                 Note: game notification names correspond to "notifyAllPlayers" and "notifyPlayer" calls in
-                 your linko.game.php file.
-                 
-                 */
-                setupNotifications: function ()
-                {
-                    this.debug('notifications subscriptions setup');
-
-                    // TODO: here, associate your game notifications with local methods
-
-                    // Example 1: standard notification handling
-                    // dojo.subscribe( 'cardPlayed', this, "notif_cardPlayed" );
-
-                    // Example 2: standard notification handling + tell the user interface to wait
-                    //            during 3 seconds after calling the method in order to let the players
-                    //            see what is happening in the game.
-                    // dojo.subscribe( 'cardPlayed', this, "notif_cardPlayed" );
-                    // this.notifqueue.setSynchronous( 'cardPlayed', 3000 );
-                    // 
-                },
+                
 
                 // TODO: from this point and below, you can write your game notifications handling methods
 

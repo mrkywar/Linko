@@ -38,19 +38,35 @@ trait PlayTrait {
 
         if ($playCardChecker->check($activePlayer, $cards)) {
             $collectionIndex = $cardManager->getNextCollectionIndexFor($activePlayer);
+            /*/-- TEMPORY DESACTIVE 
             $cardManager->moveCards($cards, Deck::LOCATION_PLAYER_TABLE . "_" . $activePlayer->getId(), $collectionIndex);
-            
+
             $collections = $takeableCollectionIdentifier->identify($cards, $activePlayer);
             //var_dump($collections);
                         
             if (!empty($collections)) {
                 $stateManager->initCollectionAttack($activePlayer,$collections);
             }
+            //*/
+            
+            
+            
+            self::notifyAllPlayers("playNumber", clienttranslate('${playerName} plays a collection of ${count} card(s) with a value of ${number}'),
+                [
+                    'playerId' => $activePlayer->getId(),
+                    'playerName' => $activePlayer->getName(),
+                    'count' => sizeof($cards),
+                    'number' => $cards[0],
+                    'collectionIndex' => $collectionIndex,
+                    'cards' => $cards
+                ]);
             
         } else {
             throw new PlayCardException("Invalid selection try again");
         }
 
+        
+        
         $stateManager->closeActualState();
         
         $this->gamestate->nextState();

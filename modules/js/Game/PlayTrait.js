@@ -17,6 +17,8 @@ define([
                     
                     this.handCards = [];
                     this.selectedJokers = [];
+                    
+                    dojo.subscribe('playNumber', this, "notifPlayNumber");
                 },
 
                 initalizePlayNumber: function () {
@@ -52,6 +54,7 @@ define([
                         lock: true
                     }, this, function (result) {
                         this.debug("Play :", result);
+                        this.debug("Cards : ",cards)
                     }, function (is_error) {
                         //--error
                         this.debug("Play fail:", is_error);
@@ -105,27 +108,27 @@ define([
                  * ---------------------------------------------------------- */
                 notifPlayNumber(datas) {
                     this.debug('NPN', datas.args);
-                    var collection = {
-                        collection_index: datas.args.collectionIndex,
-                        player_id: datas.args.playerId
-                    };
-
-                    var collDestination = "playertable_" + datas.args.playerId;
-                    dojo.place(this.format_block('jstpl_collection', collection), collDestination);
-                    var collectionDiv = "collection_" + datas.args.playerId + "_" + datas.args.collectionIndex;
-
-                    for (var cardId in datas.args.cards) {
-                        var card = datas.args.cards[cardId];
-
-                        var divId = "hand_card_" + card.card_id;
-                        if (parseInt(datas.args.playerId) === this.player_id) {
-                            this.slideToObjectAndDestroy(divId, collectionDiv);
-                        } else {
-                            this.debug("NPN - NOT IMPLENTED PART");
-                        }
-                        dojo.place(this.format_block('jstpl_card', card), collectionDiv);
-
-                    }
+//                    var collection = {
+//                        collection_index: datas.args.collectionIndex,
+//                        player_id: datas.args.playerId
+//                    };
+//
+//                    var collDestination = "playertable_" + datas.args.playerId;
+//                    dojo.place(this.format_block('jstpl_collection', collection), collDestination);
+//                    var collectionDiv = "collection_" + datas.args.playerId + "_" + datas.args.collectionIndex;
+//
+//                    for (var cardId in datas.args.cards) {
+//                        var card = datas.args.cards[cardId];
+//
+//                        var divId = "hand_card_" + card.card_id;
+//                        if (parseInt(datas.args.playerId) === this.player_id) {
+//                            this.slideToObjectAndDestroy(divId, collectionDiv);
+//                        } else {
+//                            this.debug("NPN - NOT IMPLENTED PART");
+//                        }
+//                        dojo.place(this.format_block('jstpl_card', card), collectionDiv);
+//
+//                    }
                 }
 
             });

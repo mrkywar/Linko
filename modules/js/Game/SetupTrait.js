@@ -77,9 +77,9 @@ define([
 //
 //
 //                    // Setup game notifications to handle (see "setupNotifications" method below)
-//                    this.setupNotifications();
+                    this.setupNotifications();
 //
-//                    this.debug("Ending game setup");
+                    this.debug("Ending game setup");
                 },
 
                 /**
@@ -147,7 +147,29 @@ define([
 
 
 
+                },
+
+                /*
+                 setupNotifications:
+                 
+                 In this method, you associate each of your game notifications with your local method to handle it.
+                 
+                 Note: game notification names correspond to "notifyAllPlayers" and "notifyPlayer" calls in
+                 your linko.game.php file.
+                 
+                 */
+                setupNotifications: function ()
+                {
+                    this.debug('notifications subscriptions setup');
+
+                    dojo.subscribe('playNumber', this, "notifPlayNumber");
+
+                    this.debug('end subscriptions setup');
+
+
                 }
+
+
 
             });
 
